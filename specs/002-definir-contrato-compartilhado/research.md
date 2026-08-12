@@ -190,3 +190,23 @@ linha **Testes** existente passa a encadear também
 Testes.
 
 ## Decisões durante a implementação
+
+- **`packages/contracts/tsconfig.json` ganhou `rootDir: "src"`**, não
+  previsto na Decisão 5 (que dizia "`tsconfig.json` não muda"). Ao
+  rodar `pnpm --filter @eventpier/contracts build` (T009) pela primeira
+  vez com declaração de tipos (`declaration: true`, herdado de
+  `tsconfig.base.json` desde a spec 001) e múltiplos arquivos fonte
+  (`manifest.ts`, `pagination.ts`, `errors.ts`, `index.ts`,
+  `contract-shape.check.ts`), o TypeScript 7 falhou com
+  `TS5011: The common source directory ... rootDir must be explicitly
+  set`, e sem a correção o output caía em `dist/src/index.js` em vez
+  de `dist/index.js` — incompatível com `main`/`types` do
+  `package.json` (Decisão 5). A spec 001 nunca builda de verdade (só
+  `tsc --noEmit`), por isso esse gap não apareceu antes. Corrigido
+  adicionando `"rootDir": "src"` ao `compilerOptions` de
+  `packages/contracts/tsconfig.json`; `pnpm -r exec tsc --noEmit`
+  confirmado ainda verde em todos os workspaces após a mudança. Sinal
+  para specs futuras que também builda com `declaration: true`
+  (`providers/aws`, `apps/ui`): esperar o mesmo erro e aplicar a mesma
+  correção (`rootDir` explícito) na primeira vez que rodarem um build
+  real, não só `--noEmit`.

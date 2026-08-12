@@ -100,37 +100,37 @@ outra task não concluída). Sem marcador = sequencial.
 
 Ordem sequencial — cada task assume o estado deixado pela anterior.
 
-- [ ] **T008** Rodar `pnpm -r exec tsc --noEmit`. Confirmar que passa
+- [X] **T008** Rodar `pnpm -r exec tsc --noEmit`. Confirmar que passa
   sem erros em todos os workspaces — em particular, que T002
   (`contract-shape.check.ts`) agora **compila** (GREEN).
   _Valida: quickstart.md passo 1; T002._
 
-- [ ] **T009** Rodar `pnpm --filter @eventpier/contracts build`.
+- [X] **T009** Rodar `pnpm --filter @eventpier/contracts build`.
   Confirmar que gera `packages/contracts/dist/index.js` e
   `packages/contracts/dist/index.d.ts` sem erro, e que `dist/` não
   aparece em `git status` (coberto por `.gitignore`).
   _Valida: quickstart.md passo 2; T001._
 
-- [ ] **T010** Rodar `node scripts/validate-contract-constants.mjs`.
+- [X] **T010** Rodar `node scripts/validate-contract-constants.mjs`.
   Confirmar que agora passa (GREEN — T003 encontra `dist/index.js`
   construído em T009 e as constantes batem).
   _Valida: quickstart.md passo 3; T003._
 
-- [ ] **T011** Rodar o `node -e` de importação dinâmica descrito em
+- [X] **T011** Rodar o `node -e` de importação dinâmica descrito em
   `quickstart.md` passo 4. Confirmar que `Object.keys(...)` inclui
   `CAPABILITIES`, `CAPABILITY_STATUSES`, `CONTRACT_VERSION`,
   `HEALTH_FAILURE_CODES` — sem tocar `apps/ui/package.json` nem
   `providers/aws/package.json`.
   _Valida: quickstart.md passo 4; spec.md FR6, Critério de Sucesso "pacote consumível via dependência de workspace"._
 
-- [ ] **T012** Atualizar `.pipeline/quality-gates.md`: adicionar linha
+- [X] **T012** Atualizar `.pipeline/quality-gates.md`: adicionar linha
   **Build** (`pnpm --filter @eventpier/contracts build`, critério:
   `dist/index.js` e `dist/index.d.ts` gerados sem erro) antes da linha
   **Testes** existente; atualizar a linha **Testes** para encadear
   também `node scripts/validate-contract-constants.mjs`.
   _Origem: research.md Decisão 7 ("Consequência para /tasks")._
 
-- [ ] **T013** Rodar `git status --short`. Confirmar que as mudanças
+- [X] **T013** Rodar `git status --short`. Confirmar que as mudanças
   ficam restritas a `packages/contracts/`,
   `scripts/validate-contract-constants.mjs` e
   `.pipeline/quality-gates.md` — nenhuma mudança em `apps/ui/`,

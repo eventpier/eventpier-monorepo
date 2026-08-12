@@ -139,18 +139,18 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
 
 ## Fase: Polish
 
-- [ ] **T014** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T014** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer decisão não prevista (ex.: ajuste fino
   de mensagem de erro do script T003, se necessário).
 
-- [ ] **T015** `[P]` Rodar
+- [X] **T015** `[P]` Rodar
   `find packages/contracts/src -type f`. Confirmar que lista
   exatamente `manifest.ts`, `pagination.ts`, `errors.ts`, `index.ts`,
   `contract-shape.check.ts` — nenhum arquivo extra, nenhuma lógica de
   negócio, chamada de rede ou adapter vazados de specs futuras.
   _Origem: spec.md FR7 ("Fora do escopo")._
 
-- [ ] **T016** Revisão final contra `spec.md` → "Critérios de Sucesso":
+- [X] **T016** Revisão final contra `spec.md` → "Critérios de Sucesso":
   confirmar, lendo o código produzido (não só rodando gates), que uma
   pessoa desenvolvendo `providers/aws` (spec 005+) ou `apps/ui` (spec
   009+) conseguiria preencher/consumir os tipos sem redefinir nenhuma

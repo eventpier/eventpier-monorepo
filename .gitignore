@@ -1,0 +1,27 @@
+# Credenciais e configurações locais sensíveis
+.claude/settings.local.json
+.cursor/settings.local.json
+.env
+.env.local
+.env.*.local
+
+# Dependências
+node_modules/
+
+# Build
+dist/
+build/
+.next/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / SO
+.DS_Store
+.vscode/
+.idea/
+
+# Testes / cobertura
+coverage/

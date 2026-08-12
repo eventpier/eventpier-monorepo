@@ -28,7 +28,7 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Testes
 
-- [ ] **T002** `[P]` Criar `packages/contracts/src/contract-shape.check.ts`
+- [X] **T002** `[P]` Criar `packages/contracts/src/contract-shape.check.ts`
   (não reexportado pelo `index.ts` — só entra no gate Typecheck via
   `include: ["src"]`). Deve validar, construindo valores de exemplo:
   - **Caso feliz**: um `ProviderManifest` completo, com uma
@@ -47,7 +47,7 @@ outra task não concluída). Sem marcador = sequencial.
   `errors.ts`/`index.ts` ainda não existem.
   _Origem: contracts/contract-shape.md (contract test); data-model.md (invariantes); spec.md FR1-FR4._
 
-- [ ] **T003** `[P]` Criar `scripts/validate-contract-constants.mjs`
+- [X] **T003** `[P]` Criar `scripts/validate-contract-constants.mjs`
   (raiz do monorepo, sem dependência externa — mesmo padrão de
   `scripts/validate-workspace-manifests.mjs` da spec 001). Deve
   validar:

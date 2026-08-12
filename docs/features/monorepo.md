@@ -41,9 +41,11 @@ N/A — nenhuma API HTTP exposta. O "contrato" é a forma de cada
 - `validate-workspace-manifests.mjs` checa `pnpm-workspace.yaml` por
   substring, não parse YAML real — um pattern comentado passaria como
   válido.
-- Nenhum lint/build configurado ainda em
-  `.pipeline/quality-gates.md`; entram quando as specs correspondentes
-  (ESLint junto de `apps/ui`, build real) existirem.
+- Lint ainda não configurado em `.pipeline/quality-gates.md`; entra
+  quando `apps/ui` ganhar ESLint. Build já existe para
+  `packages/contracts` desde a spec 002 (ver
+  [`docs/features/contracts.md`](./contracts.md)); `apps/ui` e
+  `providers/aws` ainda não têm build próprio.
 
 ## Specs Relacionadas
 

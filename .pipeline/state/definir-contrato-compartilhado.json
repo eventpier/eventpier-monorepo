@@ -1,0 +1,22 @@
+{
+  "feature_dir": "specs/002-definir-contrato-compartilhado",
+  "branch": "feature/002-definir-contrato-compartilhado",
+  "short_name": "definir-contrato-compartilhado",
+  "current_phase": "done",
+  "status_detail": null,
+  "phases_completed": ["specify", "plan", "tasks", "implement", "review"],
+  "phases_pending": [],
+  "clarifications_asked": 0,
+  "last_updated": "2026-08-12T21:06:29Z",
+  "quality_gates_status": {
+    "typecheck": "pass",
+    "test": "pass",
+    "lint": null,
+    "build": "pass"
+  },
+  "task_progress": {
+    "total": 16,
+    "completed": 16,
+    "failed": 0
+  }
+}

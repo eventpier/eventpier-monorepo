@@ -8,17 +8,26 @@ específicos de scripts ou ferramentas.
 | Gate | Comando | Critério de sucesso |
 |---|---|---|
 | Typecheck | `pnpm -r exec tsc --noEmit` | Zero erros em todos os workspaces |
-| Testes | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs` | Ambos os scripts terminam com exit code 0 |
+| Build | `pnpm --filter @eventpier/contracts build` | `packages/contracts/dist/index.js` e `dist/index.d.ts` gerados sem erro |
+| Testes | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs && node scripts/validate-contract-constants.mjs` | Todos os scripts terminam com exit code 0 |
 
-Lint e Build ainda não se aplicam — nenhum linter (ESLint/Ruff/etc.)
-nem build step real existe até este ponto do roadmap (spec 001 só cria
-o skeleton de workspaces). Readicionar as linhas quando a spec que
-introduzir cada ferramenta for implementada (Lint: quando ESLint for
-configurado, provavelmente junto de `apps/ui`; Build: quando houver
-algo real para compilar, ex. `pnpm build` do Next.js).
+Lint ainda não se aplica — nenhum linter (ESLint/Ruff/etc.) configurado
+até este ponto do roadmap. Readicionar a linha quando ESLint for
+configurado, provavelmente junto de `apps/ui`.
 
-A linha "Testes" hoje aponta para os scripts de validação estrutural
-criados pela spec 001 (`specs/001-setup-monorepo-workspaces/tasks.md`,
-T004/T005) — não é um test runner real (jest/vitest/pytest). Trocar
-por um runner de verdade quando a primeira spec com lógica de negócio
-(002+) precisar de testes unitários.
+A linha "Build" existe desde a spec 002 (`packages/contracts`, primeiro
+workspace com output real de `tsc`) — ver
+`specs/002-definir-contrato-compartilhado/research.md`, Decisão 5.
+Reavaliar/estender quando `apps/ui` (Next.js) ou `providers/aws`
+ganharem seu próprio build.
+
+A linha "Testes" combina os scripts de validação estrutural da spec
+001 (`validate-workspace-manifests.mjs`/`validate-workspace-dependencies.mjs`)
+com o novo `validate-contract-constants.mjs` da spec 002 — nenhum é um
+test runner real (jest/vitest/pytest), todos são scripts Node puros
+(ver `specs/002-definir-contrato-compartilhado/research.md`,
+Decisão 7). `validate-contract-constants.mjs` depende do gate Build já
+ter rodado (lê `packages/contracts/dist/index.js`) — por isso Build
+vem antes de Testes nesta tabela. Trocar por um runner de verdade
+quando a primeira spec com lógica de negócio condicional (006,
+health-check com cache) precisar de testes unitários.

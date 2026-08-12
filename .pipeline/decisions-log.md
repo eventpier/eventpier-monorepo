@@ -49,6 +49,23 @@ de 1 linha com link/referência se quiser evitar duplicação.
   desta feature precisaram ser renomeadas/recriadas (PR #1 → #2) por
   causa disso.
 
+## 002-definir-contrato-compartilhado — Contrato Compartilhado (2026-08-12)
+
+- `packages/contracts/tsconfig.json` ganhou `rootDir: "src"` explícito,
+  não previsto no plano original. TypeScript 7 falha (`TS5011`) ao
+  emitir declarations de múltiplos arquivos fonte sem `rootDir`
+  explícito, e sem ele o build caía em `dist/src/index.js` em vez de
+  `dist/index.js`, quebrando `main`/`types` do `package.json`. A spec
+  001 nunca builda de verdade (só `tsc --noEmit`), por isso o gap só
+  apareceu aqui. Sinal para `providers/aws`/`apps/ui`: esperar o mesmo
+  erro na primeira vez que rodarem um build real com
+  `declaration: true`.
+- `packages/contracts/tsconfig.build.json` criado (achado do
+  `/review-pr` desta PR): `contract-shape.check.ts` — fixture interna
+  de teste de forma, nunca reexportada — vazava para `dist/` junto com
+  a API pública. Corrigido com um tsconfig de build separado que a
+  exclui da emissão, mantendo-a coberta pelo gate Typecheck.
+
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)
 

@@ -15,8 +15,16 @@ sem erro.
 
 ## Quando é chamado
 
-- Automaticamente pelo `/review-pr`, Etapa 8 (pós-merge)
-- Manualmente a qualquer momento: `/docs-sync <slug-da-feature>`
+- Automaticamente pelo `/review-pr`, Etapa 5/7 — as mudanças de
+  documentação são montadas antes de pedir aprovação e commitadas na
+  própria branch da PR (Etapa 7), para serem revisadas junto com o
+  código, não depois do merge.
+- Manualmente a qualquer momento: `/docs-sync <slug-da-feature>`. Se a
+  branch da feature já não existir mais (feature já mergeada há
+  tempo), crie uma branch nova a partir de `main` antes de rodar este
+  comando — o passo de Fechamento abaixo commita no branch atual, e
+  branches protegidas (ver branch protection do repositório) não
+  aceitam commit direto; abra e mergeie uma PR em seguida.
 
 ## Entrada
 

@@ -31,8 +31,8 @@ e reporte exatamente qual falhou — não prossiga nem tente adivinhar.
    - **Se não existir**: esta é uma PR fora do pipeline (hotfix direto,
      contribuição externa). Reporte `⚠ PR fora do pipeline — nenhum
      estado de feature associado à branch <branch>` e siga com o review
-     normalmente — apenas pule a Etapa 8 (pós-merge), que depende de
-     estado.
+     normalmente — apenas pule o fechamento de feature na Etapa 7 e a
+     Etapa 8, que dependem de estado.
    - **Se existir**, verifique também:
      4. `current_phase` não é `blocked`/`cancelled`/`failed`?
      5. `phases_completed` inclui `implement`?
@@ -167,15 +167,51 @@ qual é opinião do revisor.
 - [ ] Aprovar
 ```
 
+### Fechamento da feature (só monte se a recomendação não for "Bloquear merge")
+
+`main` (ou a branch protegida do projeto) exige PR para qualquer
+mudança — não é mais possível commitar o fechamento pós-merge
+diretamente nela (ver `.pipeline/config.md`/branch protection do
+repositório). Por isso, se houver `<ESTADO_DIR>/<slug>.json` associado
+(Pré-condição 3) e a recomendação não for bloqueante, monte agora —
+mas **não commite ainda**, isso só acontece na Etapa 7 após aprovação
+— as mudanças que fechariam a feature, para serem incluídas na própria
+PR e revisadas junto com o código:
+
+1. `<ESTADO_DIR>/<slug>.json`: `review` → `phases_completed`,
+   `current_phase` → `done`.
+2. Se `ARQUIVO_ROADMAP` estiver configurado: linha da feature → ✅
+   Concluído.
+3. Se `ARQUIVO_DECISIONS_LOG` estiver configurado: leia a seção
+   "Decisões durante a implementação" do `research.md` da feature (se
+   existir e tiver conteúdo) e monte uma entrada nova, seguindo o
+   formato de `.pipeline/decisions-log.md`. Sem decisões não previstas
+   registradas, monte um resumo de 1 linha do que a spec entregou —
+   nunca deixe a spec sem entrada nenhuma no log.
+4. Se `DOCS_FEATURES_DIR` estiver configurado: rode a lógica do
+   `/docs-sync <slug>` e monte as mudanças de documentação de domínio
+   — elas entram no relatório abaixo para serem revisadas como
+   qualquer outro arquivo da PR.
+5. Se `ARQUIVOS_STATUS` (em `.pipeline/config.md`) não estiver vazio:
+   monte a atualização de cada documento listado.
+
+Inclua um resumo dessas mudanças no relatório mostrado ao usuário
+(pode ser um diff resumido ou a lista de arquivos/seções afetadas) —
+a pessoa revisando precisa ver o que vai entrar na PR, não só
+descobrir depois do merge.
+
 ---
 
 ## Etapa 6 — Solicitar aprovação do usuário (obrigatória)
 
-Após exibir o relatório completo, pergunte:
+Após exibir o relatório completo (incluindo o fechamento da feature,
+se montado), pergunte:
 
 ```
 Review gerado com [N] comentários ([X] críticos, [Y] altos, [Z] médios,
 [W] baixos).
+[Se houver fechamento montado: "Inclui o fechamento da feature (state/
+roadmap/decisions-log/docs) para entrar nesta mesma PR."]
 
 Deseja:
   [1] Submeter este review ao GitHub exatamente como está
@@ -198,41 +234,61 @@ Se o usuário escolher **[3]**: encerrar sem enviar nada.
 
 ## Etapa 7 — Submeter ao GitHub (somente após aprovação explícita)
 
-1. Criar review pendente: `pull_request_review_write` method=`create`
-2. Adicionar comentários por arquivo/linha:
+1. Se o fechamento da feature foi montado na Etapa 5 (recomendação não
+   bloqueante e há estado associado): faça checkout da branch da PR,
+   aplique essas mudanças (`<ESTADO_DIR>/<slug>.json`, `ARQUIVO_ROADMAP`,
+   `ARQUIVO_DECISIONS_LOG`, docs de domínio, `ARQUIVOS_STATUS`), commit
+   (`git commit -m "docs(<slug>): mark feature as complete"`) e push —
+   tudo isso passa a fazer parte do diff da própria PR, revisado junto
+   com o código.
+2. Criar review pendente: `pull_request_review_write` method=`create`
+3. Adicionar comentários por arquivo/linha:
    `add_comment_to_pending_review`
-3. Submeter: `pull_request_review_write` method=`submit_pending`,
+4. Submeter: `pull_request_review_write` method=`submit_pending`,
    `event=REQUEST_CHANGES` (críticos/altos bloqueantes),
    `event=COMMENT` (apenas baixos/médios), ou `event=APPROVE`
-   (sem problemas significativos)
-4. Salvar o relatório completo em `<SPECS_DIR>/review-pr-[N].md`
+   (sem problemas significativos) — se `event=REQUEST_CHANGES`, **não**
+   execute o passo 1 (fechamento) mesmo que já tivesse sido montado na
+   Etapa 5; descarte-o e reavalie na próxima rodada de review.
+5. Commit e push do relatório completo em `<SPECS_DIR>/review-pr-[N].md`
+   (mesma branch da PR).
+
+Quando o usuário mergear a PR (squash ou merge commit), o fechamento
+já commitado nela se torna efetivo em `main` junto com o código —
+nenhuma ação adicional é necessária. `/pipeline-status` já vai
+reportar a feature como `done` a partir daí.
 
 ---
 
-## Etapa 8 — Pós-merge (somente após confirmação explícita de merge)
+## Etapa 8 — Fechamento fora do fluxo normal (casos excepcionais)
 
-Não execute esta etapa automaticamente após o review — apenas quando o
-usuário confirmar que a PR foi de fato mergeada.
+A Etapa 7 já cobre o caso comum (fechamento incluído na própria PR
+antes do merge). Use esta etapa só quando isso não aconteceu:
+- a PR foi mergeada sem passar pela Etapa 7 deste comando (merge
+  manual direto no GitHub, ou review feito antes desta versão do
+  comando existir);
+- ou o review anterior foi `REQUEST_CHANGES` e o fechamento foi
+  descartado (Etapa 7, passo 4), mas a PR acabou sendo mergeada mesmo
+  assim (ex.: correções feitas fora deste fluxo).
 
-1. Atualizar `<ESTADO_DIR>/<slug>.json`: `review` → `phases_completed`,
-   `current_phase` → `done`, atualize `last_updated`.
-2. Se `ARQUIVO_ROADMAP` estiver configurado, atualizar a linha desta
-   feature para ✅ Concluído. (Se em vez de merge o usuário sinalizar
-   que a feature foi bloqueada/cancelada/falhou, use o mapeamento de
-   estados de exceção — ver `.pipeline/feature-state.schema.md` e a
-   legenda em `.pipeline/roadmap.md` — em vez desta etapa.)
-3. Se `ARQUIVO_DECISIONS_LOG` estiver configurado: leia a seção
-   "Decisões durante a implementação" do `research.md` da feature (se
-   existir e tiver conteúdo) e adicione uma entrada nova em
-   `ARQUIVO_DECISIONS_LOG`, seguindo o formato de
-   `.pipeline/decisions-log.md`. Se não houver decisões não previstas
-   registradas, adicione só um resumo de 1 linha do que a spec
-   entregou — não deixe a spec sem entrada nenhuma no log.
-4. Se `DOCS_FEATURES_DIR` estiver configurado, execute `/docs-sync
-   <slug>` para atualizar a documentação de domínio afetada.
-5. Se `ARQUIVOS_STATUS` (em `.pipeline/config.md`) não estiver vazio,
-   atualizar cada documento listado com o status da feature.
-6. Commit: `git commit -m "docs(<slug>): mark feature as complete"`
+Não execute automaticamente — só quando o usuário confirmar
+explicitamente que a PR foi de fato mergeada e que o fechamento ainda
+não está refletido em `main`.
+
+1. A partir de `main` atualizada, crie uma branch nova (ex.:
+   `chore/close-<slug>`) — commit direto em `main` não é mais possível
+   com a proteção de branch ativa.
+2. Nessa branch, aplique o mesmo fechamento da Etapa 5 (state → `done`,
+   roadmap → ✅, entrada no decisions-log, `/docs-sync <slug>`,
+   `ARQUIVOS_STATUS`). (Se em vez de merge o usuário sinalizar que a
+   feature foi bloqueada/cancelada/falhou, use o mapeamento de estados
+   de exceção — ver `.pipeline/feature-state.schema.md` e a legenda em
+   `.pipeline/roadmap.md` — em vez do fechamento normal.)
+3. Commit: `git commit -m "docs(<slug>): mark feature as complete"`,
+   push, e abra uma PR (`chore/close-<slug>` → `main`).
+4. Reporte a PR de fechamento ao usuário e aguarde ele mergeá-la (ou
+   peça confirmação antes de mergear você mesmo) — mesma regra de
+   nunca mergear sem sinal verde explícito.
 
 ---
 

@@ -38,7 +38,7 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Testes
 
-- [ ] **T004** Criar `scripts/validate-compose-shape.mjs` (raiz do
+- [X] **T004** Criar `scripts/validate-compose-shape.mjs` (raiz do
   monorepo, sem dependência externa — mesmo padrão de
   `scripts/validate-contract-constants.mjs` da spec 002). Deve rodar
   `docker compose config --format json` (via `node:child_process`),

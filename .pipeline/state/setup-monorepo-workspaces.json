@@ -1,13 +1,13 @@
 {
   "feature_dir": "specs/001-setup-monorepo-workspaces",
-  "branch": "001-setup-monorepo-workspaces",
+  "branch": "feature/001-setup-monorepo-workspaces",
   "short_name": "setup-monorepo-workspaces",
   "current_phase": "review",
   "status_detail": null,
   "phases_completed": ["specify", "plan", "tasks", "implement"],
   "phases_pending": ["review"],
   "clarifications_asked": 1,
-  "last_updated": "2026-08-12T14:41:11Z",
+  "last_updated": "2026-08-12T15:12:55Z",
   "quality_gates_status": {
     "typecheck": "pass",
     "test": "pass",

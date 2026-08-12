@@ -70,7 +70,7 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Core
 
-- [ ] **T004** `[P]` Criar `packages/contracts/src/manifest.ts`:
+- [X] **T004** `[P]` Criar `packages/contracts/src/manifest.ts`:
   `CONTRACT_VERSION`, `CAPABILITIES`/`Capability`,
   `CAPABILITY_STATUSES`/`CapabilityStatus`,
   `HEALTH_FAILURE_CODES`/`HealthFailureCode`, `Provider`,
@@ -80,18 +80,18 @@ outra task não concluída). Sem marcador = sequencial.
   Decisão 1).
   _Origem: spec.md FR1, FR2, FR5, FR8; data-model.md (`Provider`, `Environment`, `CapabilityDescriptor`, `ProviderManifest`)._
 
-- [ ] **T005** `[P]` Criar `packages/contracts/src/pagination.ts`:
+- [X] **T005** `[P]` Criar `packages/contracts/src/pagination.ts`:
   `Page<T>` (`items: T[]`, `nextCursor?: string`).
   _Origem: spec.md FR3; data-model.md (`Page<T>`)._
 
-- [ ] **T006** Criar `packages/contracts/src/errors.ts`: `ProviderError`
+- [X] **T006** Criar `packages/contracts/src/errors.ts`: `ProviderError`
   (`code`, `message`, `capability?: Capability`, `retryable`),
   importando `Capability` de `./manifest.js` (extensão `.js`
   explícita — research.md, Decisão 3). Depende de T004 (precisa do
   tipo `Capability` já existir).
   _Origem: spec.md FR4; data-model.md (`ProviderError`); research.md Decisão 3._
 
-- [ ] **T007** Criar `packages/contracts/src/index.ts`: barrel público
+- [X] **T007** Criar `packages/contracts/src/index.ts`: barrel público
   (`export * from "./manifest.js"`, `"./pagination.js"`,
   `"./errors.js"`). Depende de T004, T005 e T006.
   _Origem: spec.md FR6; research.md Decisão 2._

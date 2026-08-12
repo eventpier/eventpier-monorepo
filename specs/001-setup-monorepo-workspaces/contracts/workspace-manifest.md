@@ -38,6 +38,7 @@ packages:
   "name": "@eventpier/<slug>",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {}
 }
 ```
@@ -50,6 +51,12 @@ Campos obrigatórios:
 - `private`: `true` para os três workspaces desta spec (mesmo
   `packages/contracts` — só deixa de ser `private` no Estado 2, ver
   `research.md` Decisão 3 e `arquitetura.md` seção 2).
+- `type`: `"module"` — obrigatório em todo workspace. `tsconfig.base.json`
+  emite sintaxe ESM (`module: "ESNext"`); sem este campo, Node
+  interpretaria o `.js` gerado como CommonJS por padrão e quebraria em
+  runtime (`SyntaxError: Unexpected token 'export'`) assim que houvesse
+  código real para rodar fora de um bundler — caso de `providers/aws`.
+  Ver `research.md`, "Decisões durante a implementação".
 - `scripts`: objeto presente, mesmo que vazio — specs futuras
   adicionam `build`/`test`/`lint` conforme `ARQUIVO_QUALITY_GATES` for
   preenchido.

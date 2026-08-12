@@ -28,7 +28,12 @@ const WORKSPACES = [
 const errors = [];
 
 function allDeps(pkg) {
-  return { ...(pkg.dependencies ?? {}), ...(pkg.devDependencies ?? {}) };
+  return {
+    ...(pkg.dependencies ?? {}),
+    ...(pkg.devDependencies ?? {}),
+    ...(pkg.peerDependencies ?? {}),
+    ...(pkg.optionalDependencies ?? {}),
+  };
 }
 
 for (const { path, name, forbiddenDeps } of WORKSPACES) {

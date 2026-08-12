@@ -126,3 +126,13 @@ vazio — **sem** lógica de negócio:
   `packages/contracts` passam por um bundler — reavaliar se
   `providers/aws` (Node.js puro, sem bundler) tiver problema de
   resolução de módulo ao ganhar código real.
+- **`"type": "module"` adicionado aos 3 `package.json`** (achado do
+  `/review-pr` da PR #1, não previsto originalmente). `module: "ESNext"`
+  em `tsconfig.base.json` emite sintaxe ESM; sem `"type": "module"`,
+  Node interpretaria o `.js` gerado como CommonJS por padrão e
+  quebraria em runtime assim que `providers/aws` ganhasse código real
+  rodado fora de bundler (`tsc --noEmit` não pega isso, só
+  type-checka). Optou-se por manter `tsconfig.base.json` compartilhado
+  como está (sem override de `moduleResolution` por workspace) e só
+  adicionar o campo que faltava — mais simples que dar a
+  `providers/aws` uma configuração de módulo própria.

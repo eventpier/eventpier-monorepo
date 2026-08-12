@@ -59,6 +59,9 @@ function checkWorkspaceManifest({ path, name }) {
   if (pkg.private !== true) {
     errors.push(`${path}/package.json: "private" deveria ser true, encontrado ${pkg.private}`);
   }
+  if (pkg.type !== "module") {
+    errors.push(`${path}/package.json: "type" deveria ser "module", encontrado "${pkg.type}"`);
+  }
   if (typeof pkg.scripts !== "object" || pkg.scripts === null) {
     errors.push(`${path}/package.json: "scripts" deveria estar presente (mesmo vazio)`);
   }

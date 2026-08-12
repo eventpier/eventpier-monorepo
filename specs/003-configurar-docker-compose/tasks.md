@@ -93,18 +93,18 @@ outra task não concluída). Sem marcador = sequencial.
   ou de Docker.
   _Origem: plan.md, "Observação para /tasks", passo 5; quickstart.md passo 1._
 
-- [ ] **T010** `[P]` Criar `.dockerignore` na raiz do monorepo
+- [X] **T010** `[P]` Criar `.dockerignore` na raiz do monorepo
   (`node_modules`, `**/node_modules`, `dist`, `**/dist`, `.git`,
   `.env`, `.env.local`, `*.log`, `.DS_Store`).
   _Origem: research.md Decisão 2; contracts/compose-shape.md (".dockerignore")._
 
-- [ ] **T011** `[P]` Criar `apps/ui/Dockerfile` (multi-stage: `base` →
+- [X] **T011** `[P]` Criar `apps/ui/Dockerfile` (multi-stage: `base` →
   `deps` → `build` → `runtime`), exatamente como
   `contracts/compose-shape.md` ("apps/ui/Dockerfile") — sem copiar
   `node_modules` para a imagem final (research.md, Decisão 2).
   _Origem: spec.md FR2; research.md Decisão 2, 6._
 
-- [ ] **T012** `[P]` Criar `providers/aws/Dockerfile` — equivalente a
+- [X] **T012** `[P]` Criar `providers/aws/Dockerfile` — equivalente a
   T011 para `providers/aws`, porta 4000.
   _Origem: spec.md FR2; research.md Decisão 2, 6._
 

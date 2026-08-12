@@ -105,4 +105,34 @@ vazio — **sem** lógica de negócio:
 
 ## Decisões durante a implementação
 
-<!-- Preenchido pelo /implement se surgir algo não previsto aqui. -->
+- **Versão do TypeScript fixada em `7.0.2`** (não prevista em nenhuma
+  decisão anterior — este research.md não fixava versão). O npm
+  registry mostra `7.0.2` como a última linha estável (sucedendo uma
+  linha `6.x` intermediária), publicada depois do conhecimento
+  treinado do modelo que implementou esta spec — não foi possível
+  confirmar compatibilidade do ecossistema (Next.js, Storybook,
+  plugins ESLint) com esse major. Confirmado explicitamente com o
+  usuário, ciente do risco. **Atenção para a spec 009** (skeleton
+  Next.js): se o Next.js ainda não suportar TypeScript 7 nesse
+  momento, rebaixar para `6.0.3` ali, não silenciosamente.
+- **Opções concretas de `tsconfig.base.json`**: `target: "ES2022"`,
+  `module: "ESNext"`, `moduleResolution: "Bundler"`,
+  `strict: true`, `esModuleInterop: true`, `skipLibCheck: true`,
+  `forceConsistentCasingInFileNames: true`, `resolveJsonModule: true`,
+  `isolatedModules: true`, `declaration: true`, `sourceMap: true`. A
+  Decisão 4 original só previa "opções comuns" sem listar; registrado
+  aqui para as specs 002+ herdarem sem redecidir. `moduleResolution:
+  "Bundler"` assume que `apps/ui` (Next.js) e o build de
+  `packages/contracts` passam por um bundler — reavaliar se
+  `providers/aws` (Node.js puro, sem bundler) tiver problema de
+  resolução de módulo ao ganhar código real.
+- **`"type": "module"` adicionado aos 3 `package.json`** (achado do
+  `/review-pr` da PR #1, não previsto originalmente). `module: "ESNext"`
+  em `tsconfig.base.json` emite sintaxe ESM; sem `"type": "module"`,
+  Node interpretaria o `.js` gerado como CommonJS por padrão e
+  quebraria em runtime assim que `providers/aws` ganhasse código real
+  rodado fora de bundler (`tsc --noEmit` não pega isso, só
+  type-checka). Optou-se por manter `tsconfig.base.json` compartilhado
+  como está (sem override de `moduleResolution` por workspace) e só
+  adicionar o campo que faltava — mais simples que dar a
+  `providers/aws` uma configuração de módulo própria.

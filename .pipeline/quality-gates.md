@@ -7,28 +7,18 @@ específicos de scripts ou ferramentas.
 
 | Gate | Comando | Critério de sucesso |
 |---|---|---|
-| Typecheck | `<preencher>` | Zero erros |
-| Testes | `<preencher>` | Todos verdes; cobertura mínima: `<preencher>%` |
-| Lint | `<preencher>` | Zero erros (warnings permitidos: `<preencher>`) |
-| Build | `<preencher>` | Build sem falhas |
+| Typecheck | `pnpm -r exec tsc --noEmit` | Zero erros em todos os workspaces |
+| Testes | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs` | Ambos os scripts terminam com exit code 0 |
 
-<!--
-Exemplos de preenchimento (apagar este comentário após configurar):
+Lint e Build ainda não se aplicam — nenhum linter (ESLint/Ruff/etc.)
+nem build step real existe até este ponto do roadmap (spec 001 só cria
+o skeleton de workspaces). Readicionar as linhas quando a spec que
+introduzir cada ferramenta for implementada (Lint: quando ESLint for
+configurado, provavelmente junto de `apps/ui`; Build: quando houver
+algo real para compilar, ex. `pnpm build` do Next.js).
 
-Node.js / TypeScript:
-| Typecheck | `tsc --noEmit` | Zero erros |
-| Testes    | `pnpm test -- --coverage` | Cobertura ≥ 80% |
-| Lint      | `eslint . --max-warnings=0` | Zero erros/warnings |
-| Build     | `pnpm build` | Build sem falhas |
-
-Python:
-| Typecheck | `mypy .` | Zero erros |
-| Testes    | `pytest --cov` | Cobertura ≥ 80% |
-| Lint      | `ruff check .` | Zero erros |
-
-Adicione ou remova linhas conforme as ferramentas reais do seu projeto.
-Se um gate não se aplicar (ex.: projeto sem build step), remova a linha
-em vez de deixar `<preencher>` vazio — comando ausente é interpretado
-pelo /implement como "gate não existe", enquanto `<preencher>` sem
-edição é interpretado como configuração pendente e gera aviso.
--->
+A linha "Testes" hoje aponta para os scripts de validação estrutural
+criados pela spec 001 (`specs/001-setup-monorepo-workspaces/tasks.md`,
+T004/T005) — não é um test runner real (jest/vitest/pytest). Trocar
+por um runner de verdade quando a primeira spec com lógica de negócio
+(002+) precisar de testes unitários.

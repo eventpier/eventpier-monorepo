@@ -41,9 +41,13 @@ encontrado em <feature_dir>">
 
 ## Passo 1 — Carregar contexto
 
-1. Leia `<ESTADO_DIR>/<slug>.json` para obter `feature_dir`.
-2. Leia `spec.md` da feature.
-3. Leia `ARQUIVO_REGRAS` e `ARQUIVO_ARQUITETURA`.
+1. Leia `<ESTADO_DIR>/<slug>.json` para obter `feature_dir` e `branch`.
+2. Faça checkout de `branch` (crie-a a partir da branch atual se, por
+   algum motivo, não existir mais localmente) antes de qualquer
+   alteração — todo artefato desta fase é commitado nela, nunca na
+   branch em que o comando foi iniciado.
+3. Leia `spec.md` da feature.
+4. Leia `ARQUIVO_REGRAS` e `ARQUIVO_ARQUITETURA`.
 
 ## Passo 2 — Gerar artefatos de design
 

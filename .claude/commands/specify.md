@@ -31,7 +31,10 @@ texto deste comando.
 2. Gere um nome curto (2-4 palavras, formato ação-substantivo) a partir
    da descrição recebida (ou já lida do roadmap).
 3. Verifique se já existe `<ESTADO_DIR>/<slug>.json` para essa feature.
-   - Se existir: leia `feature_dir` e `current_phase`.
+   - Se existir: leia `feature_dir`, `branch` e `current_phase`. Faça
+     checkout de `branch` (crie-a a partir da branch atual se, por
+     algum motivo, não existir mais localmente — ex.: retomando a
+     feature em outra máquina/sessão) antes de prosseguir.
      - Se `current_phase` for `blocked`/`cancelled`/`failed`: informe
        o usuário com o `status_detail` registrado (ex.: "Esta feature
        está bloqueada: `<status_detail>`. Resolva o bloqueio antes de
@@ -42,8 +45,13 @@ texto deste comando.
        o usuário que a feature já avançou e pergunte se ele quer mesmo
        revisar a spec ou retomar a fase atual.
    - Se não existir: determine o próximo número sequencial disponível
-     em `SPECS_DIR`, crie `<SPECS_DIR>/<NNN>-<slug>/`, e crie o arquivo
-     de estado conforme `.pipeline/feature-state.schema.md`.
+     em `SPECS_DIR`; defina `branch` como `<NNN>-<slug>` e crie essa
+     branch git a partir da branch atual (`git checkout -b
+     <NNN>-<slug>`); crie `<SPECS_DIR>/<NNN>-<slug>/`; crie o arquivo
+     de estado conforme `.pipeline/feature-state.schema.md` já com
+     `branch` preenchido. Todo commit desta fase em diante (Passo 5) e
+     das fases seguintes acontece nessa branch — nunca na branch em
+     que o comando foi iniciado.
 4. Se `ARQUIVO_ROADMAP` estiver configurado e esta feature **não**
    tiver uma entrada lá ainda (feature nova, não planejada
    previamente), adicione uma linha com status 🔲 Pendente antes de

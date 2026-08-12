@@ -39,9 +39,13 @@ foi concluído" ou "nenhum artefato de design encontrado em
 
 ## Passo 1 — Carregar contexto
 
-Leia `<ESTADO_DIR>/<slug>.json` → `feature_dir`. Leia `spec.md`,
-`plan.md`, `data-model.md`, `contracts/`, `research.md`,
-`quickstart.md` (os que existirem — nem todo projeto gera todos).
+Leia `<ESTADO_DIR>/<slug>.json` → `feature_dir` e `branch`. Faça
+checkout de `branch` (crie-a a partir da branch atual se, por algum
+motivo, não existir mais localmente) antes de qualquer alteração —
+todo artefato desta fase é commitado nela, nunca na branch em que o
+comando foi iniciado. Leia `spec.md`, `plan.md`, `data-model.md`,
+`contracts/`, `research.md`, `quickstart.md` (os que existirem — nem
+todo projeto gera todos).
 
 ## Passo 2 — Gerar tasks.md
 

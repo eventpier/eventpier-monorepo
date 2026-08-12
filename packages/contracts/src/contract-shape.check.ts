@@ -48,8 +48,3 @@ const exampleError: ProviderError = {
 // escritos como código (quebrariam o gate Typecheck de propósito):
 //   { id: "storage", status: "available", reason: "UNKNOWN" }  // inválido: available não tem reason
 //   { id: "storage", status: "unavailable" }                    // inválido: unavailable exige reason
-
-// Silencia "declared but never read" sem exportar estes exemplos como API pública.
-void exampleManifest;
-void examplePage;
-void exampleError;

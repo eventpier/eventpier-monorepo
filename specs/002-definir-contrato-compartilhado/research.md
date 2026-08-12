@@ -210,3 +210,16 @@ Testes.
   (`providers/aws`, `apps/ui`): esperar o mesmo erro e aplicar a mesma
   correção (`rootDir` explícito) na primeira vez que rodarem um build
   real, não só `--noEmit`.
+- **`packages/contracts/tsconfig.build.json` criado** (achado do
+  `/review-pr` desta PR, não previsto originalmente): sem ele,
+  `contract-shape.check.ts` — fixture interna de verificação de forma,
+  nunca reexportada por `index.ts` — era compilada para
+  `dist/contract-shape.check.{js,d.ts}` junto com a API pública, por
+  estar em `src/` e incluída pelo `tsconfig.json` original. Não era
+  alcançável externamente (`package.json.exports` restringe a `"."`),
+  mas inflava o artefato de build sem necessidade. Corrigido com um
+  `tsconfig.build.json` (`extends: "./tsconfig.json"`,
+  `exclude: ["src/contract-shape.check.ts"]`) usado só pelo script
+  `build`; o gate Typecheck (`pnpm -r exec tsc --noEmit`) continua
+  usando `tsconfig.json` original, então a checagem de forma não perde
+  cobertura — só para de ser emitida.

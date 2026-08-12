@@ -26,7 +26,7 @@ abaixo são um ponto de partida; ajuste ao rodar `/specify` de cada uma.
 | # | Spec | Status | Última atualização |
 |---|------|--------|---------------------|
 | 001 | Setup do monorepo (workspaces `apps/*`, `providers/*`, `packages/*`) | ✅ Concluído | 2026-08-12 |
-| 002 | `packages/contracts`: `ProviderManifest`, `Page<T>`, `ProviderError`, `CapabilityDescriptor` com versionamento semântico desde o commit inicial | 🟡 Em andamento | 2026-08-12 |
+| 002 | `packages/contracts`: `ProviderManifest`, `Page<T>`, `ProviderError`, `CapabilityDescriptor` com versionamento semântico desde o commit inicial | ✅ Concluído | 2026-08-12 |
 | 003 | Docker Compose do MVP (rede interna `eventpier-net`, `ministack` opcional via profile, apenas `eventpier-ui` exposta ao host entre os serviços do Eventpier) | 🔲 Pendente | 2026-08-12 |
 | 004 | CI com gatilho por path para `providers/*` (antecipando o comportamento do monorepo permanente do Estado 3 de `arquitetura.md`) | 🔲 Pendente | 2026-08-12 |
 

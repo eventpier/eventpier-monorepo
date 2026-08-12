@@ -22,10 +22,32 @@ de 1 linha com link/referência se quiser evitar duplicação.
 
 ---
 
-## <NNN>-<slug> — <título curto> (AAAA-MM-DD)
+## 001-setup-monorepo-workspaces — Setup do monorepo (2026-08-12)
 
-- <decisão 1, 1-2 frases, com o porquê>
-- <decisão 2>
+- TypeScript fixado em `7.0.2` (última versão estável no npm registry,
+  mas lançada depois do conhecimento treinado do modelo que
+  implementou a spec — compatibilidade com Next.js/Storybook não
+  verificada). Confirmado explicitamente com o usuário, ciente do
+  risco. Reavaliar na spec 009 (skeleton Next.js) se o ecossistema
+  ainda não acompanhou esse major.
+- pnpm escolhido como gerenciador de workspaces (não npm/yarn), sem
+  Turborepo/Nx — resolve o problema real (isolamento de dependências,
+  "phantom dependencies") sem a complexidade de orquestração que 3
+  workspaces sem grafo de build ainda não justificam (princípio 12).
+- `"type": "module"` adicionado aos 3 `package.json` — achado do
+  `/review-pr` da PR #1: `module: "ESNext"` em `tsconfig.base.json`
+  sem esse campo faria Node interpretar o `.js` gerado como CommonJS,
+  quebrando em runtime assim que `providers/aws` (sem bundler)
+  ganhasse código real. `tsc --noEmit` não detectava isso.
+- Corrigido um gap real do próprio pipeline, descoberto durante esta
+  feature: `/specify` passou a criar a branch já no início (antes só
+  `/implement` criava, então os commits de specify/plan/tasks caíam
+  direto na `main`). Uma segunda rodada de correção alinhou o nome da
+  branch a `feature/<NNN>-<slug>` (Git Flow, `memory/constitution.md`)
+  depois que a primeira tentativa (`<NNN>-<slug>` sem prefixo) violou
+  essa regra — achado no próprio `/review-pr` da PR #1. A branch e a PR
+  desta feature precisaram ser renomeadas/recriadas (PR #1 → #2) por
+  causa disso.
 
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)

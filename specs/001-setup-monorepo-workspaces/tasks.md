@@ -19,25 +19,25 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Setup
 
-- **T001** `[P]` Criar `/package.json` (raiz): `name: "eventpier-monorepo"`,
+- [X] **T001** `[P]` Criar `/package.json` (raiz): `name: "eventpier-monorepo"`,
   `private: true`, `version: "0.0.0"`, `devDependencies.typescript`
   fixado em uma versão estável específica (não `latest`) — registrar
   a versão escolhida em `research.md` → "Decisões durante a
   implementação".
   _Origem: spec.md FR1; contracts/workspace-manifest.md "Root package.json"._
 
-- **T002** `[P]` Criar `/pnpm-workspace.yaml` (raiz) listando
+- [X] **T002** `[P]` Criar `/pnpm-workspace.yaml` (raiz) listando
   exatamente `apps/*`, `providers/*`, `packages/*`.
   _Origem: spec.md FR1, FR4; research.md Decisão 1; contracts/workspace-manifest.md._
 
-- **T003** `[P]` Criar `/tsconfig.base.json` (raiz) com `strict: true`
+- [X] **T003** `[P]` Criar `/tsconfig.base.json` (raiz) com `strict: true`
   e demais opções comuns de compilação para Node.js + TypeScript (sem
   `composite`/`references`).
   _Origem: research.md Decisão 4._
 
 ## Fase: Testes
 
-- **T004** `[P]` Criar `/scripts/validate-workspace-manifests.mjs`:
+- [X] **T004** `[P]` Criar `/scripts/validate-workspace-manifests.mjs`:
   script Node que lê `pnpm-workspace.yaml` e o `package.json` de cada
   um dos 3 workspaces esperados (`data-model.md` → "Instâncias criadas
   por esta spec") e falha (`process.exitCode = 1` + mensagem) se: (a)
@@ -49,7 +49,7 @@ outra task não concluída). Sem marcador = sequencial.
   que **falha agora** — os workspaces ainda não existem (RED).
   _Origem: contracts/workspace-manifest.md (contract test)._
 
-- **T005** `[P]` Criar `/scripts/validate-workspace-dependencies.mjs`:
+- [X] **T005** `[P]` Criar `/scripts/validate-workspace-dependencies.mjs`:
   script Node que, para cada `package.json` de workspace que existir,
   falha se `packages/contracts` tiver `dependencies`/`devDependencies`
   apontando para `@eventpier/ui` ou `@eventpier/provider-aws` (relação

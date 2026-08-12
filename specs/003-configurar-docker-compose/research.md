@@ -217,4 +217,22 @@ do Compose.
 
 ## Decisões durante a implementação
 
-<!-- preenchido por /implement se algo não previsto aqui surgir -->
+- **`@types/node` adicionado como devDependency da raiz (`24.13.3`,
+  pinado — mesmo major do Node local, `v24.13.1`), e `"types": ["node"]`
+  adicionado a `apps/ui/tsconfig.json` e `providers/aws/tsconfig.json`
+  individualmente (não em `tsconfig.base.json`)**, não previsto em
+  nenhuma decisão de `research.md`. Ao rodar
+  `pnpm --filter @eventpier/ui build` / `... provider-aws build`
+  (T009) pela primeira vez com os placeholders da Decisão 3
+  (`node:http`, `console.log`), o TypeScript falhou com `TS2591`
+  (`node:http` não reconhecido), `TS7006` (parâmetros implicitamente
+  `any` nos handlers HTTP) e `TS2584` (`console` não declarado) — sem
+  `@types/node`, o compilador não tem as declarações ambiente de
+  módulos `node:*` nem dos globais do Node. `packages/contracts` nunca
+  precisou disso (spec 002) por não importar nenhum módulo do Node nem
+  usar `console`. Escopo deliberadamente restrito aos dois workspaces
+  que de fato precisam (`apps/ui`, `providers/aws`), não em
+  `tsconfig.base.json`, para não alterar o ambiente de type-checking de
+  `packages/contracts` sem necessidade (constitution, princípio 12).
+  Sinal para as specs 005/009: `@types/node` já está disponível como
+  devDependency compartilhada da raiz, não precisa ser readicionado.

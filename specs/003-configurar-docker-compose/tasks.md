@@ -64,26 +64,26 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Core
 
-- [ ] **T005** `[P]` Substituir `apps/ui/src/index.ts` (hoje
+- [X] **T005** `[P]` Substituir `apps/ui/src/index.ts` (hoje
   `export {}` da spec 001) pelo servidor HTTP mínimo descrito em
   `contracts/compose-shape.md` — só `node:http`, escuta na porta 3000,
   responde texto identificando-se como placeholder da spec 003.
   _Origem: research.md Decisão 3; spec.md FR9 (Critério de Sucesso "UI acessível pelo host")._
 
-- [ ] **T006** `[P]` Substituir `providers/aws/src/index.ts` pelo
+- [X] **T006** `[P]` Substituir `providers/aws/src/index.ts` pelo
   equivalente para `providers/aws` — porta 4000.
   _Origem: research.md Decisão 3; data-model.md (entidade `PlaceholderServer`)._
 
-- [ ] **T007** `[P]` Atualizar `apps/ui/package.json`: `version`
+- [X] **T007** `[P]` Atualizar `apps/ui/package.json`: `version`
   `0.1.0` → `0.2.0`, `scripts.build: "tsc -p tsconfig.json"`,
   `scripts.start: "node dist/index.js"`.
   _Origem: research.md Decisão 5; contracts/compose-shape.md ("apps/ui/package.json")._
 
-- [ ] **T008** `[P]` Atualizar `providers/aws/package.json`: mesma
+- [X] **T008** `[P]` Atualizar `providers/aws/package.json`: mesma
   mudança de T007, para `providers/aws`.
   _Origem: research.md Decisão 5; contracts/compose-shape.md ("providers/aws/package.json")._
 
-- [ ] **T009** Checkpoint nativo (sem Docker ainda), sequencial —
+- [X] **T009** Checkpoint nativo (sem Docker ainda), sequencial —
   depende de T001-T008: rodar `pnpm -r exec tsc --noEmit`,
   `pnpm --filter @eventpier/ui build`,
   `pnpm --filter @eventpier/provider-aws build`. Confirmar que os três

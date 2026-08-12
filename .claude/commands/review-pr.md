@@ -277,8 +277,13 @@ Se o usuário escolher **[3]**: encerrar sem enviar nada.
    a recomendação. Se `event=REQUEST_CHANGES`, **não** execute o
    passo 1 (fechamento) mesmo que já tivesse sido montado na Etapa 5;
    descarte-o e reavalie na próxima rodada de review.
-5. Commit e push do relatório completo em `<SPECS_DIR>/review-pr-[N].md`
-   (mesma branch da PR).
+5. Se houver `<ESTADO_DIR>/<slug>.json` associado (Pré-condição 3):
+   commit e push do relatório completo em
+   `<SPECS_DIR>/review-pr-[N].md` (mesma branch da PR) — vira parte do
+   histórico da spec. Se não houver (PR fora do pipeline, ex.:
+   correção de pipeline/tooling): pule este passo — o comentário já
+   submetido ao GitHub na PR é o registro suficiente; duplicar em
+   arquivo só agrega valor quando há uma spec para referenciar.
 
 Quando o usuário mergear a PR (squash ou merge commit), o fechamento
 já commitado nela se torna efetivo em `main` junto com o código —

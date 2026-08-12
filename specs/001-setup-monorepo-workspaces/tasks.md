@@ -62,25 +62,25 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Core
 
-- **T006** `[P]` Criar workspace `apps/ui/`: `package.json`
+- [X] **T006** `[P]` Criar workspace `apps/ui/`: `package.json`
   (`name: "@eventpier/ui"`, `version: "0.1.0"`, `private: true`,
   `scripts: {}`), `tsconfig.json` (`extends: "../../tsconfig.base.json"`,
   `outDir: "dist"`, `include: ["src"]`), `src/index.ts` com export
   vazio/placeholder. Sem dependências declaradas.
   _Origem: spec.md FR2, FR5; data-model.md; contracts/workspace-manifest.md._
 
-- **T007** `[P]` Criar workspace `providers/aws/`: mesma estrutura de
+- [X] **T007** `[P]` Criar workspace `providers/aws/`: mesma estrutura de
   T006, com `name: "@eventpier/provider-aws"`.
   _Origem: spec.md FR2, FR5; data-model.md; contracts/workspace-manifest.md._
 
-- **T008** `[P]` Criar workspace `packages/contracts/`: mesma
+- [X] **T008** `[P]` Criar workspace `packages/contracts/`: mesma
   estrutura de T006, com `name: "@eventpier/contracts"`. Nenhum
   conteúdo funcional de contrato (`ProviderManifest`,
   `CapabilityDescriptor`, `Page<T>`, `ProviderError`) — apenas o
   placeholder mínimo (ver spec.md "Fora do escopo").
   _Origem: spec.md FR2, FR5; research.md Decisão 3; contracts/workspace-manifest.md._
 
-- **T009** Adicionar ao `README.md` da raiz (criar se não existir) uma
+- [X] **T009** Adicionar ao `README.md` da raiz (criar se não existir) uma
   seção curta explicando o propósito de `apps/`, `providers/` e
   `packages/`. Depende de T006-T008 concluídas (precisa descrevê-las
   corretamente).

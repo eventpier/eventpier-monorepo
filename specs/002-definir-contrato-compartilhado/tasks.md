@@ -19,7 +19,7 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Setup
 
-- [ ] **T001** Atualizar `packages/contracts/package.json`: `version`
+- [X] **T001** Atualizar `packages/contracts/package.json`: `version`
   `0.1.0` → `0.2.0`, adicionar `main: "./dist/index.js"`,
   `types: "./dist/index.d.ts"`, `exports` (campo `"."` com
   `types`/`default`), e `scripts.build: "tsc -p tsconfig.json"`. Não

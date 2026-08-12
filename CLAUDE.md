@@ -3,11 +3,6 @@
 Este arquivo orienta o Claude Code (claude.ai/code) ao trabalhar neste
 repositório.
 
-> Copiado de `CLAUDE.example.md` do pacote de pipeline. Preencha os
-> placeholders `<...>` abaixo e adicione as seções específicas do seu
-> projeto ao final. Se este projeto já tinha um `CLAUDE.md`, mescle só
-> a seção "Este projeto usa um pipeline formal" nele.
-
 ## Eventpier
 
 Organização open-source de ferramentas para inspeção e debugging de
@@ -40,12 +35,12 @@ comportamento aqui, porque desatualiza.
 nunca assuma idioma, stack ou caminho fora dele. Os documentos que ele
 referencia:
 
-- `ARQUIVO_REGRAS` (`<caminho, ex.: memory/constitution.md>`) —
-  princípios de engenharia não-negociáveis deste projeto.
-- `ARQUIVO_ARQUITETURA` (`<caminho, ex.: docs/arquitetura.md>`) —
-  decisões técnicas e desenho do sistema.
-- `ARQUIVO_PRODUTO` (`<caminho, ex.: docs/product.md>`) — visão de
-  produto: problema, público-alvo, escopo de MVP.
+- `ARQUIVO_REGRAS` (`memory/constitution.md`) — princípios de
+  engenharia não-negociáveis deste projeto.
+- `ARQUIVO_ARQUITETURA` (`docs/arquitetura.md`) — decisões técnicas e
+  desenho do sistema.
+- `ARQUIVO_PRODUTO` (`docs/product.md`) — visão de produto: problema,
+  público-alvo, escopo de MVP.
 
 ## Regras não-negociáveis herdadas do pipeline
 

@@ -22,17 +22,17 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Setup
 
-- [ ] **T001** Atualizar `package.json` da raiz: adicionar
+- [X] **T001** Atualizar `package.json` da raiz: adicionar
   `"packageManager": "pnpm@11.10.0"`. Não alterar `devDependencies`
   (`typescript` continua `7.0.2`).
   _Origem: research.md Decisão 6; contracts/compose-shape.md ("package.json (raiz)")._
 
-- [ ] **T002** `[P]` Atualizar `apps/ui/tsconfig.json`: adicionar
+- [X] **T002** `[P]` Atualizar `apps/ui/tsconfig.json`: adicionar
   `"rootDir": "src"` em `compilerOptions`, mantendo `outDir: "dist"` e
   `include: ["src"]`.
   _Origem: research.md Decisão 4; contracts/compose-shape.md ("apps/ui/tsconfig.json")._
 
-- [ ] **T003** `[P]` Atualizar `providers/aws/tsconfig.json`: mesma
+- [X] **T003** `[P]` Atualizar `providers/aws/tsconfig.json`: mesma
   mudança de T002, para `providers/aws`.
   _Origem: research.md Decisão 4; contracts/compose-shape.md ("providers/aws/tsconfig.json")._
 

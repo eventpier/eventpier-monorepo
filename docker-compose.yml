@@ -1,0 +1,33 @@
+services:
+  eventpier-ui:
+    build:
+      context: .
+      dockerfile: apps/ui/Dockerfile
+    ports:
+      - "3000:3000"
+    networks: [eventpier-net]
+    environment:
+      - EVENTPIER_AWS_URL=http://eventpier-aws:4000
+
+  eventpier-aws:
+    build:
+      context: .
+      dockerfile: providers/aws/Dockerfile
+    networks: [eventpier-net]
+    environment:
+      - HEALTH_CHECK_TTL_MS=${HEALTH_CHECK_TTL_MS:-4000}
+      - MINISTACK_ENDPOINT=${MINISTACK_ENDPOINT:-http://ministack:4566}
+      - MINISTACK_MANAGED=${MINISTACK_MANAGED:-true}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  ministack:
+    image: ministackorg/ministack:latest
+    ports:
+      - "4566:4566"
+    networks: [eventpier-net]
+    profiles: ["managed-env"]
+
+networks:
+  eventpier-net:
+    driver: bridge

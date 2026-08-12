@@ -14,9 +14,13 @@ const errors = [];
 let config;
 
 try {
+  // --profile managed-env: sem isso, `docker compose config` omite
+  // serviços com profile (ex.: `ministack`) da saída por padrão — a
+  // mesma filtragem aplicada a `up`/`ps`. Precisamos da forma completa
+  // para validar `ministack` também.
   const raw = execFileSync(
     "docker",
-    ["compose", "config", "--format", "json"],
+    ["compose", "--profile", "managed-env", "config", "--format", "json"],
     { encoding: "utf8" },
   );
   config = JSON.parse(raw);

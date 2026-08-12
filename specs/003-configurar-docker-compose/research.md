@@ -236,3 +236,15 @@ do Compose.
   `packages/contracts` sem necessidade (constitution, princípio 12).
   Sinal para as specs 005/009: `@types/node` já está disponível como
   devDependency compartilhada da raiz, não precisa ser readicionado.
+- **`scripts/validate-compose-shape.mjs` (T004) precisou de
+  `docker compose --profile managed-env config` em vez de
+  `docker compose config`** — já era um risco antecipado na própria
+  task (tasks.md T025). Confirmado na prática: `docker compose config`
+  sem `--profile` aplica a mesma filtragem de profile que `up`/`ps`,
+  omitindo `ministack` (profile `managed-env`) da saída — o script
+  falhava com "serviço ministack não encontrado" mesmo com
+  `docker-compose.yml` correto. Corrigido adicionando
+  `--profile managed-env` à chamada de `docker compose config` dentro
+  do script; isso não afeta o comportamento real de `up` (que continua
+  respeitando o profile normalmente) — é só a introspecção do script
+  que precisa enxergar todos os serviços declarados.

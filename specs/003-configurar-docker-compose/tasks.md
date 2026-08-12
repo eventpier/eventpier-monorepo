@@ -108,7 +108,7 @@ outra task não concluída). Sem marcador = sequencial.
   T011 para `providers/aws`, porta 4000.
   _Origem: spec.md FR2; research.md Decisão 2, 6._
 
-- [ ] **T013** Criar `docker-compose.yml` na raiz — depende de T011 e
+- [X] **T013** Criar `docker-compose.yml` na raiz — depende de T011 e
   T012 (referencia os dois Dockerfiles). Três serviços
   (`eventpier-ui`, `eventpier-aws`, `ministack`), rede `eventpier-net`,
   exatamente como `contracts/compose-shape.md` ("docker-compose.yml"):
@@ -118,7 +118,7 @@ outra task não concluída). Sem marcador = sequencial.
   e as três variáveis de ambiente com default `${VAR:-default}`.
   _Origem: spec.md FR1, FR3, FR4, FR5, FR6, FR7, FR8; data-model.md (entidades `Service`, `EnvVar`); research.md Decisões 1, 7, 8, 9._
 
-- [ ] **T014** `[P]` Criar `.env.example` na raiz, documentando
+- [X] **T014** `[P]` Criar `.env.example` na raiz, documentando
   `MINISTACK_ENDPOINT`, `MINISTACK_MANAGED`, `HEALTH_CHECK_TTL_MS` sem
   valores reais.
   _Origem: research.md Decisão 9; contracts/compose-shape.md (".env.example")._

@@ -45,10 +45,13 @@ texto deste comando.
        o usuário que a feature já avançou e pergunte se ele quer mesmo
        revisar a spec ou retomar a fase atual.
    - Se não existir: determine o próximo número sequencial disponível
-     em `SPECS_DIR`; defina `branch` como `<NNN>-<slug>` e crie essa
-     branch git a partir da branch atual (`git checkout -b
-     <NNN>-<slug>`); crie `<SPECS_DIR>/<NNN>-<slug>/`; crie o arquivo
-     de estado conforme `.pipeline/feature-state.schema.md` já com
+     em `SPECS_DIR`; defina `branch` como `feature/<NNN>-<slug>`
+     (convenção Git Flow de `ARQUIVO_REGRAS` — nunca crie a branch sem
+     esse prefixo) e crie essa branch git a partir da branch atual
+     (`git checkout -b feature/<NNN>-<slug>`); crie
+     `<SPECS_DIR>/<NNN>-<slug>/` (sem o prefixo — só a branch o leva,
+     o diretório da spec continua `<NNN>-<slug>`); crie o arquivo de
+     estado conforme `.pipeline/feature-state.schema.md` já com
      `branch` preenchido. Todo commit desta fase em diante (Passo 5) e
      das fases seguintes acontece nessa branch — nunca na branch em
      que o comando foi iniciado.

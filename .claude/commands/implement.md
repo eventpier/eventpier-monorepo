@@ -42,7 +42,9 @@ não foi preenchido pelo projeto">
 
 1. Leia `<ESTADO_DIR>/<slug>.json` → `feature_dir`, `branch`.
 2. Crie ou faça checkout da branch da feature (use `branch` do estado;
-   se ausente, derive de `feature_dir`).
+   se ausente — feature criada antes desta convenção existir —, derive
+   como `feature/<basename de feature_dir>`, nunca sem o prefixo
+   `feature/`).
 3. Carregue **todos** os artefatos disponíveis da feature: spec, plan,
    tasks, data-model, contracts, research, quickstart — mais
    `ARQUIVO_REGRAS` e `ARQUIVO_ARQUITETURA` (de `.pipeline/config.md`).

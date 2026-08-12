@@ -16,7 +16,7 @@ conversa/memória quando o estado já existir.
 ```json
 {
   "feature_dir": "specs/017-user-auth",
-  "branch": "017-user-auth",
+  "branch": "feature/017-user-auth",
   "short_name": "user-auth",
   "current_phase": "tasks",
   "status_detail": null,

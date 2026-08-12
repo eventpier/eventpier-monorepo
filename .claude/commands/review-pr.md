@@ -188,10 +188,15 @@ PR e revisadas junto com o código:
    formato de `.pipeline/decisions-log.md`. Sem decisões não previstas
    registradas, monte um resumo de 1 linha do que a spec entregou —
    nunca deixe a spec sem entrada nenhuma no log.
-4. Se `DOCS_FEATURES_DIR` estiver configurado: rode a lógica do
-   `/docs-sync <slug>` e monte as mudanças de documentação de domínio
-   — elas entram no relatório abaixo para serem revisadas como
-   qualquer outro arquivo da PR.
+4. Se `DOCS_FEATURES_DIR` estiver configurado: execute só os Passos
+   1-3 de `docs-sync.md` (identificar domínio, atualizar/criar o doc,
+   registrar em "Specs Relacionadas") e monte as mudanças de
+   documentação de domínio resultantes — **não** execute o passo de
+   "Fechamento" de `docs-sync.md` (que faz `git add`/`git commit`
+   diretamente); o commit de tudo isso, junto com o resto do
+   fechamento, só acontece na Etapa 7 deste comando. Elas entram no
+   relatório abaixo para serem revisadas como qualquer outro arquivo
+   da PR.
 5. Se `ARQUIVOS_STATUS` (em `.pipeline/config.md`) não estiver vazio:
    monte a atualização de cada documento listado.
 
@@ -199,6 +204,14 @@ Inclua um resumo dessas mudanças no relatório mostrado ao usuário
 (pode ser um diff resumido ou a lista de arquivos/seções afetadas) —
 a pessoa revisando precisa ver o que vai entrar na PR, não só
 descobrir depois do merge.
+
+**Nota de consistência de estado**: como esse fechamento entra na
+branch da PR antes do merge, `current_phase: done` fica tecnicamente
+"verdade só a partir do merge" — se alguém rodar `/pipeline-status`
+nessa branch antes de mergear, vai ver a feature como concluída
+antecipadamente. Comportamento esperado desta técnica (não é bug);
+`/pipeline-status` reflete o estado real assim que a branch voltar
+para `main` pós-merge.
 
 ---
 
@@ -222,7 +235,14 @@ Digite 1, 2 ou 3:
 ```
 
 **Aguardar resposta do usuário antes de qualquer chamada de escrita ao
-GitHub.**
+GitHub.** Esta confirmação no chat é o gate de aprovação real deste
+pipeline enquanto o projeto tiver um único colaborador — o GitHub
+bloqueia autoaprovação de PR (ver Etapa 7, item 4), então não há como
+o `state` da review no GitHub carregar essa aprovação sozinho. Quando
+houver mais de um colaborador no repositório, essa confirmação no chat
+deixa de ser suficiente sozinha — nesse momento, configure a branch
+protection do GitHub para exigir 1+ aprovação humana real antes do
+merge (regra de infraestrutura, fora do escopo deste comando).
 
 Se o usuário escolher **[2]**: listar os comentários numerados, ajustar
 conforme pedido, exibir o review final novamente e repetir a pergunta
@@ -245,11 +265,18 @@ Se o usuário escolher **[3]**: encerrar sem enviar nada.
 3. Adicionar comentários por arquivo/linha:
    `add_comment_to_pending_review`
 4. Submeter: `pull_request_review_write` method=`submit_pending`,
-   `event=REQUEST_CHANGES` (críticos/altos bloqueantes),
-   `event=COMMENT` (apenas baixos/médios), ou `event=APPROVE`
-   (sem problemas significativos) — se `event=REQUEST_CHANGES`, **não**
-   execute o passo 1 (fechamento) mesmo que já tivesse sido montado na
-   Etapa 5; descarte-o e reavalie na próxima rodada de review.
+   `event=REQUEST_CHANGES` (críticos/altos bloqueantes) ou
+   `event=COMMENT` (demais casos, incluindo "sem problemas
+   significativos"). **Não tente `event=APPROVE`** quando o autor da
+   PR for o mesmo usuário autenticado no GitHub — a API retorna `422
+   Review Can not approve your own pull request`. Isso é esperado
+   (não um erro a contornar) enquanto o projeto tiver um único
+   colaborador: a aprovação real já aconteceu no chat (Etapa 6); o
+   `event=COMMENT` aqui só registra o conteúdo do review no GitHub, o
+   `state` da review ficando `COMMENTED` em vez de `APPROVED` não muda
+   a recomendação. Se `event=REQUEST_CHANGES`, **não** execute o
+   passo 1 (fechamento) mesmo que já tivesse sido montado na Etapa 5;
+   descarte-o e reavalie na próxima rodada de review.
 5. Commit e push do relatório completo em `<SPECS_DIR>/review-pr-[N].md`
    (mesma branch da PR).
 

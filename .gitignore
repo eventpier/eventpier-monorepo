@@ -1,5 +1,6 @@
 # Credenciais e configurações locais sensíveis
 .claude/settings.local.json
+.claude/settings.json
 .cursor/settings.local.json
 .env
 .env.local

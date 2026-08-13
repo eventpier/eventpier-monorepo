@@ -85,7 +85,7 @@ implementação deve passar antes de ser considerada concluída. Ver
 ## Modo de execução
 
 ```
-MODO_EXECUCAO: supervisionado
+MODO_EXECUCAO: encadeado
 ```
 
 - **`supervisionado`** (default): cada comando encerra ao fim da fase e

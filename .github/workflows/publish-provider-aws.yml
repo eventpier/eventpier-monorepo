@@ -1,0 +1,41 @@
+name: Publish provider — aws
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "providers/aws/**"
+      - "packages/contracts/**"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image tag (short sha)
+        id: vars
+        run: echo "sha_tag=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          file: providers/aws/Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ghcr.io/eventpier/eventpier-aws:${{ steps.vars.outputs.sha_tag }}
+            ghcr.io/eventpier/eventpier-aws:latest

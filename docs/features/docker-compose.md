@@ -5,8 +5,10 @@
 Orquestra os três serviços do MVP (`eventpier-ui`, `eventpier-aws`,
 `ministack`) via `docker-compose.yml` na raiz do monorepo, seguindo o
 Estado 1 de `docs/arquitetura.md` §8. `eventpier-ui` e `eventpier-aws`
-são construídos localmente (build, não imagem publicada — a CI de
-publicação, spec 004, ainda não existe); `ministack` usa a imagem
+são construídos localmente (build, não imagem publicada — este
+Compose continua buildando 100% a partir do código-fonte mesmo depois
+da spec 004 introduzir CI de publicação; ver
+[ci.md](ci.md)); `ministack` usa a imagem
 publicada `ministackorg/ministack:latest`.
 
 ## Comportamentos-chave e regras de negócio

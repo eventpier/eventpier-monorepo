@@ -93,6 +93,30 @@ de 1 linha com link/referência se quiser evitar duplicação.
   documentado como limitação conhecida em
   `docs/features/docker-compose.md`, não como bug do Compose.
 
+## 004-configurar-ci-path-providers — CI com Gatilho por Path (2026-08-13)
+
+- Nenhum desvio do plano durante a implementação: `ci.yml`,
+  `publish-provider-aws.yml` e `scripts/validate-ci-workflow-shape.mjs`
+  saíram exatamente como desenhados em `research.md`/
+  `contracts/ci-workflow-shape.md` — RED antes dos workflows existirem,
+  GREEN na primeira tentativa depois de criá-los, sem nenhuma correção
+  de forma.
+- `docker compose build` reaproveitou cache do BuildKit de sessões
+  anteriores (specs 002/003) durante a validação local, terminando em
+  segundos — não representa o tempo real de um runner do GitHub
+  Actions partindo de cache frio; sinal para quem for monitorar a
+  duração de `ci.yml` pela primeira vez em produção.
+- Três follow-ups manuais pós-merge ficaram fora do que
+  `secrets.GITHUB_TOKEN` consegue automatizar (violaria o requisito de
+  "sem segredo externo" da spec se forçado): marcar `validate` como
+  required status check na branch protection de `main` (só possível
+  depois do primeiro run real), marcar o pacote `eventpier-aws` do
+  GHCR como público (nasce privado por padrão, comportamento do
+  GitHub, não bug), e confirmar o comportamento real do gatilho por
+  path (PR sem tocar `providers/` não publica; merge em
+  `providers/aws/**` ou só em `packages/contracts/**` publica). Ver
+  `research.md`, Decisões 5 e 8.
+
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)
 

@@ -29,6 +29,7 @@ abaixo são um ponto de partida; ajuste ao rodar `/specify` de cada uma.
 | 002 | `packages/contracts`: `ProviderManifest`, `Page<T>`, `ProviderError`, `CapabilityDescriptor` com versionamento semântico desde o commit inicial | ✅ Concluído | 2026-08-12 |
 | 003 | Docker Compose do MVP (rede interna `eventpier-net`, `ministack` opcional via profile, apenas `eventpier-ui` exposta ao host entre os serviços do Eventpier) | ✅ Concluído | 2026-08-13 |
 | 004 | CI com gatilho por path para `providers/*` (antecipando o comportamento do monorepo permanente do Estado 3 de `arquitetura.md`) | ✅ Concluído | 2026-08-13 |
+| 013 | Ativação operacional do CI da spec 004 (required status check, permissão de package creation da org, visibilidade pública do pacote GHCR, confirmação real do gatilho por path) | 🟡 Em andamento | 2026-08-13 |
 
 ## Fase 2 — Provider AWS (`providers/aws`)
 

@@ -191,7 +191,7 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
 
 ## Fase: Polish
 
-- [ ] **T024** Atualizar `.pipeline/quality-gates.md`: estender a
+- [X] **T024** Atualizar `.pipeline/quality-gates.md`: estender a
   linha **Build** existente para incluir
   `pnpm --filter @eventpier/provider-aws build` e
   `pnpm --filter @eventpier/ui build`; adicionar uma linha nova

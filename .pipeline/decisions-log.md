@@ -66,6 +66,33 @@ de 1 linha com link/referência se quiser evitar duplicação.
   a API pública. Corrigido com um tsconfig de build separado que a
   exclui da emissão, mantendo-a coberta pelo gate Typecheck.
 
+## 003-configurar-docker-compose — Docker Compose do MVP (2026-08-13)
+
+- Imagens de `eventpier-ui`/`eventpier-aws` via build local
+  (Dockerfile multi-stage), não `image:` publicada — decisão tomada
+  ainda no `/specify`, já que a CI de publicação (spec 004) não existe
+  neste ponto do roadmap; inverter essa dependência teria sido pior
+  que buildar local.
+- `@types/node` adicionado como devDependency da raiz, e `"types":
+  ["node"]` nos tsconfigs de `apps/ui`/`providers/aws` (não em
+  `tsconfig.base.json`) — necessário assim que os dois workspaces
+  ganharam código real usando `node:http`/`console` pela primeira vez;
+  `packages/contracts` nunca precisou disso.
+- `scripts/validate-compose-shape.mjs` precisou de
+  `docker compose --profile managed-env config` (não só
+  `docker compose config`) — sem o profile explícito, o Compose omite
+  serviços com profile (`ministack`) da configuração resolvida, o
+  mesmo filtro aplicado a `up`/`ps`.
+- Dois achados específicos do ambiente de dev, sem impacto no
+  `docker-compose.yml`: uma porta 4566 já ocupada por um MiniStack
+  pré-existente no host (não relacionado a este projeto) impediu
+  validar o `ministack` gerenciado na primeira tentativa — repetido
+  com sucesso depois, com a porta livre; e `host.docker.internal`
+  resolve corretamente mas a conexão TCP é recusada neste host
+  específico por rodar o Docker daemon com `userland-proxy=false` —
+  documentado como limitação conhecida em
+  `docs/features/docker-compose.md`, não como bug do Compose.
+
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)
 

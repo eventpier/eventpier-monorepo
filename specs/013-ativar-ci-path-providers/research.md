@@ -173,3 +173,31 @@ altera gatilho, path filter, tags ou permissões já definidos pela spec
 
 ## Decisões durante a implementação
 
+- **Payload da regra `required_status_checks` (Decisão 1) precisou de
+  ajuste**: `PATCH`/`PUT` com `"integration_id": null` explícito foi
+  rejeitado pela API (`422 Invalid property /rules/3: data matches no
+  possible input`). A API exige que `integration_id` seja um inteiro
+  ou **ausente** — nunca `null`. Corrigido omitindo o campo
+  inteiramente (`{"context": "validate"}` sozinho). A regra passou a
+  valer imediatamente para o PR de teste já aberto (T002/PR #7), sem
+  precisar de novo push — GitHub reavalia Rulesets em tempo real
+  contra PRs abertos.
+- **A restrição real na Decisão 2 não foi "criação de pacote", foi
+  "visibilidade pública de pacote"**: a primeira publicação (T005/PR
+  #9) teve sucesso de primeira, sem qualquer erro 403 — a política de
+  criação de pacotes da organização já era permissiva, ao contrário do
+  que a Decisão 2 tratava como principal risco. O bloqueio real
+  apareceu um passo depois (T008): a UI do pacote mostrava as opções
+  **Public** e **Internal** como "Setting is disabled by organization
+  administrators", só **Private** disponível. Precisou de uma segunda
+  ação manual do usuário, não prevista no plano: em
+  `github.com/organizations/eventpier/settings/packages`, habilitar a
+  política que permite pacotes públicos na organização — só depois
+  disso a mudança de visibilidade do pacote (Decisão 4) funcionou.
+  Sinal para a próxima vez que uma organização nova do Eventpier
+  precisar publicar um pacote: essa política de org é uma dependência
+  anterior à primeira publicação pública, não só um fallback
+  hipotético de erro 403.
+- **Nenhum desvio nos 3 PRs de README** (T004, T005, T010): cada um
+  passou `ci.yml` e mergeou sem retrabalho; o comportamento de gatilho
+  por path foi exatamente o desenhado pela spec 004 nos três cenários.

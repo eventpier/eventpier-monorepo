@@ -23,7 +23,7 @@ encadeado` — não é dispensado automaticamente.
 
 ## Fase: Setup
 
-- [ ] **T001** Confirmar estado atual antes de qualquer mudança:
+- [X] **T001** Confirmar estado atual antes de qualquer mudança:
   `gh api repos/eventpier/eventpier-monorepo/rulesets/20759671` tem
   exatamente as 3 regras já conhecidas (sem `required_status_checks`
   ainda); `apps/ui/README.md`, `providers/aws/README.md`,
@@ -34,7 +34,7 @@ encadeado` — não é dispensado automaticamente.
 
 ## Fase: Testes
 
-- [ ] **T002** Estado RED do Requisito 1: criar branch de teste a
+- [X] **T002** Estado RED do Requisito 1: criar branch de teste a
   partir de `main`, quebrar `pnpm -r exec tsc --noEmit` de propósito
   num arquivo qualquer, abrir PR contra `main`. Aguardar `ci.yml`
   falhar. Confirmar `gh pr view <N> --json mergeStateStatus` **não**
@@ -44,22 +44,22 @@ encadeado` — não é dispensado automaticamente.
 
 ## Fase: Core
 
-- [ ] **T003** ⚠ Adicionar a regra `required_status_checks`
+- [X] **T003** ⚠ Adicionar a regra `required_status_checks`
   (`context: "validate"`) ao Ruleset `20759671` via `PUT`, preservando
   as 3 regras existentes — payload exato em `research.md`, Decisão 1.
   _Origem: spec.md, Requisito Funcional 1; data-model.md (`RulesetRule`)._
 
-- [ ] **T004** ⚠ Criar `apps/ui/README.md` mínimo (breve descrição do
+- [X] **T004** ⚠ Criar `apps/ui/README.md` mínimo (breve descrição do
   workspace, seu estado atual de placeholder). Abrir PR isolado
   (só este arquivo), aguardar `ci.yml` passar, mergear em `main`.
   _Origem: spec.md, Requisito Funcional 4 (cenário "apps/ui-only"); research.md, Decisão 3, passo 1._
 
-- [ ] **T005** ⚠ Criar `providers/aws/README.md` mínimo. Abrir PR
+- [X] **T005** ⚠ Criar `providers/aws/README.md` mínimo. Abrir PR
   isolado, aguardar `ci.yml` passar, mergear em `main` — este merge é
   o gatilho da primeira publicação real.
   _Origem: spec.md, Requisitos Funcionais 2, 4 (cenário "providers/aws"); research.md, Decisão 3, passo 2._
 
-- [ ] **T006** Re-confirmar T002 agora com a regra de T003 ativa:
+- [X] **T006** Re-confirmar T002 agora com a regra de T003 ativa:
   `gh pr view <N do T002> --json mergeStateStatus` deve reportar
   `BLOCKED` (GREEN). Fechar o PR de T002 **sem mergear** e deletar sua
   branch.
@@ -69,7 +69,7 @@ encadeado` — não é dispensado automaticamente.
 
 Sequencial — cada task assume o resultado real da anterior no GitHub.
 
-- [ ] **T007** Confirmar o resultado do run de `publish-provider-aws.yml`
+- [X] **T007** Confirmar o resultado do run de `publish-provider-aws.yml`
   disparado por T005:
   - Se `SUCCESS`: Requisito Funcional 2 satisfeito, seguir para T008.
   - Se falhou por permissão (403): seguir o fallback de
@@ -78,7 +78,7 @@ Sequencial — cada task assume o resultado real da anterior no GitHub.
     até obter `SUCCESS` antes de prosseguir.
   _Valida: spec.md Requisito Funcional 2; data-model.md (`RequirementEvidence` FR2)._
 
-- [ ] **T008** Pedir ao usuário para marcar o pacote
+- [X] **T008** Pedir ao usuário para marcar o pacote
   `eventpier-aws` do GHCR como público
   (`github.com/orgs/eventpier/packages/container/eventpier-aws/settings`
   → Change visibility → Public) — ação manual, token atual sem escopo
@@ -86,12 +86,12 @@ Sequencial — cada task assume o resultado real da anterior no GitHub.
   antes de prosseguir para T009.
   _Origem: spec.md, Requisito Funcional 3; research.md, Decisão 4._
 
-- [ ] **T009** De uma sessão sem `docker login ghcr.io`, rodar
+- [X] **T009** De uma sessão sem `docker login ghcr.io`, rodar
   `docker pull ghcr.io/eventpier/eventpier-aws:latest`. Confirmar
   sucesso sem prompt de autenticação.
   _Valida: spec.md Requisito Funcional 3, Critério de Sucesso 2; data-model.md (`RequirementEvidence` FR3)._
 
-- [ ] **T010** ⚠ Criar `packages/contracts/README.md` mínimo (sem
+- [X] **T010** ⚠ Criar `packages/contracts/README.md` mínimo (sem
   tocar `providers/`). Abrir PR isolado, aguardar `ci.yml` passar,
   mergear em `main`. Confirmar que `publish-provider-aws.yml` dispara
   de novo mesmo sem mudança em `providers/aws/**`.
@@ -99,15 +99,15 @@ Sequencial — cada task assume o resultado real da anterior no GitHub.
 
 ## Fase: Polish
 
-- [ ] **T011** Preencher a tabela `RequirementEvidence` de
+- [X] **T011** Preencher a tabela `RequirementEvidence` de
   `data-model.md` com os links reais (PRs, runs) observados em
   T002-T010.
 
-- [ ] **T012** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T012** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer decisão não prevista (ex.: se o
   fallback de permissão da Decisão 2 foi de fato necessário).
 
-- [ ] **T013** Revisão final contra `spec.md` → "Critérios de
+- [X] **T013** Revisão final contra `spec.md` → "Critérios de
   Sucesso": confirmar os três critérios com a evidência registrada em
   T011, e preparar o resumo para `/review-pr` (quais requisitos têm
   evidência real de execução, não apenas configuração).

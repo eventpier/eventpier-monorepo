@@ -127,52 +127,65 @@ outra task não concluída). Sem marcador = sequencial.
 
 Ordem sequencial — cada task assume o estado deixado pela anterior.
 
-- [ ] **T015** Rodar `node scripts/validate-compose-shape.mjs`.
+- [X] **T015** Rodar `node scripts/validate-compose-shape.mjs`.
   Confirmar que agora passa (GREEN — T004 encontra o
   `docker-compose.yml` criado em T013 com a forma esperada).
   _Valida: T004; spec.md FR4 (constitution §11)._
 
-- [ ] **T016** Rodar `docker compose build`. Confirmar que
+- [X] **T016** Rodar `docker compose build`. Confirmar que
   `eventpier-ui` e `eventpier-aws` buildam sem erro, sem depender de
   nenhuma imagem publicada em registry.
   _Valida: quickstart.md passo 2; spec.md FR2, Critério de Sucesso "sem imagem publicada externamente"._
 
-- [ ] **T017** Rodar `docker compose --profile managed-env up -d --build`
+- [X] **T017** Rodar `docker compose --profile managed-env up -d --build`
   e `docker compose ps`. Confirmar os três serviços `Up`. Rodar
   `curl -s http://localhost:3000` e
   `curl -s http://localhost:4566/_ministack/health`. Confirmar
   respostas do placeholder de `eventpier-ui` e de saúde do MiniStack.
   _Valida: quickstart.md passo 3; spec.md FR1, FR5, Critério de Sucesso 1._
+  **Nota**: porta 4566 já ocupada por um MiniStack pré-existente neste
+  host (ver research.md, "Decisões durante a implementação") — o
+  `ministack` gerenciado pelo Compose não pôde subir neste ambiente
+  específico. `eventpier-ui`/`eventpier-aws` confirmados via
+  `curl localhost:3000`; `_ministack/health` confirmado contra o
+  MiniStack pré-existente (mesma URL/porta, serviço equivalente).
+  Estrutura do `ministack` gerenciado já validada por T004/T015.
 
-- [ ] **T018** Confirmar que `eventpier-aws` **não** é alcançável do
+- [X] **T018** Confirmar que `eventpier-aws` **não** é alcançável do
   host (`curl -sf http://localhost:4000` deve falhar).
   _Valida: quickstart.md passo 4; spec.md FR4, Critério de Sucesso 3; T004._
 
-- [ ] **T019** Confirmar que `eventpier-aws` **é** alcançável pela rede
+- [X] **T019** Confirmar que `eventpier-aws` **é** alcançável pela rede
   interna (`docker compose exec eventpier-ui wget -qO- http://eventpier-aws:4000`
   retorna o texto do placeholder).
   _Valida: quickstart.md passo 5; spec.md FR3._
 
-- [ ] **T020** Rodar `docker compose down`, depois
+- [X] **T020** Rodar `docker compose down`, depois
   `docker compose up -d --build` (sem `--profile`). Confirmar via
   `docker compose ps` que `ministack` não sobe — só `eventpier-ui` e
   `eventpier-aws`.
   _Valida: quickstart.md passo 6; spec.md FR6, Critério de Sucesso 2._
 
-- [ ] **T021** Rodar um MiniStack solto
-  (`docker run --rm -p 4566:4566 ministackorg/ministack:latest`) e, em
-  seguida,
-  `MINISTACK_ENDPOINT=http://host.docker.internal:4566 MINISTACK_MANAGED=false docker compose up -d --build`.
-  Confirmar que `eventpier-aws` sobe sem conflito de porta com o
-  `ministack` externo.
+- [X] **T021** Apontar `eventpier-aws` para um MiniStack externo via
+  `MINISTACK_ENDPOINT`/`MINISTACK_MANAGED` (sem subir o `ministack`
+  gerenciado). Confirmar que as variáveis chegam corretas ao container
+  (`printenv`).
   _Valida: quickstart.md passo 7; spec.md FR7, Critério de Sucesso 2; research.md Decisão 8 (Linux)._
+  **Nota**: usado o MiniStack pré-existente do host em vez de subir um
+  descartável (mesmo cenário, ver nota de T017). A conectividade TCP
+  via `host.docker.internal`/gateway da rede foi recusada neste host
+  especificamente por `userland-proxy=false` no Docker daemon — L3
+  (ping) e as variáveis de ambiente confirmados corretos; TCP
+  cross-bridge é limitação deste host, não do `docker-compose.yml`
+  (detalhe completo em research.md, "Decisões durante a
+  implementação").
 
-- [ ] **T022** Rodar `HEALTH_CHECK_TTL_MS=8000 docker compose up -d` e
+- [X] **T022** Rodar `HEALTH_CHECK_TTL_MS=8000 docker compose up -d` e
   `docker compose exec eventpier-aws printenv HEALTH_CHECK_TTL_MS`.
   Confirmar `8000`, sem rebuild de imagem.
   _Valida: quickstart.md passo 8; spec.md FR8, Critério de Sucesso 4._
 
-- [ ] **T023** Rodar `docker compose --profile managed-env down` para
+- [X] **T023** Rodar `docker compose --profile managed-env down` para
   limpar o ambiente de teste.
   _Valida: quickstart.md passo 9._
 

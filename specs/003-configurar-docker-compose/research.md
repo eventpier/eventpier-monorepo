@@ -248,3 +248,39 @@ do Compose.
   do script; isso não afeta o comportamento real de `up` (que continua
   respeitando o profile normalmente) — é só a introspecção do script
   que precisa enxergar todos os serviços declarados.
+- **Porta 4566 já ocupada no host de desenvolvimento por um MiniStack
+  pré-existente (não relacionado a este projeto, rodando há várias
+  horas)**: impediu subir o `ministack` gerenciado pelo Compose
+  (T017) neste ambiente específico — `docker compose --profile
+  managed-env up` falhou com "port is already allocated", e o Compose
+  parou/removeu os containers `eventpier-ui`/`eventpier-aws` que já
+  tinham subido com sucesso junto (efeito colateral do próprio
+  Compose ao tratar erro de um serviço do mesmo `up`). Não é falha do
+  `docker-compose.yml` — é ambiente local. Aproveitado como validação
+  ainda mais realista do Cenário de Uso 2 da spec (developer já roda
+  MiniStack externo): T017 (parcial, sem o `ministack` gerenciado),
+  T019, T020 e T021 foram validados subindo só `eventpier-ui`/
+  `eventpier-aws` (sem profile) contra esse MiniStack pré-existente.
+- **`extra_hosts: host.docker.internal:host-gateway` (research.md
+  Decisão 8) resolve corretamente (`172.17.0.1` no `/etc/hosts` do
+  container) e as variáveis de override chegam certas
+  (`MINISTACK_ENDPOINT`/`MINISTACK_MANAGED` confirmadas via
+  `printenv`), mas a conexão TCP para a porta publicada do MiniStack
+  externo foi recusada neste host específico** — mesmo testando contra
+  o gateway da própria `eventpier-net` (172.19.0.1), não só
+  `host.docker.internal`. ICMP (`ping`) funciona nos dois casos
+  (roteamento L3 entre bridges OK, `ip_forward=1`); a recusa é
+  especificamente na camada TCP/NAT. Diagnóstico: nenhum processo
+  `docker-proxy` para a porta 4566 no host — este Docker daemon roda
+  com `userland-proxy=false` (hairpin NAT via iptables puro), e é
+  documentadamente conhecido que esse modo pode falhar para tráfego
+  chegando de uma bridge network diferente da que publicou a porta,
+  dependendo da versão do kernel/iptables. **Isto é uma característica
+  da configuração do Docker deste host de desenvolvimento, não um
+  defeito em `docker-compose.yml`** — o mecanismo `extra_hosts:
+  host-gateway` é a forma oficialmente documentada pelo Docker Compose
+  para este cenário e continua correto para hosts com
+  `userland-proxy=true` (default na maioria das instalações) ou Docker
+  Desktop (macOS/Windows). Sinal para quem for rodar este Compose
+  localmente: se `host.docker.internal` não for alcançável a partir de
+  um container, verificar `userland-proxy` no `daemon.json` do Docker.

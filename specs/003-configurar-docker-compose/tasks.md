@@ -143,13 +143,15 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   `curl -s http://localhost:4566/_ministack/health`. Confirmar
   respostas do placeholder de `eventpier-ui` e de saúde do MiniStack.
   _Valida: quickstart.md passo 3; spec.md FR1, FR5, Critério de Sucesso 1._
-  **Nota**: porta 4566 já ocupada por um MiniStack pré-existente neste
-  host (ver research.md, "Decisões durante a implementação") — o
-  `ministack` gerenciado pelo Compose não pôde subir neste ambiente
-  específico. `eventpier-ui`/`eventpier-aws` confirmados via
-  `curl localhost:3000`; `_ministack/health` confirmado contra o
-  MiniStack pré-existente (mesma URL/porta, serviço equivalente).
-  Estrutura do `ministack` gerenciado já validada por T004/T015.
+  **Nota**: na primeira tentativa, a porta 4566 estava ocupada por um
+  MiniStack pré-existente neste host, não relacionado a este projeto
+  (ver research.md, "Decisões durante a implementação") — validado
+  então via `curl localhost:3000` (`eventpier-ui`) e contra esse
+  MiniStack externo. Repetido com sucesso mais tarde, com a porta
+  livre: os três serviços (`eventpier-ui`, `eventpier-aws`,
+  `ministack`) sobem juntos via `--profile managed-env up`,
+  `ministack` reportando `(healthy)`, e `curl localhost:4566/_ministack/health`
+  responde 200 — Critério de Sucesso 1 fechado ponta a ponta.
 
 - [X] **T018** Confirmar que `eventpier-aws` **não** é alcançável do
   host (`curl -sf http://localhost:4000` deve falhar).
@@ -201,18 +203,18 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   existente.
   _Origem: plan.md, "Observação para /tasks", passo 10._
 
-- [ ] **T025** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T025** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer decisão não prevista (ex.: ajuste na
   filtragem de profile do `docker compose config` em T004, se
   necessário).
 
-- [ ] **T026** `[P]` Rodar `git status --short`. Confirmar que as
+- [X] **T026** `[P]` Rodar `git status --short`. Confirmar que as
   mudanças ficam restritas aos arquivos listados em `quickstart.md`
   passo 10 — nenhuma mudança em `packages/contracts/`, nenhum endpoint
   HTTP real, nenhuma tela de UI.
   _Valida: quickstart.md passo 10; spec.md "Fora do escopo desta spec"._
 
-- [ ] **T027** Revisão final contra `spec.md` → "Critérios de
+- [X] **T027** Revisão final contra `spec.md` → "Critérios de
   Sucesso": confirmar, lendo o código produzido (não só rodando
   gates), que os quatro critérios estão satisfeitos e que nenhuma
   task desta spec criou lógica de negócio, rota real ou dependência de

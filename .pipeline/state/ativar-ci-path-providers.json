@@ -1,0 +1,22 @@
+{
+  "feature_dir": "specs/013-ativar-ci-path-providers",
+  "branch": "feature/013-ativar-ci-path-providers",
+  "short_name": "ativar-ci-path-providers",
+  "current_phase": "done",
+  "status_detail": null,
+  "phases_completed": ["specify", "plan", "tasks", "implement", "review"],
+  "phases_pending": [],
+  "clarifications_asked": 0,
+  "last_updated": "2026-08-13T21:00:00Z",
+  "quality_gates_status": {
+    "typecheck": "pass",
+    "test": "pass",
+    "build": "pass",
+    "docker": "pass"
+  },
+  "task_progress": {
+    "total": 13,
+    "completed": 13,
+    "failed": 0
+  }
+}

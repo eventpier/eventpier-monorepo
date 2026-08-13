@@ -117,6 +117,28 @@ de 1 linha com link/referência se quiser evitar duplicação.
   `providers/aws/**` ou só em `packages/contracts/**` publica). Ver
   `research.md`, Decisões 5 e 8.
 
+## 013-ativar-ci-path-providers — Ativação Operacional do CI (2026-08-13)
+
+- Este repositório usa **Rulesets**, não Branch Protection clássica —
+  `gh api .../branches/main/protection` retorna 404. O required status
+  check foi adicionado ao Ruleset já existente ("Protect main - PR
+  only", `id: 20759671`) via `PUT`, não descoberto em nenhum plano
+  anterior; achado só nesta spec ao investigar por que o job `validate`
+  não bloqueava merge.
+- Payload da regra `required_status_checks` com `"integration_id":
+  null"` explícito é rejeitado pela API (`422`) — o campo precisa ficar
+  **ausente**, não nulo, quando não usado. Corrigido no research.md
+  desta spec após a tentativa real falhar.
+- A restrição real da spec 004 (Decisão 2: "criação de pacote da org")
+  não era sobre criação — a primeira publicação teve sucesso de
+  primeira. A restrição real apareceu na **visibilidade**: a
+  organização tinha "Public"/"Internal" desabilitados para pacotes,
+  exigindo um segundo ajuste manual do usuário em
+  `settings/packages`, não previsto no plano original.
+- Todos os 4 requisitos funcionais foram confirmados com evidência real
+  (PRs #7-#10, runs de Actions, `docker pull`), não apenas configuração
+  — ver `data-model.md` desta spec para os links.
+
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)
 

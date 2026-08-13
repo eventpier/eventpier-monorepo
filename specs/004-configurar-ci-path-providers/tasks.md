@@ -23,7 +23,7 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Setup
 
-- [ ] **T001** Rodar localmente os quality gates já existentes (antes
+- [X] **T001** Rodar localmente os quality gates já existentes (antes
   de qualquer mudança desta spec) como checkpoint baseline:
   ```bash
   pnpm install --frozen-lockfile
@@ -44,7 +44,7 @@ outra task não concluída). Sem marcador = sequencial.
 
 ## Fase: Testes
 
-- [ ] **T002** Criar `scripts/validate-ci-workflow-shape.mjs` (raiz do
+- [X] **T002** Criar `scripts/validate-ci-workflow-shape.mjs` (raiz do
   monorepo, sem dependência externa — mesmo padrão de
   `scripts/validate-compose-shape.mjs`: leitura de texto/regex sobre
   os arquivos YAML, sem parser). Deve validar:
@@ -78,14 +78,14 @@ outra task não concluída). Sem marcador = sequencial.
     clara indicando qual falta (não stack trace bruto), `exit code 1`.
   _Origem: research.md (seção final, sobre o shape validator); contracts/ci-workflow-shape.md "Validação esperada"; spec.md requisitos funcionais 1, 3, 4, 5, 6, 8._
 
-- [ ] **T003** Rodar `node scripts/validate-ci-workflow-shape.mjs`
+- [X] **T003** Rodar `node scripts/validate-ci-workflow-shape.mjs`
   agora e confirmar que **falha** (RED) — nenhum workflow existe
   ainda em `.github/workflows/`.
   _Origem: TDD; espelha T004/T015 de `specs/003-configurar-docker-compose/tasks.md`._
 
 ## Fase: Core
 
-- [ ] **T004** `[P]` Criar `.github/workflows/ci.yml` exatamente como
+- [X] **T004** `[P]` Criar `.github/workflows/ci.yml` exatamente como
   descrito em `contracts/ci-workflow-shape.md` — gatilho
   `pull_request` contra `main`, sem filtro de path, `permissions:
   { contents: read }`, os quatro quality gates de
@@ -93,7 +93,7 @@ outra task não concluída). Sem marcador = sequencial.
   `node scripts/validate-ci-workflow-shape.mjs` na etapa de Testes).
   _Origem: spec.md requisitos funcionais 1, 2; research.md Decisões 2, 6; data-model.md (instância `Workflow` — `ci.yml`)._
 
-- [ ] **T005** `[P]` Criar
+- [X] **T005** `[P]` Criar
   `.github/workflows/publish-provider-aws.yml` exatamente como
   descrito em `contracts/ci-workflow-shape.md` — gatilho `push` para
   `main` com `paths: [providers/aws/**, packages/contracts/**]`,
@@ -108,19 +108,19 @@ outra task não concluída). Sem marcador = sequencial.
 
 Ordem sequencial — cada task assume o estado deixado pela anterior.
 
-- [ ] **T006** Rodar `node scripts/validate-ci-workflow-shape.mjs`
+- [X] **T006** Rodar `node scripts/validate-ci-workflow-shape.mjs`
   novamente. Confirmar que agora passa (GREEN — T002 encontra os dois
   workflows criados em T004/T005 com a forma esperada).
   _Valida: T002; contracts/ci-workflow-shape.md "Validação esperada"._
 
-- [ ] **T007** Repetir a Fase 1 completa de `quickstart.md` (todos os
+- [X] **T007** Repetir a Fase 1 completa de `quickstart.md` (todos os
   dez comandos, agora incluindo
   `node scripts/validate-ci-workflow-shape.mjs`, que não existia em
   T001). Confirmar exit code 0 em todos — este é exatamente o
   conjunto de comandos que `ci.yml` executará no GitHub.
   _Valida: quickstart.md Fase 1._
 
-- [ ] **T008** Registrar explicitamente (sem executar — não é possível
+- [X] **T008** Registrar explicitamente (sem executar — não é possível
   nesta sessão) três follow-ups manuais pós-merge que não podem ser
   confirmados durante `/implement` nem localmente:
   1. Comportamento real no GitHub Actions (`quickstart.md` Fases 3-4):
@@ -142,7 +142,7 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
 
 ## Fase: Polish
 
-- [ ] **T009** Atualizar `.pipeline/quality-gates.md`: encadear
+- [X] **T009** Atualizar `.pipeline/quality-gates.md`: encadear
   `node scripts/validate-ci-workflow-shape.mjs` na linha **Testes**
   existente; adicionar uma nota de contexto (mesmo padrão das notas já
   presentes no arquivo, ver texto sobre a linha **Docker** da spec
@@ -151,7 +151,7 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   `.github/workflows/ci.yml` — deixam de ser apenas locais/manuais.
   _Origem: espelha T024 de `specs/003-configurar-docker-compose/tasks.md`; spec.md requisito funcional 1._
 
-- [ ] **T010** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T010** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer decisão não prevista (ex.: ajuste na
   sintaxe exata do regex do shape validator, se necessário).
 

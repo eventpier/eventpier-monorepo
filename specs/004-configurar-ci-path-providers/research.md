@@ -268,3 +268,23 @@ pipeline.
 
 ## Decisões durante a implementação
 
+- **Nenhum desvio do contrato**: `scripts/validate-ci-workflow-shape.mjs`
+  (T002) ficou RED como esperado antes dos workflows existirem (T003)
+  e GREEN na primeira tentativa após criar `ci.yml`/`publish-provider-aws.yml`
+  (T004-T006) exatamente como descrito em `contracts/ci-workflow-shape.md`
+  — nenhuma correção de forma foi necessária.
+- **`docker compose build` (T001 e T007) reaproveitou cache do BuildKit
+  de sessões anteriores (specs 002/003)**, terminando em segundos —
+  isso não representa o tempo real de `docker compose build` dentro de
+  `ci.yml` em um runner do GitHub Actions, que sempre parte de cache
+  frio (nenhum registry de cache remoto foi configurado nesta spec;
+  ver "Decisões descartadas por ora" — cache não foi tratado como
+  necessidade comprovada). Sinal para quem for monitorar a duração de
+  `ci.yml`: o primeiro run real será mais lento que qualquer medição
+  local feita durante esta implementação.
+- **Execução real no GitHub (Fases 3-4 de `quickstart.md`) e a
+  configuração manual de branch protection/visibilidade do pacote
+  (Decisões 5 e 8) não foram e não podiam ser executadas nesta
+  sessão** — dependem do merge desta spec em `main` e de acesso às
+  configurações do repositório no GitHub. Ver T008 em `tasks.md` para
+  o registro formal desse follow-up.

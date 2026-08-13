@@ -1,0 +1,22 @@
+{
+  "feature_dir": "specs/004-configurar-ci-path-providers",
+  "branch": "feature/004-configurar-ci-path-providers",
+  "short_name": "configurar-ci-path-providers",
+  "current_phase": "plan",
+  "status_detail": null,
+  "phases_completed": ["specify"],
+  "phases_pending": ["plan", "tasks", "implement", "review"],
+  "clarifications_asked": 2,
+  "last_updated": "2026-08-13T12:00:00Z",
+  "quality_gates_status": {
+    "typecheck": null,
+    "test": null,
+    "build": null,
+    "docker": null
+  },
+  "task_progress": {
+    "total": null,
+    "completed": 0,
+    "failed": 0
+  }
+}

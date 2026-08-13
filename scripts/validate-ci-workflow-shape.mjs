@@ -21,6 +21,21 @@ function readOrReportMissing(path) {
   return readFileSync(path, "utf8");
 }
 
+function checkPinnedBySha(path, content, action) {
+  const match = content.match(
+    new RegExp(`uses:\\s*${action.replace(/\//g, "\\/")}@(\\S+)`),
+  );
+  if (!match) {
+    return;
+  }
+  const ref = match[1];
+  if (!/^[0-9a-f]{40}$/.test(ref)) {
+    errors.push(
+      `"${path}" usa ${action}@${ref} — Action de terceiro deveria ser fixada por SHA de commit completo (40 chars), não por tag mutável (achado do review da PR #6)`,
+    );
+  }
+}
+
 function checkNoSecretsBeyondGithubToken(path, content) {
   const matches = content.match(/secrets\.[A-Za-z0-9_]+/g) ?? [];
   const unexpected = [...new Set(matches)].filter(
@@ -45,6 +60,11 @@ if (ciContent) {
   if (/^\s*paths:/m.test(ciContent)) {
     errors.push(
       `"${CI_PATH}" não deveria ter filtro de path — a validação precisa cobrir todo PR, qualquer workspace (requisito funcional 1, spec.md)`,
+    );
+  }
+  if (!/^\s*concurrency:/m.test(ciContent)) {
+    errors.push(
+      `"${CI_PATH}" deveria declarar um grupo de concurrency para cancelar runs supersedidos por push (achado do review da PR #6)`,
     );
   }
 
@@ -108,6 +128,8 @@ if (publishContent) {
     );
   }
 
+  checkPinnedBySha(PUBLISH_PATH, publishContent, "docker/login-action");
+  checkPinnedBySha(PUBLISH_PATH, publishContent, "docker/build-push-action");
   checkNoSecretsBeyondGithubToken(PUBLISH_PATH, publishContent);
 }
 

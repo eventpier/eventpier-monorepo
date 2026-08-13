@@ -53,6 +53,14 @@ projeto).
    *required status checks*. Esta é uma ação manual única — ver
    `research.md`, Decisão 8. Sem este passo, `ci.yml` roda e reporta
    status, mas não bloqueia merge de fato (requisito funcional 2).
+0.5. **Antes** do primeiro merge que toque `providers/aws/**` (achado
+   do review da PR #6): confirme em **Organization Settings (eventpier)
+   → Actions → General**, ou equivalente, que a criação de pacotes por
+   workflow está permitida. `publish-provider-aws.yml` publica em
+   `ghcr.io/eventpier/...` (namespace da organização) via
+   `GITHUB_TOKEN` padrão — se essa política estiver desabilitada, o
+   step "Build and push" falha com 403 no primeiro push real, e isso
+   só seria descoberto nesse momento.
 1. Abra um PR que só altera `apps/ui/**` (ex.: um comentário).
    **Esperado**: `ci.yml` roda e passa; nenhum job de publish é
    disparado (nem aparece na lista de checks do PR).

@@ -13,6 +13,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -85,14 +89,14 @@ jobs:
         run: echo "sha_tag=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           context: .
           file: providers/aws/Dockerfile
@@ -110,6 +114,9 @@ jobs:
 - `ci.yml`:
   - gatilho é `pull_request` contra `main`, **sem** chave `paths:`
     (requisito funcional 1 — cobre todo PR, qualquer workspace).
+  - declara `concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }`
+    — cancela runs supersedidos por pushes sucessivos na mesma PR
+    (achado do review da PR #6).
   - executa, nesta ordem, os quatro gates de
     `.pipeline/quality-gates.md` (Typecheck, Build, Docker, Testes) —
     incluindo `node scripts/validate-ci-workflow-shape.mjs` na lista
@@ -125,6 +132,13 @@ jobs:
   - `file:` aponta para `providers/aws/Dockerfile` (o mesmo Dockerfile
     já validado por `specs/003-configurar-docker-compose`), `context:`
     é `.` (raiz do monorepo).
+  - `docker/login-action` e `docker/build-push-action` são fixados por
+    SHA de commit completo (40 chars hex), não por tag mutável (`@v3`/
+    `@v6`) — achado do review da PR #6 (risco de supply chain para um
+    job com `packages: write`). `actions/checkout`/`actions/setup-node`
+    (primeira parte, mantidos pela própria GitHub) continuam pinados
+    por tag major — o risco que motivou a mudança é específico de
+    Actions de terceiro.
 
 `scripts/validate-ci-workflow-shape.mjs` (criado por esta spec) checa
 os pontos acima lendo os dois arquivos YAML como texto (sem

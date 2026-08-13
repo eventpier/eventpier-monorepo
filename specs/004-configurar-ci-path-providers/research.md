@@ -288,3 +288,17 @@ pipeline.
   sessão** — dependem do merge desta spec em `main` e de acesso às
   configurações do repositório no GitHub. Ver T008 em `tasks.md` para
   o registro formal desse follow-up.
+- **Correções aplicadas após o review da PR #6** (não previstas no
+  plano original, incorporadas na mesma PR antes do merge):
+  `docker/login-action` e `docker/build-push-action` passaram de tag
+  major (`@v3`/`@v6`) para SHA de commit completo — `c94ce9fb...`
+  (v3.7.0) e `10e90e36...` (v6.19.2), resolvidos via
+  `gh api repos/docker/<action>/git/refs/tags/<v>` no momento da
+  correção; `ci.yml` ganhou `concurrency` para cancelar runs
+  supersedidos; `scripts/validate-ci-workflow-shape.mjs` passou a
+  exigir ambos (`checkPinnedBySha`, checagem de `concurrency:`) para
+  não regredir. A terceira ressalva do review (política de "Package
+  creation" da organização não verificável via API pública) virou um
+  passo novo em `quickstart.md`, Fase 3 (passo "0.5") — não é
+  corrigível em código, só verificável manualmente antes do primeiro
+  publish real.

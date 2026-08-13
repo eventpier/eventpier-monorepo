@@ -50,10 +50,22 @@ Payload (regras existentes preservadas, uma nova adicionada):
     { "type": "pull_request", "parameters": { "required_approving_review_count": 0, "dismiss_stale_reviews_on_push": false, "required_reviewers": [], "require_code_owner_review": false, "dismissal_restriction": { "enabled": false, "allowed_actors": [] }, "require_last_push_approval": false, "required_review_thread_resolution": false, "allowed_merge_methods": ["merge", "squash", "rebase"] } },
     { "type": "non_fast_forward" },
     { "type": "deletion" },
-    { "type": "required_status_checks", "parameters": { "required_status_checks": [{ "context": "validate", "integration_id": null }], "strict_required_status_checks_policy": false } }
+    { "type": "required_status_checks", "parameters": { "required_status_checks": [{ "context": "validate" }], "strict_required_status_checks_policy": false } }
   ]
 }
 ```
+
+`strict_required_status_checks_policy: false` é deliberado — exigir
+`true` forçaria todo PR a estar atualizado com `main` (rebase/merge
+manual) antes de poder mergear, fricção desproporcional para um
+repositório de mantenedor único e baixo volume de PRs simultâneos
+(achado do review da PR #11). Reavaliar para `true` se/quando o
+projeto ganhar mais de um colaborador ativo e PRs concorrentes se
+tornarem comuns.
+
+`integration_id` foi deliberadamente omitido (não `null`) — a API
+rejeita `null` explícito nesse campo opcional; ver "Decisões durante a
+implementação" para o erro `422` real encontrado ao tentar com `null`.
 
 **Verificação, não só configuração**: o Requisito 1/Critério de
 Sucesso exige confirmação prática, não apenas a regra existir. Depois

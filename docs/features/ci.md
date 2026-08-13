@@ -41,6 +41,19 @@ compartilhando o mesmo repositório (constitution, princípio 3;
   workflows (gatilho, filtro de path, permissões, tags, ausência de
   segredo não previsto) lendo-os como texto — sem dependência de
   parser YAML.
+- O job `validate` de `ci.yml` é *required status check* na proteção
+  de `main` (Ruleset "Protect main - PR only", regra
+  `required_status_checks`, `context: "validate"`) — um PR com esse
+  job falho fica estruturalmente impedido de ser mergeado, não é só
+  reportado. Este repositório usa **Rulesets**, não a API clássica de
+  Branch Protection (`branches/main/protection` retorna 404) — ver
+  `specs/013-ativar-ci-path-providers/research.md`, Decisão 1.
+- A imagem `ghcr.io/eventpier/eventpier-aws` é pública desde a
+  primeira publicação real (spec 013) — `docker pull` funciona sem
+  autenticação. Publicar o pacote de um provider novo (Azure/GCP)
+  exige que a organização já permita pacotes públicos em
+  `settings/packages`; para `eventpier`, essa política já está
+  habilitada (spec 013, T008), não precisa ser reconfigurada.
 
 ## Contrato de API
 
@@ -50,15 +63,12 @@ workflow; ver
 
 ## Limitações conhecidas
 
-- O pacote `eventpier-aws` no GHCR nasce **privado** na primeira
-  publicação, independente do repositório ser público — é o
-  comportamento documentado do GitHub, não um bug deste CI. Precisa
-  ser marcado como público manualmente, uma única vez, nas settings do
-  pacote.
-- O job `validate` de `ci.yml` só bloqueia merge de fato depois de ser
-  marcado manualmente como *required status check* na branch
-  protection de `main` — configuração de repositório, não
-  automatizável via `GITHUB_TOKEN`.
+- Todo pacote GHCR novo (ex.: quando Azure/GCP ganharem seu próprio
+  `publish-provider-<nome>.yml`) ainda nasce **privado** na primeira
+  publicação — é preciso repetir a ação manual de marcar como público
+  nas settings do pacote (a política de org que permite pacotes
+  públicos já está habilitada, mas a visibilidade é por pacote, não
+  herdada automaticamente).
 - Sem cache de dependências pnpm em `ci.yml` e sem build multi-arch em
   `publish-provider-aws.yml` — adiados por não serem necessidade
   comprovada ainda (ver `research.md`, "Decisões descartadas por
@@ -68,4 +78,5 @@ workflow; ver
 
 | # | Spec | Tipo | Resumo | Data |
 |---|------|------|--------|------|
+| 013 | [013-ativar-ci-path-providers](../../specs/013-ativar-ci-path-providers/) | ✨ Feature | Ativação operacional do CI: required status check via Ruleset, primeira publicação real, pacote GHCR público, gatilho por path confirmado com evidência real | 2026-08-13 |
 | 004 | [004-configurar-ci-path-providers](../../specs/004-configurar-ci-path-providers/) | ✨ Feature | CI com validação em todo PR e publish de imagem do provider AWS com gatilho por path (`providers/aws/**` + `packages/contracts/**`) | 2026-08-13 |

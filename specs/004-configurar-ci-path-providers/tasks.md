@@ -155,7 +155,7 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   implementação" com qualquer decisão não prevista (ex.: ajuste na
   sintaxe exata do regex do shape validator, se necessário).
 
-- [ ] **T011** `[P]` Rodar `git status --short`. Confirmar que as
+- [X] **T011** `[P]` Rodar `git status --short`. Confirmar que as
   mudanças desta fase ficam restritas a `.github/workflows/ci.yml`,
   `.github/workflows/publish-provider-aws.yml`,
   `scripts/validate-ci-workflow-shape.mjs` e
@@ -164,7 +164,7 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   `packages/contracts/src/`.
   _Valida: quickstart.md Fase 5; spec.md "Fora do escopo desta spec"._
 
-- [ ] **T012** Revisão final contra `spec.md` → "Critérios de
+- [X] **T012** Revisão final contra `spec.md` → "Critérios de
   Sucesso": para cada critério, confirmar explicitamente se já é
   verificável nesta sessão (ex.: `ci.yml` sem `paths:`, `paths:` de
   publish contendo os dois patterns exigidos, tags incluindo sha,

@@ -47,6 +47,12 @@ Estes passos só fazem sentido depois que esta spec estiver mergeada em
 `main` (branch protection já ativa, `main` protegida — ver memória do
 projeto).
 
+0. Após o primeiro merge desta spec em `main` (para o job `validate`
+   de `ci.yml` já ter rodado ao menos uma vez): em **Settings →
+   Branches → regra de `main`**, adicione `validate` à lista de
+   *required status checks*. Esta é uma ação manual única — ver
+   `research.md`, Decisão 8. Sem este passo, `ci.yml` roda e reporta
+   status, mas não bloqueia merge de fato (requisito funcional 2).
 1. Abra um PR que só altera `apps/ui/**` (ex.: um comentário).
    **Esperado**: `ci.yml` roda e passa; nenhum job de publish é
    disparado (nem aparece na lista de checks do PR).

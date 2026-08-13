@@ -194,6 +194,29 @@ próprio raciocínio já registrado pela spec 003 (build local existe
 justamente para não depender de uma imagem publicada) e quebraria o
 fluxo de desenvolvimento já validado.
 
+## Decisão 8 — Tornar `ci.yml` obrigatório na branch protection é uma ação manual, fora do escopo desta spec
+
+**Decisão**: o requisito funcional 2 ("merge bloqueado enquanto os
+gates não passarem") depende do job `validate` de `ci.yml` estar
+marcado como *required status check* nas configurações de proteção de
+`main` — uma configuração do repositório no GitHub, não um arquivo
+versionado. Esta spec cria o workflow; marcá-lo como obrigatório na
+branch protection já existente (ver memória do projeto: `main`
+protegida) é uma ação manual única, feita pelo mantenedor após o
+primeiro merge desta spec (só é possível selecionar um status check
+como obrigatório depois que ele rodou pelo menos uma vez).
+
+**Justificativa**: assim como a Decisão 5 (visibilidade do pacote),
+automatizar isso exigiria uma credencial com permissão de
+administração do repositório além do `GITHUB_TOKEN` padrão do
+workflow — violaria o requisito funcional 8. Diferente da Decisão 5,
+isso não é algo que o CI "faz" em algum momento; é uma configuração
+prévia de repositório, mais próxima de setup único do que de
+pipeline.
+
+**Consequência para `/tasks`**: passo manual documentado em
+`quickstart.md` (Fase 3), não um arquivo produzido por nenhuma task.
+
 ## Decisões descartadas por ora
 
 - **Cache de dependências pnpm em `ci.yml`** (`actions/cache` ou o

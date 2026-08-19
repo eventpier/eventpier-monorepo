@@ -261,3 +261,24 @@ para adicionar CORS.
   `manifest.service.ts`, `index.ts`, `Dockerfile`, script de
   validação) funcionou exatamente como especificado em
   `contracts/manifest-endpoint-shape.md`, sem outros desvios.
+- **Gate Typecheck precisou passar a rodar depois do Build** (achado
+  do `/review-pr` da PR #12, não previsto em `plan.md`/`research.md`
+  originais): `providers/aws` agora importa `@eventpier/contracts` de
+  verdade (Decisão 2), e `pnpm -r exec tsc --noEmit` (gate Typecheck)
+  passou a exigir que `packages/contracts/dist/index.d.ts` já
+  existisse para resolver o módulo. A ordem antiga (Typecheck → Build
+  → Docker → Testes) nunca tinha esse problema porque nenhum workspace
+  importava outro por tipos publicados antes desta spec. Localmente
+  isso passou despercebido (eu já tinha buildado `packages/contracts`
+  em passos anteriores da mesma sessão) — só o CI real (checkout
+  limpo, PR #12, run 32249870616) expôs o erro
+  (`TS2307: Cannot find module '@eventpier/contracts'`). Corrigido
+  invertendo a ordem para **Build → Typecheck → Docker → Testes** em
+  `.pipeline/quality-gates.md` e `.github/workflows/ci.yml`.
+  Aproveitado para também adicionar `validate-manifest-endpoint.mjs`
+  ao step "Testes" de `ci.yml` — T012 só previa atualizar
+  `quality-gates.md`, deixando `ci.yml` (que é hardcoded, não lê
+  `quality-gates.md` dinamicamente) sem o novo script. Confirmado
+  localmente com `dist/` apagado de propósito (simulando checkout
+  limpo) antes de reexecutar Build → Typecheck → Docker → Testes na
+  nova ordem — todos verdes.

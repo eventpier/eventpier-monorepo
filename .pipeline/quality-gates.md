@@ -7,8 +7,8 @@ específicos de scripts ou ferramentas.
 
 | Gate | Comando | Critério de sucesso |
 |---|---|---|
-| Typecheck | `pnpm -r exec tsc --noEmit` | Zero erros em todos os workspaces |
 | Build | `pnpm --filter @eventpier/contracts build && pnpm --filter @eventpier/provider-aws build && pnpm --filter @eventpier/ui build` | `dist/index.js`/`dist/index.d.ts` gerados sem erro para os três workspaces |
+| Typecheck | `pnpm -r exec tsc --noEmit` | Zero erros em todos os workspaces |
 | Docker | `docker compose build` | Build de `eventpier-ui` e `eventpier-aws` termina com exit code 0 |
 | Testes | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs && node scripts/validate-contract-constants.mjs && node scripts/validate-compose-shape.mjs && node scripts/validate-ci-workflow-shape.mjs && node scripts/validate-manifest-endpoint.mjs` | Todos os scripts terminam com exit code 0 |
 
@@ -29,6 +29,16 @@ workspace com output real de `tsc`) — ver
 Estendida pela spec 003 para incluir `apps/ui` e `providers/aws`,
 primeira vez que os dois ganham build próprio (ver
 `specs/003-configurar-docker-compose/research.md`, Decisões 3-5).
+
+**Build vem antes de Typecheck** (invertido a partir da spec 005): a
+partir do momento em que `providers/aws` importa `@eventpier/contracts`
+de verdade (spec 005), `pnpm -r exec tsc --noEmit` (gate Typecheck)
+passa a exigir que `packages/contracts/dist/index.d.ts` já exista para
+resolver o módulo — e só o gate Build gera esse `dist/`. Num checkout
+limpo (como o CI sempre faz), rodar Typecheck antes de Build falha com
+`TS2307: Cannot find module '@eventpier/contracts'`. Ver
+`specs/005-expor-manifesto/research.md`, Decisões durante a
+implementação.
 
 A linha "Docker" existe desde a spec 003 — valida que os Dockerfiles
 multi-stage de `apps/ui`/`providers/aws` buildam a partir do

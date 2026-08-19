@@ -113,7 +113,7 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   passar contra o código real de T003/T004).
   _Valida: T002._
 
-- [ ] **T009** Atualizar `providers/aws/Dockerfile` (arquivo completo)
+- [X] **T009** Atualizar `providers/aws/Dockerfile` (arquivo completo)
   exatamente como em `contracts/manifest-endpoint-shape.md`: estágio
   `build` passa a copiar e buildar também `packages/contracts`;
   estágio `runtime` ganha as duas linhas `COPY` que recriam
@@ -121,14 +121,14 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   `package.json` buildados no estágio `build`.
   _Origem: research.md Decisão 6; contracts/manifest-endpoint-shape.md ("providers/aws/Dockerfile")._
 
-- [ ] **T010** Rodar `docker compose build`. Confirmar que
+- [X] **T010** Rodar `docker compose build`. Confirmar que
   `eventpier-ui` e `eventpier-aws` buildam sem erro — em particular,
   que o build de `eventpier-aws` resolve `@eventpier/contracts` a
   partir do `packages/contracts` agora copiado/buildado dentro do
   Dockerfile (T009), sem depender de nenhum estado fora da imagem.
   _Valida: quickstart.md passo 7._
 
-- [ ] **T011** Rodar `docker compose up -d --build` e repetir os três
+- [X] **T011** Rodar `docker compose up -d --build` e repetir os três
   cenários (GET 200, POST 405, `GET` a path desconhecido 404) pela
   rede interna via
   `docker compose exec eventpier-ui wget ...`. Confirmar também que

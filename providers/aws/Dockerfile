@@ -12,12 +12,16 @@ RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
 COPY tsconfig.base.json ./
+COPY packages/contracts packages/contracts
 COPY providers/aws providers/aws
+RUN pnpm --filter @eventpier/contracts build
 RUN pnpm --filter @eventpier/provider-aws build
 
 FROM base AS runtime
 ENV NODE_ENV=production
 COPY --from=build /app/providers/aws/dist ./dist
 COPY --from=build /app/providers/aws/package.json ./package.json
+COPY --from=build /app/packages/contracts/dist ./node_modules/@eventpier/contracts/dist
+COPY --from=build /app/packages/contracts/package.json ./node_modules/@eventpier/contracts/package.json
 EXPOSE 4000
 CMD ["node", "dist/index.js"]

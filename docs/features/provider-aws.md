@@ -73,6 +73,14 @@ tipos `ProviderManifest`/`ProviderError` definidos em
   `pnpm deploy` — funciona porque `packages/contracts` não tem
   nenhuma dependência própria de terceiro ainda. Reavaliar quando a
   spec 008 (Storage) trouxer uma dependência real (AWS SDK).
+- Sem documentação OpenAPI/Swagger — a tabela em "Contrato de API"
+  acima cobre a única rota existente sem esforço. O valor de
+  OpenAPI/Swagger (exploração interativa, geração de client SDK)
+  aparece com múltiplas rotas com parâmetros reais e/ou consumidores
+  externos de verdade; hoje o único consumidor é a UI, server-to-server,
+  na mesma rede Docker. Reavaliar junto com a decisão de Fastify
+  acima, quando a spec 008 (Storage) trouxer múltiplas rotas com
+  parâmetros de path.
 
 ## Specs Relacionadas
 

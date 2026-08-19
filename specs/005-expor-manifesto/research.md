@@ -250,4 +250,14 @@ para adicionar CORS.
 
 ## Decisões durante a implementação
 
-<!-- preenchido pelo /implement, se algo não previsto aqui surgir -->
+- **`wget` do BusyBox não suporta `--method=POST`** (usado em
+  `quickstart.md` passo 8 para testar o cenário 405 pela rede
+  interna). A imagem `eventpier-ui` (`node:24-alpine`) traz o `wget`
+  do BusyBox, não o GNU wget — a flag correta para forçar `POST` é
+  `--post-data=""` (corpo vazio). Corrigido diretamente em
+  `quickstart.md`; nenhum impacto no código de `providers/aws` (o
+  endpoint em si nunca dependeu de `wget`, só o passo de validação
+  manual via container). Todo o restante do plano (código de
+  `manifest.service.ts`, `index.ts`, `Dockerfile`, script de
+  validação) funcionou exatamente como especificado em
+  `contracts/manifest-endpoint-shape.md`, sem outros desvios.

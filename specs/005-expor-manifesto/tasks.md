@@ -156,19 +156,19 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
 
 ## Fase: Polish
 
-- [ ] **T014** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T014** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer decisão não prevista (ex.: ajuste fino
   do timeout/heurística de "provider subiu" em T002, se o log de
   startup não for suficiente na prática).
 
-- [ ] **T015** `[P]` Rodar `find providers/aws/src -type f`. Confirmar
+- [X] **T015** `[P]` Rodar `find providers/aws/src -type f`. Confirmar
   que lista exatamente `index.ts` e `manifest/manifest.service.ts` —
   nenhum arquivo de `health-cache.ts` (spec 006), `capabilities/`
   (spec 008), `adapters/` (spec 008) ou `config/environment.config.ts`
   (spec 007) vazado de specs futuras.
   _Origem: spec.md "Fora do escopo"._
 
-- [ ] **T016** Revisão final contra `spec.md` → "Critérios de
+- [X] **T016** Revisão final contra `spec.md` → "Critérios de
   Sucesso": confirmar, lendo o código produzido (não só rodando
   gates), que o corpo de `GET /api/v1/manifest` é validável
   programaticamente contra `ProviderManifest` sem campo extra nem

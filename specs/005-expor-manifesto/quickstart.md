@@ -95,13 +95,15 @@ docker compose exec eventpier-ui wget -qO- http://eventpier-aws:4000/api/v1/mani
 placeholder da spec 003).
 
 ```bash
-docker compose exec eventpier-ui wget -qO- --method=POST http://eventpier-aws:4000/api/v1/manifest; echo
-docker compose exec eventpier-ui wget -qO- http://eventpier-aws:4000/rota-que-nao-existe; echo
+docker compose exec eventpier-ui wget -S -O- --post-data="" http://eventpier-aws:4000/api/v1/manifest; echo
+docker compose exec eventpier-ui wget -S -O- http://eventpier-aws:4000/rota-que-nao-existe; echo
 ```
 
-**Esperado**: `wget` reporta erro HTTP (405 e 404, respectivamente) —
-`wget` sem `-q` mostra o código; usar `wget -S -O- ... 2>&1 | grep "HTTP/"`
-se quiser confirmar o status exato dentro do container.
+**Esperado**: `wget` reporta erro HTTP (405 e 404, respectivamente),
+visível na linha `HTTP/1.1 4xx ...` da saída de `-S`. O `wget` do
+BusyBox (imagem `eventpier-ui`, base `node:24-alpine`) **não** suporta
+a flag `--method=POST` (comum em GNU wget) — usar `--post-data=""`
+para forçar o método `POST` com corpo vazio.
 
 ## 9. `eventpier-aws` continua inalcançável pelo host
 

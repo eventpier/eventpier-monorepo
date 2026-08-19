@@ -137,14 +137,14 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   spec). Rodar `docker compose down` ao final.
   _Valida: quickstart.md passos 8-10._
 
-- [ ] **T012** Atualizar `.pipeline/quality-gates.md`: linha
+- [X] **T012** Atualizar `.pipeline/quality-gates.md`: linha
   **Testes** ganha `&& node scripts/validate-manifest-endpoint.mjs`
   encadeado ao final do comando existente. Linha **Build** não muda
   (a ordem `@eventpier/contracts` antes de `@eventpier/provider-aws`
   já está correta desde a spec 003).
   _Origem: research.md Decisão 8 ("Consequência para /tasks")._
 
-- [ ] **T013** Rodar `git status --short`. Confirmar que as mudanças
+- [X] **T013** Rodar `git status --short`. Confirmar que as mudanças
   ficam restritas a `providers/aws/src/index.ts`,
   `providers/aws/src/manifest/manifest.service.ts` (novo),
   `providers/aws/package.json`, `providers/aws/Dockerfile`,

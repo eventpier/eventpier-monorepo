@@ -10,7 +10,7 @@ específicos de scripts ou ferramentas.
 | Typecheck | `pnpm -r exec tsc --noEmit` | Zero erros em todos os workspaces |
 | Build | `pnpm --filter @eventpier/contracts build && pnpm --filter @eventpier/provider-aws build && pnpm --filter @eventpier/ui build` | `dist/index.js`/`dist/index.d.ts` gerados sem erro para os três workspaces |
 | Docker | `docker compose build` | Build de `eventpier-ui` e `eventpier-aws` termina com exit code 0 |
-| Testes | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs && node scripts/validate-contract-constants.mjs && node scripts/validate-compose-shape.mjs && node scripts/validate-ci-workflow-shape.mjs` | Todos os scripts terminam com exit code 0 |
+| Testes | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs && node scripts/validate-contract-constants.mjs && node scripts/validate-compose-shape.mjs && node scripts/validate-ci-workflow-shape.mjs && node scripts/validate-manifest-endpoint.mjs` | Todos os scripts terminam com exit code 0 |
 
 A partir da spec 004, estes quatro gates também rodam
 automaticamente em todo Pull Request contra `main`, via
@@ -59,3 +59,12 @@ nenhum gate anterior — por isso Build e Docker vêm antes de Testes
 nesta tabela. Trocar por um runner de verdade quando a primeira spec
 com lógica de negócio condicional (006, health-check com cache)
 precisar de testes unitários.
+
+`validate-manifest-endpoint.mjs` (spec 005) é o primeiro script desta
+linha que sobe um processo real (`providers/aws/dist/index.js`) e faz
+requisições HTTP de verdade contra ele, em vez de só ler arquivos —
+depende dos gates Build de `@eventpier/contracts` **e**
+`@eventpier/provider-aws` já terem rodado, e da porta `4000` estar
+livre no momento da execução (encerra o processo filho ao final,
+mesmo em caso de falha). Ver
+`specs/005-expor-manifesto/research.md`, Decisão 8.

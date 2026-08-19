@@ -1,0 +1,22 @@
+{
+  "feature_dir": "specs/005-expor-manifesto",
+  "branch": "feature/005-expor-manifesto",
+  "short_name": "expor-manifesto",
+  "current_phase": "plan",
+  "status_detail": null,
+  "phases_completed": ["specify"],
+  "phases_pending": ["plan", "tasks", "implement", "review"],
+  "clarifications_asked": 2,
+  "last_updated": "2026-08-19T00:00:00Z",
+  "quality_gates_status": {
+    "typecheck": null,
+    "build": null,
+    "docker": null,
+    "test": null
+  },
+  "task_progress": {
+    "total": null,
+    "completed": 0,
+    "failed": 0
+  }
+}

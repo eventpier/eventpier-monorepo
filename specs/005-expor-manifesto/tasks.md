@@ -22,7 +22,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Setup
 
-- [ ] **T001** Atualizar `providers/aws/package.json`: adicionar
+- [X] **T001** Atualizar `providers/aws/package.json`: adicionar
   `"dependencies": { "@eventpier/contracts": "workspace:*" }`. Rodar
   `pnpm install` na raiz do monorepo para resolver o link de
   workspace (`node_modules/@eventpier/contracts` deve virar um
@@ -31,7 +31,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Testes
 
-- [ ] **T002** Criar `scripts/validate-manifest-endpoint.mjs`
+- [X] **T002** Criar `scripts/validate-manifest-endpoint.mjs`
   exatamente como em `contracts/manifest-endpoint-shape.md`. Deve
   validar:
   - **Caso feliz**: `GET /api/v1/manifest` → 200, `contractVersion`

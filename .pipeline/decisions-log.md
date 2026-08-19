@@ -117,6 +117,33 @@ de 1 linha com link/referência se quiser evitar duplicação.
   `providers/aws/**` ou só em `packages/contracts/**` publica). Ver
   `research.md`, Decisões 5 e 8.
 
+## 005-expor-manifesto — Endpoint de Manifesto (2026-08-19)
+
+- Gate **Typecheck precisou passar a rodar depois do Build** (achado
+  do `/review-pr` da PR #12, CI real — não previsto em `plan.md`).
+  `providers/aws` importa `@eventpier/contracts` de verdade pela
+  primeira vez nesta spec; `pnpm -r exec tsc --noEmit` passou a exigir
+  `packages/contracts/dist/index.d.ts` já existir para resolver o
+  módulo, e a ordem antiga (Typecheck → Build) só quebrava em checkout
+  limpo — localmente passava porque `dist/` já existia de passos
+  anteriores da mesma sessão. Corrigido invertendo para
+  **Build → Typecheck → Docker → Testes** em `quality-gates.md` e
+  `ci.yml`. Sinal para qualquer spec futura que introduza a primeira
+  dependência real entre dois workspaces: checar se o gate Typecheck
+  ainda roda antes de qualquer Build do qual passou a depender.
+- `.github/workflows/ci.yml` é hardcoded (não lê `quality-gates.md`
+  dinamicamente) — `scripts/validate-manifest-endpoint.mjs` tinha sido
+  adicionado só a `quality-gates.md` (T012), deixando o CI real sem
+  rodar o novo script até o `/review-pr` pegar a divergência. Sinal de
+  processo: toda spec que adiciona um script à linha "Testes" precisa
+  de uma task explícita para `ci.yml` também, não só para
+  `quality-gates.md`.
+- `wget` do BusyBox (imagem `eventpier-ui`, base `node:24-alpine`) não
+  suporta `--method=POST` (comum em GNU wget) — usa `--post-data=""`
+  para forçar o método. Achado ao validar o cenário 405 pela rede
+  interna (`quickstart.md`, passo 8); sem impacto no código do
+  provider, só no passo de validação manual via container.
+
 ## 013-ativar-ci-path-providers — Ativação Operacional do CI (2026-08-13)
 
 - Este repositório usa **Rulesets**, não Branch Protection clássica —

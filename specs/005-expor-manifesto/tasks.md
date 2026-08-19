@@ -86,20 +86,20 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 Ordem sequencial — cada task assume o estado deixado pela anterior.
 
-- [ ] **T005** Rodar
+- [X] **T005** Rodar
   `pnpm --filter @eventpier/contracts build && pnpm --filter @eventpier/provider-aws build`.
   Confirmar que ambos geram `dist/` sem erro (typecheck limpo,
   incluído no build).
   _Valida: quickstart.md passo 1; T001, T003, T004._
 
-- [ ] **T006** Rodar `pnpm --filter @eventpier/provider-aws start`
+- [X] **T006** Rodar `pnpm --filter @eventpier/provider-aws start`
   e, em outro terminal,
   `curl -s http://localhost:4000/api/v1/manifest | jq`. Confirmar
   HTTP 200 e corpo exatamente conforme `data-model.md` (`version`
   batendo com o `version` atual de `providers/aws/package.json`).
   _Valida: quickstart.md passos 2-3; spec.md FR1, FR2, FR3, FR4, FR5, FR8._
 
-- [ ] **T007** Com o provider ainda rodando: `curl -si -X POST
+- [X] **T007** Com o provider ainda rodando: `curl -si -X POST
   http://localhost:4000/api/v1/manifest` (confirmar 405, header
   `Allow: GET`, corpo `ProviderError` com `code:"METHOD_NOT_ALLOWED"`)
   e `curl -si http://localhost:4000/rota-que-nao-existe` (confirmar
@@ -107,7 +107,7 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   provider (`Ctrl+C`) ao final.
   _Valida: quickstart.md passos 4-6; spec.md FR6, FR7._
 
-- [ ] **T008** Rodar `node scripts/validate-manifest-endpoint.mjs`
+- [X] **T008** Rodar `node scripts/validate-manifest-endpoint.mjs`
   (com a porta 4000 livre — nenhuma outra instância do provider
   rodando). Confirmar que agora **passa** (GREEN — T002 volta a
   passar contra o código real de T003/T004).

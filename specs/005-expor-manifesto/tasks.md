@@ -59,7 +59,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Core
 
-- [ ] **T003** `[P]` Criar `providers/aws/src/manifest/manifest.service.ts`
+- [X] **T003** `[P]` Criar `providers/aws/src/manifest/manifest.service.ts`
   exatamente como em `contracts/manifest-endpoint-shape.md`:
   `buildManifest(): ProviderManifest` retornando `contractVersion`
   (de `CONTRACT_VERSION`, importado de `@eventpier/contracts`),
@@ -69,7 +69,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
   `../../package.json` a partir do próprio arquivo), `capabilities: []`.
   _Origem: spec.md FR1, FR2, FR3, FR4; data-model.md (instância de `ProviderManifest`); research.md Decisões 2-5._
 
-- [ ] **T004** Reescrever `providers/aws/src/index.ts` por completo
+- [X] **T004** Reescrever `providers/aws/src/index.ts` por completo
   (remove o placeholder de texto da spec 003), exatamente como em
   `contracts/manifest-endpoint-shape.md`: servidor `node:http` com
   dispatch manual — `GET /api/v1/manifest` → 200 +

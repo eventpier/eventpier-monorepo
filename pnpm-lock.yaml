@@ -19,7 +19,11 @@ importers:
 
   packages/contracts: {}
 
-  providers/aws: {}
+  providers/aws:
+    dependencies:
+      '@eventpier/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
 
 packages:
 

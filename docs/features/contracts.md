@@ -34,8 +34,11 @@ só tipos e constantes.
 
 ## Contrato de API
 
-TypeScript puro, sem endpoint HTTP ainda (isso é escopo da spec 005).
-Barrel público (`packages/contracts/src/index.ts`) reexporta:
+TypeScript puro — nenhum endpoint HTTP vive aqui. Desde a spec 005,
+`providers/aws` expõe `GET /api/v1/manifest` retornando um
+`ProviderManifest` construído com estes tipos (ver
+[`docs/features/provider-aws.md`](./provider-aws.md)). Barrel público
+(`packages/contracts/src/index.ts`) reexporta:
 
 - `manifest.ts`: `CONTRACT_VERSION`, `CAPABILITIES`/`Capability`,
   `CAPABILITY_STATUSES`/`CapabilityStatus`,
@@ -55,13 +58,16 @@ e `docs/arquitetura.md` §3 (fonte normativa).
   rejeitado para não divergir da interface documentada em
   `docs/arquitetura.md` §3. Reavaliar se a spec 006 (health-check)
   revelar bugs reais de omissão de `reason`.
-- Sem validação de runtime (zod ou equivalente) — adequado enquanto o
-  contrato só é consumido internamente entre workspaces TypeScript do
-  mesmo monorepo. Reavaliar quando a spec 005 expuser o manifesto via
-  endpoint HTTP a um boundary não confiável.
+- Sem validação de runtime (zod ou equivalente) — a spec 005 expôs o
+  manifesto via `GET /api/v1/manifest`, mas o endpoint não aceita
+  nenhum input (sem query params, corpo ou parâmetros de path), então
+  ainda não há boundary não confiável que justifique validação de
+  schema. Reavaliar quando a spec 008 (Storage) introduzir entrada
+  real vinda de fora.
 
 ## Specs Relacionadas
 
 | # | Spec | Tipo | Resumo | Data |
 |---|------|------|--------|------|
+| 005 | [005-expor-manifesto](../../specs/005-expor-manifesto/) | ✨ Feature | `providers/aws` passa a depender do pacote de verdade e consumir `CONTRACT_VERSION` em runtime | 2026-08-19 |
 | 002 | [002-definir-contrato-compartilhado](../../specs/002-definir-contrato-compartilhado/) | ✨ Feature | Cria `ProviderManifest`, `Page<T>`, `ProviderError`, `CapabilityDescriptor` com versionamento semântico | 2026-08-12 |

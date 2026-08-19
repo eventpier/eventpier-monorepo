@@ -6,5 +6,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@eventpier/contracts": "workspace:*"
   }
 }

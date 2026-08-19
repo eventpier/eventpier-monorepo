@@ -2,12 +2,12 @@
   "feature_dir": "specs/005-expor-manifesto",
   "branch": "feature/005-expor-manifesto",
   "short_name": "expor-manifesto",
-  "current_phase": "tasks",
+  "current_phase": "implement",
   "status_detail": null,
-  "phases_completed": ["specify", "plan"],
-  "phases_pending": ["tasks", "implement", "review"],
+  "phases_completed": ["specify", "plan", "tasks"],
+  "phases_pending": ["implement", "review"],
   "clarifications_asked": 2,
-  "last_updated": "2026-08-19T00:30:00Z",
+  "last_updated": "2026-08-19T01:00:00Z",
   "quality_gates_status": {
     "typecheck": null,
     "build": null,
@@ -15,7 +15,7 @@
     "test": null
   },
   "task_progress": {
-    "total": null,
+    "total": 16,
     "completed": 0,
     "failed": 0
   }

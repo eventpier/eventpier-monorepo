@@ -85,21 +85,21 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   código real de T003), todos os casos listados em T002 verdes.
   _Valida: T002._
 
-- [ ] **T005** Rodar
+- [X] **T005** Rodar
   `pnpm --filter @eventpier/contracts build && pnpm --filter @eventpier/provider-aws build && pnpm -r exec tsc --noEmit`.
   Confirmar sem erros — `dist/manifest/health-cache.js` e
   `dist/manifest/health-cache.test.js` gerados (Decisão 8 de
   `research.md`, intencional).
   _Valida: quickstart.md passo 2._
 
-- [ ] **T006** Com o build do passo anterior pronto, rodar a
+- [X] **T006** Com o build do passo anterior pronto, rodar a
   demonstração manual do passo 3 de `quickstart.md` (script `node -e`
   com `createHealthCache`, TTL de 200ms). Confirmar que `calls`
   incrementa exatamente nas leituras 1ª, 3ª e 4ª (nunca na 2ª, cache
   hit), terminando em `calls = 3`.
   _Valida: quickstart.md passo 3; spec.md Critérios de Sucesso (mecanismo testável isoladamente)._
 
-- [ ] **T007** Rodar `node scripts/validate-manifest-endpoint.mjs`.
+- [X] **T007** Rodar `node scripts/validate-manifest-endpoint.mjs`.
   Confirmar `OK` — `GET /api/v1/manifest` continua retornando
   `capabilities: []`, sem nenhuma regressão (RF9: esta spec não
   integra o cache ao manifesto).

@@ -20,7 +20,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Setup
 
-- [ ] **T001** Atualizar `providers/aws/package.json`: adicionar
+- [X] **T001** Atualizar `providers/aws/package.json`: adicionar
   `"devDependencies": { "vitest": "4.1.11" }` e
   `"scripts": { "test": "vitest run" }`. Rodar `pnpm install` na raiz
   do monorepo para resolver a nova dependência (`pnpm-lock.yaml`

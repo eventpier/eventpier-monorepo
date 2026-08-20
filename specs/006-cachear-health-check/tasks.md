@@ -29,7 +29,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Testes
 
-- [ ] **T002** Criar `providers/aws/src/manifest/health-cache.test.ts`
+- [X] **T002** Criar `providers/aws/src/manifest/health-cache.test.ts`
   exatamente como em `contracts/health-cache-shape.md`. Deve validar:
   - **Caso feliz — cache hit**: duas leituras de `getStatus()` dentro
     do TTL chamam `check()` apenas uma vez.

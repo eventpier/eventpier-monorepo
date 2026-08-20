@@ -105,14 +105,14 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   integra o cache ao manifesto).
   _Valida: quickstart.md passo 4; spec.md RF9._
 
-- [ ] **T008** `[P]` Atualizar `.pipeline/quality-gates.md`: inserir
+- [X] **T008** `[P]` Atualizar `.pipeline/quality-gates.md`: inserir
   nova linha **Testes unitários**
   (`pnpm --filter @eventpier/provider-aws test`) **antes** da linha
   **Build**; renomear a linha **Testes** existente para **Testes de
   integração** (mesmo comando, só o rótulo muda).
   _Origem: research.md Decisão 6 ("Consequência para /tasks"); contracts/health-cache-shape.md ("quality-gates.md")._
 
-- [ ] **T009** `[P]` Atualizar `.github/workflows/ci.yml`: inserir
+- [X] **T009** `[P]` Atualizar `.github/workflows/ci.yml`: inserir
   novo step **Testes unitários**
   (`run: pnpm --filter @eventpier/provider-aws test`) logo após
   "Install dependencies", antes de "Build"; renomear o step "Testes

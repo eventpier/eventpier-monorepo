@@ -220,6 +220,28 @@ arquivos `*.test.ts`. O gate **Build** (`tsc -p tsconfig.json`) gera
 
 ## Decisões durante a implementação
 
+- **Vitest não exclui `dist/` por padrão nesta configuração — adicionado
+  `providers/aws/vitest.config.ts`** (achado ao rodar o gate **Build**
+  antes do gate **Testes unitários** durante a validação final): a
+  Decisão 6 original assumia que os defaults do Vitest já excluiriam
+  `dist/**` da descoberta de testes (comportamento documentado como
+  default em outras versões/configurações). Na prática, depois de
+  `pnpm --filter @eventpier/provider-aws build` gerar
+  `dist/manifest/health-cache.test.js` (Decisão 8 — teste não excluído
+  do `tsconfig.json`), `pnpm --filter @eventpier/provider-aws test`
+  passou a rodar **os mesmos 11 testes duas vezes** (uma vez a partir
+  de `src/manifest/health-cache.test.ts`, outra a partir do `.js`
+  compilado em `dist/`) — 22 testes reportados, não 11. Isso não é só
+  redundância: um `dist/` desatualizado (de um build anterior a uma
+  mudança no teste) rodaria uma versão *diferente* do mesmo teste sem
+  aviso nenhum, mascarando o resultado real. Corrigido adicionando
+  `providers/aws/vitest.config.ts` com
+  `test.exclude: ["**/node_modules/**", "dist/**"]`, mantendo a decisão
+  original de não excluir `*.test.ts` do `tsconfig.json` (Decisão 8
+  continua válida — a causa raiz era a descoberta de arquivos do
+  Vitest, não a compilação em si). Confirmado depois da correção:
+  `pnpm --filter @eventpier/provider-aws test` volta a reportar
+  exatamente 1 arquivo, 11 testes.
 - **Prosa de `quality-gates.md` atualizada além do literal de
   `contracts/health-cache-shape.md`** (T008): o contrato normativo só
   especificava a nova linha da tabela e a renomeação de rótulo. Durante

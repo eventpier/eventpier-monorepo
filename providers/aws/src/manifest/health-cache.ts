@@ -37,16 +37,25 @@ export function createHealthCache(
 ): HealthCache {
   const ttlMs = resolveTtlMs(options.ttlMs);
   let cached: CachedHealth | null = null;
+  let generation = 0;
 
   async function runCheck(): Promise<CachedHealth> {
+    const myGeneration = ++generation;
     let result: HealthCheckResult;
     try {
       result = await check();
     } catch {
       result = { status: "unavailable", reason: "UNKNOWN" };
     }
-    cached = { ...result, checkedAt: Date.now() };
-    return cached;
+    const fresh: CachedHealth = { ...result, checkedAt: Date.now() };
+    // Só grava no cache se nenhuma verificação mais nova (ou invalidate())
+    // começou desde que esta foi disparada — evita que uma verificação
+    // lenta e obsoleta sobrescreva um resultado mais recente ao resolver
+    // por último.
+    if (myGeneration === generation) {
+      cached = fresh;
+    }
+    return fresh;
   }
 
   return {
@@ -58,6 +67,7 @@ export function createHealthCache(
     },
     invalidate(): void {
       cached = null;
+      generation++;
     },
   };
 }

@@ -220,6 +220,31 @@ arquivos `*.test.ts`. O gate **Build** (`tsc -p tsconfig.json`) gera
 
 ## Decisões durante a implementação
 
+- **Contador de geração adicionado a `runCheck()`/`invalidate()`**
+  (achado do `/review-pr` desta PR): sem ele, duas chamadas a
+  `runCheck()` concorrentes gravavam em `cached` por ordem de
+  **conclusão**, não de início — uma verificação lenta disparada antes
+  de um `invalidate()` podia resolver depois e sobrescrever
+  silenciosamente o valor mais recente (ou o próprio `invalidate()`),
+  violando a garantia do RF6/princípio 6 ("nunca reportar `available`
+  desatualizado"). A Decisão 4 original só avaliou a ausência de
+  deduplicação como uma questão de eficiência (chamadas redundantes a
+  `check()`), sem cobrir essa implicação de corretude na escrita do
+  cache — as duas preocupações são independentes: deduplicar chamadas é
+  uma otimização (continua fora de escopo, Decisão 4 inalterada);
+  garantir que a escrita no cache respeite ordem de início, não de
+  conclusão, é uma correção de corretude (agora implementada). Corrigido
+  com um contador `generation`: `runCheck()` captura seu próprio número
+  de geração antes de chamar `check()` e só grava em `cached` se nenhuma
+  verificação mais nova (nem `invalidate()`) começou desde então;
+  `invalidate()` também incrementa o contador, garantindo que qualquer
+  verificação já em voo não sobrescreva o estado limpo. Coberto por um
+  teste de regressão dedicado
+  (`health-cache.test.ts`, "uma verificação antiga em voo não
+  sobrescreve..."), com ordem de resolução controlada manualmente
+  (promises resolvidas fora de ordem), não por tempo — os 11 testes
+  originais permanecem válidos (nenhum exercita chamadas concorrentes,
+  todos usam `await` sequencial).
 - **Vitest não exclui `dist/` por padrão nesta configuração — adicionado
   `providers/aws/vitest.config.ts`** (achado ao rodar o gate **Build**
   antes do gate **Testes unitários** durante a validação final): a

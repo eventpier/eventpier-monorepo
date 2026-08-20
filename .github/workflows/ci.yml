@@ -31,6 +31,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Testes unitários
+        run: pnpm --filter @eventpier/provider-aws test
+
       - name: Build
         run: |
           pnpm --filter @eventpier/contracts build
@@ -43,7 +46,7 @@ jobs:
       - name: Docker build
         run: docker compose build
 
-      - name: Testes (scripts de validação estrutural)
+      - name: Testes de integração (scripts de validação estrutural)
         run: |
           node scripts/validate-workspace-manifests.mjs
           node scripts/validate-workspace-dependencies.mjs

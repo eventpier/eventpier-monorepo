@@ -61,7 +61,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Core
 
-- [ ] **T003** Criar `providers/aws/src/manifest/health-cache.ts`
+- [X] **T003** Criar `providers/aws/src/manifest/health-cache.ts`
   exatamente como em `contracts/health-cache-shape.md`: tipos
   `CachedHealth`, `HealthCheckResult`, `HealthCheckFn`, interface
   `HealthCache`; `resolveTtlMs(explicit?)` com prioridade
@@ -80,7 +80,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 Ordem sequencial — cada task assume o estado deixado pela anterior.
 
-- [ ] **T004** Rodar `pnpm --filter @eventpier/provider-aws test`.
+- [X] **T004** Rodar `pnpm --filter @eventpier/provider-aws test`.
   Confirmar que agora **passa** (GREEN — T002 volta a passar contra o
   código real de T003), todos os casos listados em T002 verdes.
   _Valida: T002._

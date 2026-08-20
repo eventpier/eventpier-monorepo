@@ -121,7 +121,7 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
   rótulo muda).
   _Origem: research.md Decisão 6 ("Consequência para /tasks"); contracts/health-cache-shape.md ("ci.yml")._
 
-- [ ] **T010** Rodar `git status --short`. Confirmar que as mudanças
+- [X] **T010** Rodar `git status --short`. Confirmar que as mudanças
   ficam restritas a
   `providers/aws/src/manifest/health-cache.ts` (novo),
   `providers/aws/src/manifest/health-cache.test.ts` (novo),
@@ -133,18 +133,18 @@ Ordem sequencial — cada task assume o estado deixado pela anterior.
 
 ## Fase: Polish
 
-- [ ] **T011** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T011** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer decisão não prevista (ex.: ajuste fino
   de algum caso de borda do `resolveTtlMs` não coberto originalmente).
 
-- [ ] **T012** `[P]` Rodar `find providers/aws/src -type f`. Confirmar
+- [X] **T012** `[P]` Rodar `find providers/aws/src -type f`. Confirmar
   que lista exatamente `index.ts`, `manifest/manifest.service.ts`,
   `manifest/health-cache.ts` e `manifest/health-cache.test.ts` —
   nenhum arquivo de `capabilities/` ou `adapters/` (spec 008) ou
   `config/environment.config.ts` (spec 007) vazado de specs futuras.
   _Origem: spec.md "Fora do escopo"._
 
-- [ ] **T013** Revisão final contra `spec.md` → "Critérios de
+- [X] **T013** Revisão final contra `spec.md` → "Critérios de
   Sucesso": confirmar, lendo o código produzido (não só rodando
   gates), que `createHealthCache` não tem nenhum acoplamento a uma
   capability específica (RF8) e está pronto para ser importado pela

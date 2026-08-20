@@ -219,3 +219,25 @@ arquivos `*.test.ts`. O gate **Build** (`tsc -p tsconfig.json`) gera
 `providers/aws/tsconfig.json` além do que já existe.
 
 ## Decisões durante a implementação
+
+- **Prosa de `quality-gates.md` atualizada além do literal de
+  `contracts/health-cache-shape.md`** (T008): o contrato normativo só
+  especificava a nova linha da tabela e a renomeação de rótulo. Durante
+  a implementação, os parágrafos explicativos abaixo da tabela também
+  foram ajustados — a frase "estes quatro gates" (agora são cinco), a
+  nota de rodapé que antecipava "trocar por um runner de verdade
+  quando a spec 006 precisar" (agora cumprida, reescrita no passado) e
+  um novo parágrafo explicando a linha "Testes unitários". Motivo:
+  deixar a prosa desatualizada geraria confusão para quem lesse o
+  arquivo depois desta spec (contagem errada de gates, nota apontando
+  para uma spec já concluída como se fosse futura) — mesmo espírito de
+  manter a documentação como fonte confiável, sem ser uma mudança de
+  escopo (nenhum comando de gate mudou além do já previsto).
+- Todo o restante (`health-cache.ts`, `health-cache.test.ts`,
+  `package.json`, step de `ci.yml`) funcionou exatamente como
+  especificado em `contracts/health-cache-shape.md`, sem outros
+  desvios — RED confirmado em T002 antes de `health-cache.ts` existir,
+  GREEN em T004 (11/11 testes), build/typecheck limpos em T005,
+  demonstração manual em T006 batendo exatamente com o esperado
+  (`calls = 3`), e regressão do endpoint de manifesto confirmada em
+  T007 sem nenhuma mudança de comportamento.

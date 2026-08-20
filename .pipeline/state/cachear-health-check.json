@@ -1,0 +1,22 @@
+{
+  "feature_dir": "specs/006-cachear-health-check",
+  "branch": "feature/006-cachear-health-check",
+  "short_name": "cachear-health-check",
+  "current_phase": "plan",
+  "status_detail": null,
+  "phases_completed": ["specify"],
+  "phases_pending": ["plan", "tasks", "implement", "review"],
+  "clarifications_asked": 1,
+  "last_updated": "2026-08-20T00:00:00Z",
+  "quality_gates_status": {
+    "typecheck": null,
+    "test": null,
+    "lint": null,
+    "build": null
+  },
+  "task_progress": {
+    "total": null,
+    "completed": 0,
+    "failed": 0
+  }
+}

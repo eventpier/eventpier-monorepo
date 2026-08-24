@@ -144,6 +144,32 @@ de 1 linha com link/referência se quiser evitar duplicação.
   interna (`quickstart.md`, passo 8); sem impacto no código do
   provider, só no passo de validação manual via container.
 
+## 006-cachear-health-check — Cache de Health-check por Capability (2026-08-20)
+
+- Vitest não exclui `dist/` por padrão nesta configuração: depois do
+  gate Build gerar `dist/manifest/health-cache.test.js` (teste não
+  excluído do `tsconfig.json`, decisão consciente para manter
+  cobertura de Typecheck), `pnpm --filter @eventpier/provider-aws test`
+  passou a rodar os mesmos 11 testes duas vezes (22 no total) — uma a
+  partir do `.ts` fonte, outra do `.js` compilado, com risco real de um
+  `dist/` desatualizado mascarar o resultado. Corrigido com
+  `providers/aws/vitest.config.ts`
+  (`test.exclude: ["**/node_modules/**", "dist/**"]`).
+- Achado do `/review-pr` desta PR: `health-cache.ts` não deduplicava
+  chamadas concorrentes a `check()` (decisão consciente, Decisão 4) —
+  mas isso também permitia que a verificação que resolvesse por último
+  sobrescrevesse o cache fora de ordem, mesmo tendo começado antes de
+  um `invalidate()` mais recente (o `invalidate()` podia ser
+  silenciosamente desfeito por uma verificação antiga ainda em voo).
+  Corrigido com um contador de geração interno: `runCheck()` só grava
+  no cache se nenhuma verificação mais nova (ou `invalidate()`) foi
+  disparada desde que ela começou; `invalidate()` também incrementa o
+  contador, descartando qualquer verificação já em voo. Coberto por
+  teste de regressão dedicado (ordem de resolução controlada
+  manualmente, não por tempo). A decisão de não deduplicar chamadas
+  (Decisão 4) continua válida — o problema era de corretude na escrita
+  do cache, não da quantidade de chamadas a `check()`.
+
 ## 013-ativar-ci-path-providers — Ativação Operacional do CI (2026-08-13)
 
 - Este repositório usa **Rulesets**, não Branch Protection clássica —

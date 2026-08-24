@@ -7,12 +7,13 @@ específicos de scripts ou ferramentas.
 
 | Gate | Comando | Critério de sucesso |
 |---|---|---|
+| Testes unitários | `pnpm --filter @eventpier/provider-aws test` | Vitest reporta todos os testes passando (exit code 0) |
 | Build | `pnpm --filter @eventpier/contracts build && pnpm --filter @eventpier/provider-aws build && pnpm --filter @eventpier/ui build` | `dist/index.js`/`dist/index.d.ts` gerados sem erro para os três workspaces |
 | Typecheck | `pnpm -r exec tsc --noEmit` | Zero erros em todos os workspaces |
 | Docker | `docker compose build` | Build de `eventpier-ui` e `eventpier-aws` termina com exit code 0 |
-| Testes | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs && node scripts/validate-contract-constants.mjs && node scripts/validate-compose-shape.mjs && node scripts/validate-ci-workflow-shape.mjs && node scripts/validate-manifest-endpoint.mjs` | Todos os scripts terminam com exit code 0 |
+| Testes de integração | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs && node scripts/validate-contract-constants.mjs && node scripts/validate-compose-shape.mjs && node scripts/validate-ci-workflow-shape.mjs && node scripts/validate-manifest-endpoint.mjs` | Todos os scripts terminam com exit code 0 |
 
-A partir da spec 004, estes quatro gates também rodam
+A partir da spec 004, os gates desta tabela também rodam
 automaticamente em todo Pull Request contra `main`, via
 `.github/workflows/ci.yml` — deixam de ser apenas locais/manuais. O
 merge só é permitido quando o job `validate` desse workflow passa (ver
@@ -51,8 +52,9 @@ nunca como pré-requisito deste gate local, que continua buildando
 `specs/003-configurar-docker-compose/research.md`, Decisão 2, e
 `specs/004-configurar-ci-path-providers/research.md`, Decisão 7.
 
-A linha "Testes" combina os scripts de validação estrutural da spec
-001 (`validate-workspace-manifests.mjs`/`validate-workspace-dependencies.mjs`),
+A linha "Testes de integração" (chamada apenas "Testes" até a spec 006)
+combina os scripts de validação estrutural da spec 001
+(`validate-workspace-manifests.mjs`/`validate-workspace-dependencies.mjs`),
 o `validate-contract-constants.mjs` da spec 002, o
 `validate-compose-shape.mjs` da spec 003 e o
 `validate-ci-workflow-shape.mjs` da spec 004 — nenhum é um test runner
@@ -65,10 +67,8 @@ ter rodado (lê `packages/contracts/dist/index.js`);
 (não do gate Docker ter rodado — só lê a config resolvida, não builda);
 `validate-ci-workflow-shape.mjs` depende apenas dos arquivos em
 `.github/workflows/` existirem, lidos como texto, sem depender de
-nenhum gate anterior — por isso Build e Docker vêm antes de Testes
-nesta tabela. Trocar por um runner de verdade quando a primeira spec
-com lógica de negócio condicional (006, health-check com cache)
-precisar de testes unitários.
+nenhum gate anterior — por isso Build e Docker vêm antes de Testes de
+integração nesta tabela.
 
 `validate-manifest-endpoint.mjs` (spec 005) é o primeiro script desta
 linha que sobe um processo real (`providers/aws/dist/index.js`) e faz
@@ -78,3 +78,12 @@ depende dos gates Build de `@eventpier/contracts` **e**
 livre no momento da execução (encerra o processo filho ao final,
 mesmo em caso de falha). Ver
 `specs/005-expor-manifesto/research.md`, Decisão 8.
+
+A linha "Testes unitários" (spec 006) é o runner de verdade que a nota
+acima antecipava — Vitest, escopado a `@eventpier/provider-aws`
+(`specs/006-cachear-health-check/research.md`, Decisão 6), introduzido
+assim que a primeira lógica de negócio condicional (cache de
+health-check com TTL) justificou o custo de configurá-lo. Vem antes de
+Build nesta tabela por não depender de nenhum `dist/` — Vitest
+transpila TypeScript nativamente via esbuild, sem precisar de output
+do `tsc`.

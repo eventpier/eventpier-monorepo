@@ -24,10 +24,30 @@ capability real (Storage) ainda.
   externo, `managed: false`) é escopo da spec 007
   (`EnvironmentConfig`), ainda não implementada.
 - `capabilities` é sempre `[]` nesta versão — nenhuma capability real
-  está implementada ainda (Storage é spec 008; health-check com cache
-  é spec 006). Uma lista vazia comunica "provider não implementa
-  capability nenhuma ainda", distinto de "capability implementada mas
-  indisponível agora" (constitution, princípio 5).
+  está implementada ainda (Storage é spec 008). Uma lista vazia
+  comunica "provider não implementa capability nenhuma ainda",
+  distinto de "capability implementada mas indisponível agora"
+  (constitution, princípio 5).
+- **Cache de health-check por capability** (`src/manifest/health-cache.ts`,
+  spec 006): mecanismo genérico e isolado por instância —
+  `createHealthCache(check, options?)` retorna `{ getStatus, invalidate }`.
+  Cacheia em memória o resultado de uma verificação real (`HealthCheckFn`
+  fornecida por quem cria a instância), com TTL default de 4000ms
+  (dentro do intervalo 3-5s do princípio 6 da constitution),
+  configurável via `HEALTH_CHECK_TTL_MS` (valor ausente/inválido cai
+  silenciosamente no default). `invalidate()` limpa o cache e invalida
+  qualquer verificação já em voo (contador de geração interno — ver
+  "Comportamentos-chave" abaixo), forçando nova verificação real na
+  leitura seguinte, independente do TTL restante. Qualquer falha
+  (esperada ou não) vira `{status: "unavailable", reason:
+  HealthFailureCode}` — nunca uma exceção propagada. Seguro sob
+  concorrência: verificações concorrentes nunca se sobrescrevem fora de
+  ordem (achado e corrigido no `/review-pr` da PR desta spec — ver
+  `specs/006-cachear-health-check/research.md`, "Decisões durante a
+  implementação"). Ainda **não integrado** ao manifesto — nenhuma
+  capability real o utiliza nesta versão; `capabilities` continua `[]`
+  (ver linha acima). Fica pronto para a spec 008 (Storage) importar
+  sem exigir mudança de assinatura.
 - Qualquer requisição com método diferente de `GET` em
   `/api/v1/manifest` retorna `405 Method Not Allowed` (header
   `Allow: GET`); qualquer requisição a um path diferente retorna
@@ -62,8 +82,18 @@ tipos `ProviderManifest`/`ProviderError` definidos em
 ## Limitações conhecidas
 
 - `environment` e `capabilities` são fixos/vazios até as specs
-  006-008 existirem — não refletem o estado real de um MiniStack
+  007-008 existirem — não refletem o estado real de um MiniStack
   conectado ainda.
+- `health-cache.ts` não deduplica chamadas concorrentes: duas
+  `getStatus()` simultâneas com cache expirado disparam duas
+  verificações reais independentes (decisão consciente, ver
+  `specs/006-cachear-health-check/research.md`, Decisão 4 — nenhum
+  consumidor real ainda para justificar a complexidade de compartilhar
+  uma promise em voo). Isso é só uma questão de eficiência, não de
+  corretude: um contador de geração interno garante que a verificação
+  que resolver por último nunca sobrescreve um resultado mais recente
+  nem desfaz um `invalidate()` — corrigido e coberto por teste de
+  regressão no `/review-pr` da PR desta spec.
 - Sem validação de schema de entrada — aceitável porque o endpoint
   não recebe nenhum input (sem query params, corpo ou parâmetros de
   path). Reavaliar quando a spec 008 (Storage) introduzir entrada real
@@ -86,4 +116,5 @@ tipos `ProviderManifest`/`ProviderError` definidos em
 
 | # | Spec | Tipo | Resumo | Data |
 |---|------|------|--------|------|
+| 006 | [006-cachear-health-check](../../specs/006-cachear-health-check/) | ✨ Feature | Cache genérico de health-check por capability, isolado (`health-cache.ts`) — ainda não integrado ao manifesto | 2026-08-20 |
 | 005 | [005-expor-manifesto](../../specs/005-expor-manifesto/) | ✨ Feature | Endpoint `GET /api/v1/manifest`, substitui o placeholder da spec 003 | 2026-08-19 |

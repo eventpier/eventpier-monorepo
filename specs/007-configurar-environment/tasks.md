@@ -21,7 +21,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Testes
 
-- [ ] **T001** Criar `providers/aws/src/config/environment.config.test.ts`
+- [X] **T001** Criar `providers/aws/src/config/environment.config.test.ts`
   exatamente como em `contracts/environment-config-shape.md`. Deve
   validar:
   - **Default sem nenhuma variável de ambiente**: retorna
@@ -45,7 +45,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Core
 
-- [ ] **T002** Criar `providers/aws/src/config/environment.config.ts`
+- [X] **T002** Criar `providers/aws/src/config/environment.config.ts`
   exatamente como em `contracts/environment-config-shape.md`: classe
   `InvalidEnvironmentConfigError`; `parseManaged(raw)` aceitando só
   `"true"`/`"false"` case-insensitive (ausente/vazio → default
@@ -63,7 +63,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 Ordem sequencial — cada task assume o estado deixado pela anterior,
 exceto onde marcado `[P]`.
 
-- [ ] **T003** Rodar `pnpm --filter @eventpier/provider-aws test`.
+- [X] **T003** Rodar `pnpm --filter @eventpier/provider-aws test`.
   Confirmar que agora **passa** (GREEN — T001 volta a passar contra o
   código real de T002), e que os testes já existentes de
   `health-cache.test.ts` (spec 006) continuam passando sem regressão.

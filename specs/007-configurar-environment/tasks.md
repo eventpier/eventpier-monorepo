@@ -69,7 +69,7 @@ exceto onde marcado `[P]`.
   `health-cache.test.ts` (spec 006) continuam passando sem regressão.
   _Valida: T001._
 
-- [ ] **T004** Alterar `providers/aws/src/manifest/manifest.service.ts`
+- [X] **T004** Alterar `providers/aws/src/manifest/manifest.service.ts`
   exatamente como em `contracts/environment-config-shape.md`:
   `buildManifest()` vira `buildManifest(environment: Environment)`,
   usando o parâmetro recebido em vez do valor fixo no código. Import de
@@ -77,7 +77,7 @@ exceto onde marcado `[P]`.
   outra linha muda.
   _Origem: research.md Decisão 7; contracts/environment-config-shape.md ("manifest.service.ts")._
 
-- [ ] **T005** Alterar `providers/aws/src/index.ts` exatamente como em
+- [X] **T005** Alterar `providers/aws/src/index.ts` exatamente como em
   `contracts/environment-config-shape.md`: importar
   `resolveEnvironmentConfig`/`InvalidEnvironmentConfigError`; chamar
   `resolveEnvironmentConfig()` uma única vez antes da criação do
@@ -90,7 +90,7 @@ exceto onde marcado `[P]`.
   já usado por `manifest.service.ts`).
   _Origem: spec.md RF5-RF7; research.md Decisões 2-3, 7; contracts/environment-config-shape.md ("index.ts")._
 
-- [ ] **T006** Rodar
+- [X] **T006** Rodar
   `pnpm --filter @eventpier/contracts build && pnpm --filter @eventpier/provider-aws build && pnpm -r exec tsc --noEmit`.
   Confirmar sem erros — `dist/config/environment.config.js` gerado.
   _Valida: quickstart.md passo 2._

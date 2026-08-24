@@ -282,3 +282,18 @@ essa validação.
   down` — sem o profile, `ministack` (que só existe sob esse profile)
   fica de pé e o `down` reporta a rede ainda em uso; comportamento do
   próprio Compose, não algo introduzido por esta spec.
+- **Achado e corrigido no `/review-pr` desta PR**: `MINISTACK_ENDPOINT`
+  não passava por `trim()` antes de ser usado, diferente de
+  `MINISTACK_MANAGED` (Decisão 4, já normalizado) — um espaço em
+  branco incidental no valor (ex.: erro de digitação num `.env`)
+  produzia um endpoint tecnicamente diferente do pretendido em vez de
+  cair no default ou falhar explicitamente. A Decisão 5 original só
+  cobria o default quando o valor estava ausente/vazio, sem considerar
+  um valor presente mas "sujo". Corrigido com
+  `process.env.MINISTACK_ENDPOINT?.trim()` em
+  `environment.config.ts`; coberto por dois testes de regressão
+  (endpoint com espaço ao redor preservando o valor limpo; endpoint só
+  com espaços tratado como ausente, caindo no default) —
+  `environment.config.test.ts` passa de 8 para 10 casos. 22/22 testes
+  no total, build/typecheck e os dois scripts de integração
+  reconfirmados `OK` após a correção.

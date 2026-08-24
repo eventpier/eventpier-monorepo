@@ -22,7 +22,7 @@ function parseManaged(raw: string | undefined): boolean {
 
 export function resolveEnvironmentConfig(): Environment {
   const managed = parseManaged(process.env.MINISTACK_MANAGED);
-  const endpointRaw = process.env.MINISTACK_ENDPOINT;
+  const endpointRaw = process.env.MINISTACK_ENDPOINT?.trim();
   const endpoint = endpointRaw && endpointRaw.length > 0 ? endpointRaw : undefined;
 
   if (!managed && endpoint === undefined) {

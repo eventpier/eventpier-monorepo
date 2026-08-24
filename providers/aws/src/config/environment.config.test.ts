@@ -44,6 +44,18 @@ describe("resolveEnvironmentConfig", () => {
     });
   });
 
+  it("remove espaço em branco incidental de MINISTACK_ENDPOINT (trim)", () => {
+    process.env.MINISTACK_ENDPOINT = "  http://localhost:4566  ";
+
+    expect(resolveEnvironmentConfig().endpoint).toBe("http://localhost:4566");
+  });
+
+  it("MINISTACK_ENDPOINT só com espaços cai no default, não é tratado como customizado", () => {
+    process.env.MINISTACK_ENDPOINT = "   ";
+
+    expect(resolveEnvironmentConfig().endpoint).toBe("http://ministack:4566");
+  });
+
   it.each(["true", "TRUE", "True"])(
     "aceita MINISTACK_MANAGED=%s (case-insensitive)",
     (value) => {

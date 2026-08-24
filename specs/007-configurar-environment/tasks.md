@@ -95,14 +95,14 @@ exceto onde marcado `[P]`.
   Confirmar sem erros — `dist/config/environment.config.js` gerado.
   _Valida: quickstart.md passo 2._
 
-- [ ] **T007** `[P]` Alterar `scripts/validate-manifest-endpoint.mjs`
+- [X] **T007** `[P]` Alterar `scripts/validate-manifest-endpoint.mjs`
   exatamente como em `contracts/environment-config-shape.md`: a
   asserção de `environment` passa a exigir também
   `endpoint === "http://ministack:4566"`, além de `id`/`managed` já
   verificados. Nenhuma outra linha do script muda.
   _Origem: research.md Decisão 8; contracts/environment-config-shape.md ("validate-manifest-endpoint.mjs")._
 
-- [ ] **T008** `[P]` Criar `scripts/validate-environment-config.mjs`
+- [X] **T008** `[P]` Criar `scripts/validate-environment-config.mjs`
   exatamente como em `contracts/environment-config-shape.md`: spawna
   `providers/aws/dist/index.js` real em três cenários — (1)
   `managed:false` + endpoint customizado válido, confirma que o
@@ -113,7 +113,7 @@ exceto onde marcado `[P]`.
   comportamento do cenário 2.
   _Origem: spec.md RF5-RF7, Critérios de Sucesso; research.md Decisão 8; contracts/environment-config-shape.md ("validate-environment-config.mjs")._
 
-- [ ] **T009** Rodar
+- [X] **T009** Rodar
   `node scripts/validate-manifest-endpoint.mjs && node scripts/validate-environment-config.mjs`.
   Confirmar `OK` nos dois — cobre em conjunto o cenário default (RF2-3),
   o cenário externo customizado (RF1, RF4), e os dois cenários de

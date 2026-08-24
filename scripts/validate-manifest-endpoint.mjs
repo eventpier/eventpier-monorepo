@@ -72,8 +72,12 @@ try {
   if (manifestBody.provider?.id !== "aws" || manifestBody.provider?.name !== "AWS") {
     errors.push(`provider deveria ser {id: "aws", name: "AWS"}, encontrado ${JSON.stringify(manifestBody.provider)}`);
   }
-  if (manifestBody.environment?.id !== "ministack" || manifestBody.environment?.managed !== true) {
-    errors.push(`environment deveria ser {id: "ministack", managed: true}, encontrado ${JSON.stringify(manifestBody.environment)}`);
+  if (
+    manifestBody.environment?.id !== "ministack" ||
+    manifestBody.environment?.managed !== true ||
+    manifestBody.environment?.endpoint !== "http://ministack:4566"
+  ) {
+    errors.push(`environment deveria ser {id: "ministack", endpoint: "http://ministack:4566", managed: true}, encontrado ${JSON.stringify(manifestBody.environment)}`);
   }
   if (typeof manifestBody.version !== "string" || manifestBody.version.length === 0) {
     errors.push(`version deveria ser string não vazia, encontrado ${JSON.stringify(manifestBody.version)}`);

@@ -1,5 +1,9 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { ProviderError } from "@eventpier/contracts";
+import {
+  InvalidEnvironmentConfigError,
+  resolveEnvironmentConfig,
+} from "./config/environment.config.js";
 import { buildManifest } from "./manifest/manifest.service.js";
 
 const PORT = 4000;
@@ -38,12 +42,23 @@ function notFound(res: ServerResponse, path: string): void {
   sendJson(res, 404, error);
 }
 
+let environment;
+try {
+  environment = resolveEnvironmentConfig();
+} catch (err) {
+  if (err instanceof InvalidEnvironmentConfigError) {
+    console.error(`eventpier-aws: configuração de environment inválida — ${err.message}`);
+    process.exit(1);
+  }
+  throw err;
+}
+
 const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   const path = (req.url ?? "/").split("?")[0];
 
   if (path === MANIFEST_PATH) {
     if (req.method === "GET") {
-      sendJson(res, 200, buildManifest());
+      sendJson(res, 200, buildManifest(environment));
       return;
     }
     methodNotAllowed(res, req.method);

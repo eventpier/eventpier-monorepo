@@ -192,6 +192,40 @@ de 1 linha com link/referência se quiser evitar duplicação.
   (PRs #7-#10, runs de Actions, `docker pull`), não apenas configuração
   — ver `data-model.md` desta spec para os links.
 
+## 007-configurar-environment — EnvironmentConfig (endpoint / managed) (2026-08-24)
+
+- Implementação sem desvios do plano original — todos os 16 itens de
+  `contracts/environment-config-shape.md` (`environment.config.ts`,
+  teste, `manifest.service.ts`, `index.ts`, dois scripts de validação,
+  `quality-gates.md`, `ci.yml`) produzidos exatamente como
+  especificado; fail-fast na inicialização (managed:false sem
+  endpoint; `MINISTACK_MANAGED` não reconhecível) confirmado via
+  processo real spawnado por `validate-environment-config.mjs`.
+- Achado e corrigido no `/review-pr` desta PR: `MINISTACK_ENDPOINT` não
+  passava por `trim()` antes de ser usado, diferente de
+  `MINISTACK_MANAGED` (que já era normalizado) — um espaço em branco
+  incidental no valor produzia um endpoint tecnicamente diferente do
+  pretendido em vez de cair no default ou falhar explicitamente.
+  Corrigido com `process.env.MINISTACK_ENDPOINT?.trim()`, coberto por
+  dois testes de regressão (endpoint com espaço ao redor; endpoint só
+  com espaços cai no default).
+- **Achado externo (bot Codex, PR #14), ALTO**: `docker-compose.yml`
+  (spec 003) resolvia `MINISTACK_ENDPOINT=${MINISTACK_ENDPOINT:-
+  http://ministack:4566}` no host, então o container nunca via a
+  variável como "ausente" — `MINISTACK_MANAGED=false` sozinho (sem
+  `MINISTACK_ENDPOINT`) via `docker compose up` nunca disparava o
+  fail-fast do RF5, subindo com `managed:false` apontando
+  silenciosamente para o endpoint do serviço gerenciado. Confirmado
+  reproduzindo o cenário real antes da correção. Corrigido mudando o
+  Compose para `MINISTACK_ENDPOINT=${MINISTACK_ENDPOINT:-}` (default
+  passa a vir só do código do provider); nova checagem de regressão em
+  `scripts/validate-compose-shape.mjs`
+  (`checkEndpointNotDefaultedByCompose`). Reconfirmado com Docker real:
+  default via Compose continua correto, `MINISTACK_MANAGED=false` sem
+  endpoint agora falha com exit code 1. Ver
+  `specs/007-configurar-environment/research.md`, "Decisões durante a
+  implementação", para os detalhes completos da reprodução.
+
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)
 

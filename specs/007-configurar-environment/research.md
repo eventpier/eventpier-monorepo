@@ -297,3 +297,49 @@ essa validação.
   `environment.config.test.ts` passa de 8 para 10 casos. 22/22 testes
   no total, build/typecheck e os dois scripts de integração
   reconfirmados `OK` após a correção.
+- **Achado externo (bot Codex, comentário na PR #14), ALTO —
+  `docker-compose.yml` mascarava `managed:false` sem endpoint como se
+  tivesse um configurado**: `docker-compose.yml` (spec 003) definia
+  `MINISTACK_ENDPOINT=${MINISTACK_ENDPOINT:-http://ministack:4566}` —
+  quando o usuário não define `MINISTACK_ENDPOINT` no host, o Compose
+  resolve essa expressão **antes** de passar a variável ao container,
+  então `process.env.MINISTACK_ENDPOINT` dentro de
+  `environment.config.ts` nunca chega a ver "ausente": vê sempre a
+  string `"http://ministack:4566"`, indistinguível de um endpoint real
+  customizado. Resultado: `MINISTACK_MANAGED=false` sozinho (sem
+  `MINISTACK_ENDPOINT`), rodando via `docker compose up`, nunca
+  disparava o fail-fast do Requisito Funcional 5 — o provider subia
+  normalmente, reportando `managed:false` apontando para
+  `http://ministack:4566` (o endereço do serviço **gerenciado**, que
+  pode nem estar em execução se o profile `managed-env` não estiver
+  ativo). Reproduzido e confirmado antes da correção: `docker compose
+  config` com `MINISTACK_MANAGED=false` e sem `MINISTACK_ENDPOINT`
+  resolvia `environment.MINISTACK_ENDPOINT` para o literal
+  `"http://ministack:4566"`; rodando o processo com exatamente esse
+  par de variáveis, o manifesto respondia
+  `{endpoint:"http://ministack:4566", managed:false}` sem erro nenhum
+  — o cenário exato que o Requisito Funcional 5 e a Decisão 4 desta
+  spec pretendiam impedir, só que mediado pelo Compose em vez de
+  diretamente pelo processo Node.
+
+  **Correção aplicada**: `docker-compose.yml` muda para
+  `MINISTACK_ENDPOINT=${MINISTACK_ENDPOINT:-}` — sem valor quando o
+  host não define a variável, delegando o default inteiramente ao
+  código do provider (fonte única da verdade para "qual é o default",
+  em vez de dois defaults divergentes podendo mascarar um ao outro).
+  `MINISTACK_MANAGED`/`HEALTH_CHECK_TTL_MS` mantidos como estavam — o
+  mesmo problema não se aplica a eles (o código já trata "ausente" e
+  o valor default do Compose de forma idêntica em ambos os casos, sem
+  nenhum branch de fail-fast dependendo de detectar "ausente"
+  especificamente). Regressão coberta por uma nova checagem em
+  `scripts/validate-compose-shape.mjs`
+  (`checkEndpointNotDefaultedByCompose`), que roda `docker compose
+  config` com `MINISTACK_ENDPOINT` vazia e falha se o valor resolvido
+  não ficar vazio — confirmado RED (reproduzindo o texto original)
+  antes da correção, GREEN depois. Cenário fim a fim reconfirmado com
+  o Docker real: `docker compose --profile managed-env up` (default)
+  continua reportando `endpoint: "http://ministack:4566"` corretamente
+  (agora vindo do código, não do Compose); `MINISTACK_MANAGED=false
+  docker compose up eventpier-aws` (sem endpoint) agora encerra com
+  exit code 1 e a mensagem de erro esperada, em vez de subir
+  silenciosamente.

@@ -82,6 +82,37 @@ function checkProfile(serviceName, expectedProfile) {
   }
 }
 
+function checkEndpointNotDefaultedByCompose() {
+  // Achado do Codex na PR #14 (spec 007): se docker-compose.yml
+  // resolvesse MINISTACK_ENDPOINT para um default literal quando a
+  // variável não está definida no host, esse valor ficaria
+  // indistinguível de um endpoint real customizado pelo usuário —
+  // mascarando exatamente o caso que providers/aws/src/config/
+  // environment.config.ts precisa detectar como "ausente" para
+  // disparar o fail-fast de managed:false sem endpoint (RF5,
+  // spec.md). O default de endpoint deve vir só do código do
+  // provider, nunca do Compose.
+  let raw;
+  try {
+    raw = execFileSync("docker", ["compose", "config", "--format", "json"], {
+      encoding: "utf8",
+      env: { ...process.env, MINISTACK_ENDPOINT: "", MINISTACK_MANAGED: "" },
+    });
+  } catch (err) {
+    errors.push(
+      `não foi possível rodar \`docker compose config\` com MINISTACK_ENDPOINT vazio para validar o não-vazamento do default: ${err.message}`,
+    );
+    return;
+  }
+  const cfg = JSON.parse(raw);
+  const resolvedEndpoint = cfg.services?.["eventpier-aws"]?.environment?.MINISTACK_ENDPOINT;
+  if (resolvedEndpoint) {
+    errors.push(
+      `com MINISTACK_ENDPOINT não definida no host, docker-compose.yml resolveu eventpier-aws.environment.MINISTACK_ENDPOINT para "${resolvedEndpoint}" em vez de vazio/ausente — isso mascara a ausência de endpoint e impede o fail-fast de managed:false sem endpoint (achado do Codex, PR #14, spec 007)`,
+    );
+  }
+}
+
 function checkNetwork(networkName, expectedDriver) {
   const networks = config.networks ?? {};
   const net = networks[networkName];
@@ -101,6 +132,7 @@ checkNoPublishedPort("eventpier-aws");
 checkPublishedPort("ministack", 4566);
 checkProfile("ministack", "managed-env");
 checkNetwork("eventpier-net", "bridge");
+checkEndpointNotDefaultedByCompose();
 
 if (errors.length > 0) {
   console.error("FALHOU — validate-compose-shape.mjs:");

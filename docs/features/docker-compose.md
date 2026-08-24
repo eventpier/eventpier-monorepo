@@ -24,9 +24,22 @@ publicada `ministackorg/ministack:latest`.
   `eventpier-ui`/`eventpier-aws`, permitindo apontar para um MiniStack
   já em execução externamente.
 - `MINISTACK_ENDPOINT`, `MINISTACK_MANAGED` e `HEALTH_CHECK_TTL_MS` são
-  configuráveis via variável de ambiente (`.env`, ver `.env.example`),
-  com defaults embutidos no `docker-compose.yml` — nenhum rebuild de
-  imagem necessário para trocar endpoint/TTL.
+  configuráveis via variável de ambiente (`.env`, ver `.env.example`)
+  — nenhum rebuild de imagem necessário para trocar endpoint/TTL.
+  `MINISTACK_MANAGED` (`true`) e `HEALTH_CHECK_TTL_MS` (`4000`) têm
+  default embutido no próprio `docker-compose.yml`
+  (`${VAR:-default}`); **`MINISTACK_ENDPOINT` não tem** — quando não
+  definida no host, o Compose passa a variável vazia ao container, e o
+  default (`http://ministack:4566`) é aplicado só pelo código do
+  provider (`providers/aws/src/config/environment.config.ts`, spec
+  007). Decisão deliberada: se o Compose também tivesse um default
+  para `MINISTACK_ENDPOINT`, ele seria indistinguível de um endpoint
+  real customizado pelo usuário do ponto de vista do processo,
+  mascarando o caso `MINISTACK_MANAGED=false` sem endpoint definido —
+  o fail-fast que deveria pegar essa configuração incompleta nunca
+  dispararia (achado do Codex na PR #14; `scripts/validate-compose-
+  shape.mjs` tem uma checagem de regressão dedicada,
+  `checkEndpointNotDefaultedByCompose`).
 - `apps/ui` e `providers/aws` cada um tem um `Dockerfile` multi-stage
   (`base` → `deps` → `build` → `runtime`) que instala dependências do
   workspace inteiro via pnpm, builda só o próprio workspace, e copia
@@ -65,4 +78,5 @@ respondem texto fixo). O "contrato" é a topologia do
 
 | # | Spec | Tipo | Resumo | Data |
 |---|------|------|--------|------|
+| 007 | [007-configurar-environment](../../specs/007-configurar-environment/) | 🐛 Fix | Remove o default embutido de `MINISTACK_ENDPOINT` no Compose — mascarava `managed:false` sem endpoint como se tivesse um configurado, impedindo o fail-fast do provider (achado do Codex, PR #14) | 2026-08-24 |
 | 003 | [003-configurar-docker-compose](../../specs/003-configurar-docker-compose/) | ✨ Feature | Orquestra `eventpier-ui`/`eventpier-aws`/`ministack` via Docker Compose, build local, rede interna restrita | 2026-08-13 |

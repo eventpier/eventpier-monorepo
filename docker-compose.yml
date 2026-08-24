@@ -16,7 +16,7 @@ services:
     networks: [eventpier-net]
     environment:
       - HEALTH_CHECK_TTL_MS=${HEALTH_CHECK_TTL_MS:-4000}
-      - MINISTACK_ENDPOINT=${MINISTACK_ENDPOINT:-http://ministack:4566}
+      - MINISTACK_ENDPOINT=${MINISTACK_ENDPOINT:-}
       - MINISTACK_MANAGED=${MINISTACK_MANAGED:-true}
     extra_hosts:
       - "host.docker.internal:host-gateway"

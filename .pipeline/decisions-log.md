@@ -192,6 +192,24 @@ de 1 linha com link/referência se quiser evitar duplicação.
   (PRs #7-#10, runs de Actions, `docker pull`), não apenas configuração
   — ver `data-model.md` desta spec para os links.
 
+## 007-configurar-environment — EnvironmentConfig (endpoint / managed) (2026-08-24)
+
+- Implementação sem desvios do plano original — todos os 16 itens de
+  `contracts/environment-config-shape.md` (`environment.config.ts`,
+  teste, `manifest.service.ts`, `index.ts`, dois scripts de validação,
+  `quality-gates.md`, `ci.yml`) produzidos exatamente como
+  especificado; fail-fast na inicialização (managed:false sem
+  endpoint; `MINISTACK_MANAGED` não reconhecível) confirmado via
+  processo real spawnado por `validate-environment-config.mjs`.
+- Achado e corrigido no `/review-pr` desta PR: `MINISTACK_ENDPOINT` não
+  passava por `trim()` antes de ser usado, diferente de
+  `MINISTACK_MANAGED` (que já era normalizado) — um espaço em branco
+  incidental no valor produzia um endpoint tecnicamente diferente do
+  pretendido em vez de cair no default ou falhar explicitamente.
+  Corrigido com `process.env.MINISTACK_ENDPOINT?.trim()`, coberto por
+  dois testes de regressão (endpoint com espaço ao redor; endpoint só
+  com espaços cai no default).
+
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)
 

@@ -37,7 +37,7 @@ abaixo são um ponto de partida; ajuste ao rodar `/specify` de cada uma.
 |---|------|--------|---------------------|
 | 005 | Endpoint de manifesto (`GET /api/v1/manifest`) | ✅ Concluído | 2026-08-19 |
 | 006 | Health-check com cache em memória por capability (TTL configurável via `HEALTH_CHECK_TTL_MS`, default 3-5s, com invalidação ativa em falha de chamada real) | ✅ Concluído | 2026-08-20 |
-| 007 | `EnvironmentConfig` (`endpoint` / `managed`) apontando para MiniStack gerenciado pelo compose ou externo já em execução | 🔲 Pendente | 2026-08-12 |
+| 007 | `EnvironmentConfig` (`endpoint` / `managed`) apontando para MiniStack gerenciado pelo compose ou externo já em execução | 🟡 Em andamento | 2026-08-24 |
 | 008 | Capability Storage (listar buckets, abrir bucket, listar objetos, navegar por prefixos) via MiniStack Adapter, usando AWS SDK apontando o `endpoint` do MiniStack | 🔲 Pendente | 2026-08-12 |
 
 ## Fase 3 — UI (`apps/ui`)

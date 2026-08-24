@@ -1,0 +1,22 @@
+{
+  "feature_dir": "specs/007-configurar-environment",
+  "branch": "feature/007-configurar-environment",
+  "short_name": "configurar-environment",
+  "current_phase": "plan",
+  "status_detail": null,
+  "phases_completed": ["specify"],
+  "phases_pending": ["plan", "tasks", "implement", "review"],
+  "clarifications_asked": 2,
+  "last_updated": "2026-08-24T00:00:00Z",
+  "quality_gates_status": {
+    "typecheck": null,
+    "test": null,
+    "lint": null,
+    "build": null
+  },
+  "task_progress": {
+    "total": null,
+    "completed": 0,
+    "failed": 0
+  }
+}

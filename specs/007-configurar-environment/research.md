@@ -266,3 +266,19 @@ mudança — seu `expectedSteps` é uma lista de substrings obrigatórios
 essa validação.
 
 ## Decisões durante a implementação
+
+- Nenhum desvio do plano original. `environment.config.ts`,
+  `environment.config.test.ts`, `manifest.service.ts`, `index.ts`,
+  `validate-manifest-endpoint.mjs` e `validate-environment-config.mjs`
+  foram implementados exatamente como especificado em
+  `contracts/environment-config-shape.md` — RED confirmado em T001
+  antes de `environment.config.ts` existir, GREEN em T003 (20/20
+  testes, 12 pré-existentes de `health-cache.test.ts` + 8 novos),
+  build/typecheck limpos em T006, os dois scripts de validação `OK`
+  em T009 na primeira execução, e `docker compose --profile
+  managed-env up` (T010) subindo `eventpier-aws` normalmente com os
+  defaults do Compose. Única nota operacional (não de design): derrubar
+  o Compose desta spec exige `docker compose --profile managed-env
+  down` — sem o profile, `ministack` (que só existe sob esse profile)
+  fica de pé e o `down` reporta a rede ainda em uso; comportamento do
+  próprio Compose, não algo introduzido por esta spec.

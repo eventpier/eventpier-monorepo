@@ -158,12 +158,12 @@ exceto onde marcado `[P]`.
 
 ## Fase: Polish
 
-- [ ] **T014** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T014** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer decisão não prevista (ex.: ajuste fino
   de algum caso de borda de `parseManaged` ou do timeout usado em
   `validate-environment-config.mjs` não coberto originalmente).
 
-- [ ] **T015** `[P]` Rodar `find providers/aws/src -type f`. Confirmar
+- [X] **T015** `[P]` Rodar `find providers/aws/src -type f`. Confirmar
   que lista exatamente `index.ts`, `config/environment.config.ts`,
   `config/environment.config.test.ts`, `manifest/manifest.service.ts`,
   `manifest/health-cache.ts` e `manifest/health-cache.test.ts` —
@@ -171,7 +171,7 @@ exceto onde marcado `[P]`.
   de spec futura.
   _Origem: spec.md "Fora do escopo"._
 
-- [ ] **T016** Revisão final contra `spec.md` → "Critérios de
+- [X] **T016** Revisão final contra `spec.md` → "Critérios de
   Sucesso" e "Requisitos Funcionais", lendo o código produzido (não só
   rodando gates): confirmar que nenhuma chamada de rede real ao
   MiniStack existe em `environment.config.ts`/`index.ts` (garante RF7

@@ -54,3 +54,4 @@ jobs:
           node scripts/validate-compose-shape.mjs
           node scripts/validate-ci-workflow-shape.mjs
           node scripts/validate-manifest-endpoint.mjs
+          node scripts/validate-environment-config.mjs

@@ -120,7 +120,7 @@ exceto onde marcado `[P]`.
   fail-fast (RF5-RF6). Depende de T006, T007 e T008.
   _Valida: quickstart.md passos 3-6; spec.md Critérios de Sucesso (todos)._
 
-- [ ] **T010** Rodar
+- [X] **T010** Rodar
   `docker compose --profile managed-env up --build -d` seguido de
   `docker compose logs eventpier-aws`. Confirmar que a mensagem
   "eventpier-aws ouvindo na porta 4000" aparece, sem nenhum erro —
@@ -129,7 +129,7 @@ exceto onde marcado `[P]`.
   spec 003). Encerrar com `docker compose down` ao final.
   _Valida: quickstart.md passo 7; spec.md RF2 (comportamento default via Compose)._
 
-- [ ] **T011** `[P]` Atualizar `.pipeline/quality-gates.md`: inserir
+- [X] **T011** `[P]` Atualizar `.pipeline/quality-gates.md`: inserir
   `node scripts/validate-environment-config.mjs` ao final da cadeia de
   comandos da linha **Testes de integração** (após
   `validate-manifest-endpoint.mjs`); adicionar uma frase ao parágrafo
@@ -137,13 +137,13 @@ exceto onde marcado `[P]`.
   padrão das entradas anteriores.
   _Origem: research.md Decisão 8 ("Consequência para /tasks"); contracts/environment-config-shape.md ("quality-gates.md")._
 
-- [ ] **T012** `[P]` Atualizar `.github/workflows/ci.yml`: inserir
+- [X] **T012** `[P]` Atualizar `.github/workflows/ci.yml`: inserir
   `node scripts/validate-environment-config.mjs` como última linha do
   bloco `run:` do step "Testes de integração (scripts de validação
   estrutural)", após `validate-manifest-endpoint.mjs`.
   _Origem: research.md Decisão 8 ("Consequência para /tasks"); contracts/environment-config-shape.md ("ci.yml")._
 
-- [ ] **T013** Rodar `git status --short`. Confirmar que as mudanças
+- [X] **T013** Rodar `git status --short`. Confirmar que as mudanças
   ficam restritas a
   `providers/aws/src/config/environment.config.ts` (novo),
   `providers/aws/src/config/environment.config.test.ts` (novo),

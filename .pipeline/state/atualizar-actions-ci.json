@@ -1,0 +1,22 @@
+{
+  "feature_dir": "specs/014-atualizar-actions-ci",
+  "branch": "fix/014-atualizar-actions-ci",
+  "short_name": "atualizar-actions-ci",
+  "current_phase": "done",
+  "status_detail": null,
+  "phases_completed": ["specify", "plan", "tasks", "implement", "review"],
+  "phases_pending": [],
+  "clarifications_asked": 1,
+  "last_updated": "2026-08-25T03:00:00Z",
+  "quality_gates_status": {
+    "typecheck": "pass",
+    "test": "pass",
+    "build": "pass",
+    "docker": "pass"
+  },
+  "task_progress": {
+    "total": 11,
+    "completed": 11,
+    "failed": 0
+  }
+}

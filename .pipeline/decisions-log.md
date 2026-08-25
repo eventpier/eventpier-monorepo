@@ -297,6 +297,42 @@ de 1 linha com link/referência se quiser evitar duplicação.
   resolvível). Ver `research.md`, "Decisões durante a implementação",
   para os detalhes completos das 5 correções + o achado adicional.
 
+## 014-atualizar-actions-ci — Atualizar actions/checkout e actions/setup-node (2026-08-25)
+
+- Sem desvios significativos do plano: `research.md` já havia deixado a
+  versão exata (SHA) para o `/plan` resolver via GitHub API em vez de
+  fixá-la no `/specify-tech`, para não envelhecer — `v7.0.1`/`v7.0.0`
+  (checkout/setup-node) confirmadas como as mais recentes também no
+  momento do `/implement`, sem reconciliação necessária.
+- Único ajuste não previsto: a mensagem de erro de `checkPinnedBySha`
+  (`scripts/validate-ci-workflow-shape.mjs`) dizia "Action de terceiro
+  deveria ser fixada por SHA..." — imprecisa depois que esta spec
+  estendeu a checagem para `actions/checkout`/`actions/setup-node`
+  (mantidas pela própria GitHub, não "de terceiro"). Generalizada
+  durante o `/implement`, sem mudar a lógica de checagem.
+- Esta spec revisou (não contradisse por omissão) uma decisão
+  documentada da spec 004 — `actions/checkout`/`actions/setup-node`
+  haviam sido deixadas fora do pin por SHA por serem mantidas pela
+  própria GitHub, risco julgado menor que o de `docker/login-action`/
+  `docker/build-push-action` — estendendo o pin para as quatro actions
+  dos dois workflows, com aprovação explícita do usuário via
+  `clarification-protocol`. Ver `specs/014-atualizar-actions-ci/spec.md`
+  (seção Impacto) e `research.md` (Decisão 2) para o raciocínio
+  completo.
+- Critérios de Aceite 1-3 e 5 confirmados por gate mecânico
+  (`validate-ci-workflow-shape.mjs` GREEN); Critério 4 confirmado com
+  evidência real para `ci.yml` — PR
+  [#16](https://github.com/eventpier/eventpier-monorepo/pull/16), duas
+  runs do job `validate` com Annotations vazias (`[]`), e a regressão
+  do gate comprovada revertendo e restaurando o pin (T006) antes de
+  abrir a PR. A parte de `publish-provider-aws.yml` do Critério 4
+  segue **adiada** (T008: só sintaxe YAML local, sem run real) — esse
+  workflow só dispara em `push` tocando `providers/aws/**`/
+  `packages/contracts/**`, então a confirmação real acontece no
+  próximo push legítimo, como já registrado em `quickstart.md` (seção
+  5) e no próprio Critério 4 de `spec.md` ("se possível... sem
+  disparar publicação indevida").
+
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)
 

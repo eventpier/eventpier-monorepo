@@ -181,7 +181,7 @@ exceto onde marcado `[P]`.
   `storage` é genuinamente indisponível aqui.
   _Origem: research.md Decisão 10; contracts/storage-capability-shape.md ("validate-manifest-endpoint.mjs")._
 
-- [ ] **T015** Criar `scripts/validate-storage-endpoint.mjs`
+- [X] **T015** Criar `scripts/validate-storage-endpoint.mjs`
   exatamente como em `contracts/storage-capability-shape.md`: cria uma
   fixture própria (bucket + objeto na raiz + objeto sob um prefixo) via
   `@aws-sdk/client-s3` direto contra o MiniStack real (com retry curto

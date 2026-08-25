@@ -1,0 +1,22 @@
+{
+  "feature_dir": "specs/008-implementar-storage",
+  "branch": "feature/008-implementar-storage",
+  "short_name": "implementar-storage",
+  "current_phase": "plan",
+  "status_detail": null,
+  "phases_completed": ["specify"],
+  "phases_pending": ["plan", "tasks", "implement", "review"],
+  "clarifications_asked": 1,
+  "last_updated": "2026-08-25T00:00:00Z",
+  "quality_gates_status": {
+    "typecheck": null,
+    "test": null,
+    "lint": null,
+    "build": null
+  },
+  "task_progress": {
+    "total": null,
+    "completed": 0,
+    "failed": 0
+  }
+}

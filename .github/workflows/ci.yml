@@ -46,6 +46,9 @@ jobs:
       - name: Docker build
         run: docker compose build
 
+      - name: Iniciar MiniStack
+        run: docker compose --profile managed-env up -d ministack
+
       - name: Testes de integração (scripts de validação estrutural)
         run: |
           node scripts/validate-workspace-manifests.mjs
@@ -55,3 +58,4 @@ jobs:
           node scripts/validate-ci-workflow-shape.mjs
           node scripts/validate-manifest-endpoint.mjs
           node scripts/validate-environment-config.mjs
+          node scripts/validate-storage-endpoint.mjs

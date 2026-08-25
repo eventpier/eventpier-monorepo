@@ -11,7 +11,7 @@ específicos de scripts ou ferramentas.
 | Build | `pnpm --filter @eventpier/contracts build && pnpm --filter @eventpier/provider-aws build && pnpm --filter @eventpier/ui build` | `dist/index.js`/`dist/index.d.ts` gerados sem erro para os três workspaces |
 | Typecheck | `pnpm -r exec tsc --noEmit` | Zero erros em todos os workspaces |
 | Docker | `docker compose build` | Build de `eventpier-ui` e `eventpier-aws` termina com exit code 0 |
-| Testes de integração | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs && node scripts/validate-contract-constants.mjs && node scripts/validate-compose-shape.mjs && node scripts/validate-ci-workflow-shape.mjs && node scripts/validate-manifest-endpoint.mjs && node scripts/validate-environment-config.mjs` | Todos os scripts terminam com exit code 0 |
+| Testes de integração | `node scripts/validate-workspace-manifests.mjs && node scripts/validate-workspace-dependencies.mjs && node scripts/validate-contract-constants.mjs && node scripts/validate-compose-shape.mjs && node scripts/validate-ci-workflow-shape.mjs && node scripts/validate-manifest-endpoint.mjs && node scripts/validate-environment-config.mjs && node scripts/validate-storage-endpoint.mjs` | Todos os scripts terminam com exit code 0 |
 
 A partir da spec 004, os gates desta tabela também rodam
 automaticamente em todo Pull Request contra `main`, via
@@ -96,3 +96,16 @@ customizada válida (`managed: false` + endpoint), e os dois cenários
 de fail-fast na inicialização (`managed: false` sem endpoint;
 `MINISTACK_MANAGED` com valor não reconhecível) — ver
 `specs/007-configurar-environment/research.md`, Decisão 8.
+
+`validate-storage-endpoint.mjs` (spec 008) é o primeiro script desta
+linha que depende de um serviço externo real — um MiniStack de pé e
+acessível, não apenas o processo do provider isolado. Ele cria sua
+própria fixture (bucket + objetos de teste) via `@aws-sdk/client-s3`
+direto contra o MiniStack, sobe o provider real e valida listagem de
+buckets, a distinção pasta/objeto na navegação por prefixo, bucket
+inexistente e o status da capability `storage` no manifesto — nos
+cenários de MiniStack acessível e de endpoint inalcançável. Rodar
+localmente exige `docker compose --profile managed-env up -d ministack`
+antes deste script (diferente de todos os anteriores desta linha, que
+não têm nenhuma dependência externa) — ver
+`specs/008-implementar-storage/research.md`, Decisão 9.

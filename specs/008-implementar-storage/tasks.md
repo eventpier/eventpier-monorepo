@@ -213,7 +213,7 @@ exceto onde marcado `[P]`.
   Encerrar com `docker compose --profile managed-env down`.
   _Valida: quickstart.md passo 8._
 
-- [ ] **T019** `[P]` Atualizar `.pipeline/quality-gates.md`: inserir
+- [X] **T019** `[P]` Atualizar `.pipeline/quality-gates.md`: inserir
   `node scripts/validate-storage-endpoint.mjs` ao final da cadeia de
   comandos da linha **Testes de integração** (após
   `validate-environment-config.mjs`); adicionar um parágrafo
@@ -222,7 +222,7 @@ exceto onde marcado `[P]`.
   rodar localmente).
   _Origem: research.md Decisão 9 ("Consequência para /tasks"); contracts/storage-capability-shape.md ("quality-gates.md")._
 
-- [ ] **T020** `[P]` Atualizar `.github/workflows/ci.yml`: inserir um
+- [X] **T020** `[P]` Atualizar `.github/workflows/ci.yml`: inserir um
   novo step "Iniciar MiniStack"
   (`docker compose --profile managed-env up -d ministack`) entre
   "Docker build" e "Testes de integração"; inserir

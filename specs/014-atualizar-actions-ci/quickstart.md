@@ -43,6 +43,14 @@ commitar.
 5. Fechar o PR de teste sem merge, a menos que já seja o PR real desta
    spec.
 
+## Evidência real (coletada durante `/implement`)
+
+Passo 4 executado via [PR #16](https://github.com/eventpier/eventpier-monorepo/pull/16):
+run [32864927543](https://github.com/eventpier/eventpier-monorepo/actions/runs/32864927543)
+do job `validate`, conclusão `success`. Annotations da run vazias
+(`[]`) — confirma ausência total do aviso "Node.js 20 is deprecated".
+Detalhe completo em `research.md`, "Decisões durante a implementação".
+
 ## 5. `publish-provider-aws.yml` (verificação adiada, não bloqueante)
 
 Este workflow só dispara em `push` para `main` tocando

@@ -126,3 +126,23 @@ existente no mesmo arquivo.
    `packages/contracts/**`, não é bloqueante para esta spec.
 
 ## Decisões durante a implementação
+
+- As versões `v7.0.1`/`v7.0.0` resolvidas acima na Decisão 1 ainda
+  eram as mais recentes no momento do `/implement` (mesma sessão,
+  poucos minutos depois) — nenhuma reconciliação necessária.
+- A mensagem de erro de `checkPinnedBySha` (`scripts/validate-ci-workflow-shape.mjs`)
+  dizia "Action de terceiro deveria ser fixada por SHA..." — texto que
+  ficou impreciso ao passar a cobrir `actions/checkout`/`actions/setup-node`
+  (mantidas pela própria GitHub, não "de terceiro"). Ajustada durante
+  T002 para um texto neutro ("deveria ser fixada por SHA...",
+  mencionando a extensão desta spec), sem mudar a lógica de checagem —
+  não estava previsto no plano, mas é uma correção de precisão direta
+  na mesma função tocada pela task, não escopo novo.
+- Evidência real do Critério de Aceite 4 (T007): PR
+  [#16](https://github.com/eventpier/eventpier-monorepo/pull/16), run
+  [32864927543](https://github.com/eventpier/eventpier-monorepo/actions/runs/32864927543)
+  do job `validate`, conclusão `success` em 40s. Annotations da run
+  (`gh api repos/eventpier/eventpier-monorepo/check-runs/97857735303/annotations`)
+  retornou `[]` — nenhuma anotação, confirmando ausência total do
+  aviso "Node.js 20 is deprecated" (não apenas "não apareceu entre as
+  que eu vi": a lista está vazia).

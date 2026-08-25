@@ -75,7 +75,7 @@ dispensado automaticamente (mesmo critério de `specs/013-ativar-ci-path-provide
   de prosseguir (voltar ao estado GREEN de T005).
   _Valida: spec.md, Critério de Aceite 3 ("regressão futura... deve falhar o gate")._
 
-- [ ] **T007** ⚠ Abrir um Pull Request de teste contra `main` (mudança
+- [X] **T007** ⚠ Abrir um Pull Request de teste contra `main` (mudança
   trivial, ex.: espaço em branco num comentário, revertida depois) só
   para disparar `ci.yml` de verdade. Abrir a run do job `validate` no
   GitHub Actions e inspecionar as Annotations: confirmar a **ausência**
@@ -96,17 +96,17 @@ dispensado automaticamente (mesmo critério de `specs/013-ativar-ci-path-provide
 
 ## Fase: Polish
 
-- [ ] **T009** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T009** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer achado não previsto (ex.: se as versões
   v7.0.1/v7.0.0 resolvidas no `/plan` ainda eram as mais recentes no
   momento do `/implement`, ou se mudaram).
 
-- [ ] **T010** `[P]` Atualizar `quickstart.md` (ou `research.md`) com o
+- [X] **T010** `[P]` Atualizar `quickstart.md` (ou `research.md`) com o
   link real do PR/run de T007 como evidência — mesmo espírito da
   tabela `RequirementEvidence` de `specs/013-ativar-ci-path-providers/data-model.md`,
   sem precisar replicar a estrutura de tabela (esta spec não tem
   múltiplos requisitos com evidências paralelas, um parágrafo basta).
 
-- [ ] **T011** Revisão final contra `spec.md` → "Critérios de Aceite"
+- [X] **T011** Revisão final contra `spec.md` → "Critérios de Aceite"
   (1-5): confirmar cada um com a evidência registrada em T009/T010, e
   preparar o resumo para `/review-pr`.

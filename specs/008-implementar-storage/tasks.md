@@ -135,7 +135,7 @@ exceto onde marcado `[P]`.
   passando sem regressão. Depende de T007, T008, T009.
   _Valida: T007._
 
-- [ ] **T011** Alterar
+- [X] **T011** Alterar
   `providers/aws/src/manifest/manifest.service.ts` exatamente como em
   `contracts/storage-capability-shape.md`: `buildManifest()` ganha o
   parâmetro `capabilities: CapabilityDescriptor[]`, repassado direto
@@ -143,7 +143,7 @@ exceto onde marcado `[P]`.
   adicionado a partir de `@eventpier/contracts`.
   _Origem: spec.md RF5; research.md Decisão 3; contracts/storage-capability-shape.md ("manifest.service.ts")._
 
-- [ ] **T012** Alterar `providers/aws/src/index.ts` exatamente como em
+- [X] **T012** Alterar `providers/aws/src/index.ts` exatamente como em
   `contracts/storage-capability-shape.md`: importar
   `createHealthCache`, `createMiniStackStorageAdapter`,
   `createStorageHealthCheck`, `getStorageCapabilityDescriptor`,
@@ -164,7 +164,7 @@ exceto onde marcado `[P]`.
   T009, T011.
   _Origem: spec.md RF1-RF6, RF8; research.md Decisões 3-4, 7-8; contracts/storage-capability-shape.md ("index.ts")._
 
-- [ ] **T013** Rodar
+- [X] **T013** Rodar
   `pnpm --filter @eventpier/provider-aws build && pnpm -r exec tsc --noEmit`.
   Confirmar sem erros —
   `providers/aws/dist/adapters/ministack/storage.adapter.js` e

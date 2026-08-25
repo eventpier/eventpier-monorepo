@@ -99,7 +99,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Core
 
-- [ ] **T008** Criar
+- [X] **T008** Criar
   `providers/aws/src/adapters/ministack/storage.adapter.ts`
   exatamente como em `contracts/storage-capability-shape.md`:
   interface `StorageAdapter` (`listBuckets`, `listObjects`);
@@ -113,7 +113,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
   instalado).
   _Origem: spec.md RF1-RF4; data-model.md ("StorageAdapter"); research.md Decisões 5-6; contracts/storage-capability-shape.md ("storage.adapter.ts")._
 
-- [ ] **T009** Criar
+- [X] **T009** Criar
   `providers/aws/src/capabilities/storage.controller.ts` exatamente
   como em `contracts/storage-capability-shape.md`:
   `classifyStorageError`, `toProviderError`, `createStorageHealthCheck`,
@@ -128,7 +128,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 Ordem sequencial — cada task assume o estado deixado pela anterior,
 exceto onde marcado `[P]`.
 
-- [ ] **T010** Rodar `pnpm --filter @eventpier/provider-aws test`.
+- [X] **T010** Rodar `pnpm --filter @eventpier/provider-aws test`.
   Confirmar que agora **passa** (GREEN — T007 volta a passar contra o
   código real de T008/T009), e que os testes já existentes de
   `health-cache.test.ts`/`environment.config.test.ts` continuam

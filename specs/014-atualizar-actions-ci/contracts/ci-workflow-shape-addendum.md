@@ -41,7 +41,7 @@ Adicionar, respeitando a estrutura de blocos já existente no arquivo
 ver `research.md`, Decisão 3):
 
 ```js
-// bloco ci.yml, após checkNoSecretsBeyondGithubToken(CI_PATH, ciContent);
+// bloco ci.yml, antes de checkNoSecretsBeyondGithubToken(CI_PATH, ciContent);
 checkPinnedBySha(CI_PATH, ciContent, "actions/checkout");
 checkPinnedBySha(CI_PATH, ciContent, "actions/setup-node");
 

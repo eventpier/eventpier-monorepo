@@ -319,12 +319,19 @@ de 1 linha com link/referência se quiser evitar duplicação.
   `clarification-protocol`. Ver `specs/014-atualizar-actions-ci/spec.md`
   (seção Impacto) e `research.md` (Decisão 2) para o raciocínio
   completo.
-- Todos os 5 Critérios de Aceite confirmados com evidência real, não
-  apenas configuração: PR [#16](https://github.com/eventpier/eventpier-monorepo/pull/16),
-  duas runs do job `validate` com Annotations vazias (`[]`) — o aviso
-  "Node.js 20 is deprecated" desapareceu de fato, e a regressão do
-  gate foi comprovada revertendo e restaurando o pin (T006) antes de
-  abrir a PR.
+- Critérios de Aceite 1-3 e 5 confirmados por gate mecânico
+  (`validate-ci-workflow-shape.mjs` GREEN); Critério 4 confirmado com
+  evidência real para `ci.yml` — PR
+  [#16](https://github.com/eventpier/eventpier-monorepo/pull/16), duas
+  runs do job `validate` com Annotations vazias (`[]`), e a regressão
+  do gate comprovada revertendo e restaurando o pin (T006) antes de
+  abrir a PR. A parte de `publish-provider-aws.yml` do Critério 4
+  segue **adiada** (T008: só sintaxe YAML local, sem run real) — esse
+  workflow só dispara em `push` tocando `providers/aws/**`/
+  `packages/contracts/**`, então a confirmação real acontece no
+  próximo push legítimo, como já registrado em `quickstart.md` (seção
+  5) e no próprio Critério 4 de `spec.md` ("se possível... sem
+  disparar publicação indevida").
 
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)

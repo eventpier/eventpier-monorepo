@@ -31,7 +31,7 @@ function checkPinnedBySha(path, content, action) {
   const ref = match[1];
   if (!/^[0-9a-f]{40}$/.test(ref)) {
     errors.push(
-      `"${path}" usa ${action}@${ref} — Action de terceiro deveria ser fixada por SHA de commit completo (40 chars), não por tag mutável (achado do review da PR #6)`,
+      `"${path}" usa ${action}@${ref} — deveria ser fixada por SHA de commit completo (40 chars), não por tag mutável (achado do review da PR #6, estendido a actions first-party pela spec 014)`,
     );
   }
 }
@@ -86,6 +86,8 @@ if (ciContent) {
     }
   }
 
+  checkPinnedBySha(CI_PATH, ciContent, "actions/checkout");
+  checkPinnedBySha(CI_PATH, ciContent, "actions/setup-node");
   checkNoSecretsBeyondGithubToken(CI_PATH, ciContent);
 }
 
@@ -128,6 +130,7 @@ if (publishContent) {
     );
   }
 
+  checkPinnedBySha(PUBLISH_PATH, publishContent, "actions/checkout");
   checkPinnedBySha(PUBLISH_PATH, publishContent, "docker/login-action");
   checkPinnedBySha(PUBLISH_PATH, publishContent, "docker/build-push-action");
   checkNoSecretsBeyondGithubToken(PUBLISH_PATH, publishContent);

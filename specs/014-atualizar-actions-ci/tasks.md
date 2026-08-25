@@ -20,7 +20,7 @@ dispensado automaticamente (mesmo critério de `specs/013-ativar-ci-path-provide
 
 ## Fase: Setup
 
-- [ ] **T001** Confirmar estado atual antes de qualquer mudança:
+- [X] **T001** Confirmar estado atual antes de qualquer mudança:
   `grep -n "actions/checkout@v4\|actions/setup-node@v4" .github/workflows/*.yml`
   retorna exatamente 3 ocorrências (`ci.yml` × 2 — checkout e
   setup-node —, `publish-provider-aws.yml` × 1 — checkout). Confirmar
@@ -30,7 +30,7 @@ dispensado automaticamente (mesmo critério de `specs/013-ativar-ci-path-provide
 
 ## Fase: Testes
 
-- [ ] **T002** Estender `scripts/validate-ci-workflow-shape.mjs` com as
+- [X] **T002** Estender `scripts/validate-ci-workflow-shape.mjs` com as
   chamadas novas de `checkPinnedBySha` (sem alterar a função em si):
   `actions/checkout` e `actions/setup-node` no bloco de `ci.yml`;
   `actions/checkout` no bloco de `publish-provider-aws.yml` — código

@@ -42,18 +42,18 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
   Confirmar sem erros — `packages/contracts/dist/storage.d.ts` gerado.
   Depende de T001, T002.
 
-- [ ] **T004** `[P]` Alterar `providers/aws/package.json`: adicionar
-  `"@aws-sdk/client-s3": "3.1117.0"` em `dependencies`, junto de
+- [X] **T004** `[P]` Alterar `providers/aws/package.json`: adicionar
+  `"@aws-sdk/client-s3": "3.1110.0"` em `dependencies`, junto de
   `@eventpier/contracts` já existente.
   _Origem: research.md Decisão 5; contracts/storage-capability-shape.md ("providers/aws/package.json")._
 
-- [ ] **T005** `[P]` Alterar `package.json` (raiz): adicionar
-  `"@aws-sdk/client-s3": "3.1117.0"` em `devDependencies`, mesma versão
+- [X] **T005** `[P]` Alterar `package.json` (raiz): adicionar
+  `"@aws-sdk/client-s3": "3.1110.0"` em `devDependencies`, mesma versão
   exata de T004 — necessário para `scripts/validate-storage-endpoint.mjs`
   (T015) resolver o pacote fora de qualquer workspace.
   _Origem: research.md Decisão 11; contracts/storage-capability-shape.md ("package.json (raiz)")._
 
-- [ ] **T006** Rodar `pnpm install`. Confirmar que o lockfile é
+- [X] **T006** Rodar `pnpm install`. Confirmar que o lockfile é
   atualizado sem erro e que `@aws-sdk/client-s3` fica resolvível tanto
   a partir de `providers/aws/` quanto da raiz do monorepo. Depende de
   T004, T005.

@@ -176,7 +176,7 @@ mais que o TTL para reportar indisponibilidade.
   (princípio 12).
 
 **Consequência para `/tasks`**: `providers/aws/package.json` ganha
-`@aws-sdk/client-s3` (versão `3.1117.0`, última publicada no momento
+`@aws-sdk/client-s3` (versão `3.1110.0`, última publicada no momento
 desta pesquisa) como dependência real, primeira dependência de runtime
 do provider além de `@eventpier/contracts`.
 
@@ -335,7 +335,7 @@ provider em si; só a asserção do script muda.
 
 **Decisão**: além de `providers/aws/package.json` (Decisão 5),
 `package.json` na raiz do monorepo ganha `@aws-sdk/client-s3` como
-`devDependency`, na mesma versão exata (`3.1117.0`).
+`devDependency`, na mesma versão exata (`3.1110.0`).
 
 **Justificativa**: `scripts/validate-storage-endpoint.mjs` (Decisão 9)
 roda a partir da raiz do monorepo, fora de qualquer workspace, e
@@ -377,4 +377,18 @@ scripts anteriores nunca bateram nesse problema porque só importavam
 
 ## Decisões durante a implementação
 
-<!-- Preenchido pelo /implement se algo não previsto aqui surgir. -->
+- **T004-T006 — versão de `@aws-sdk/client-s3` rebaixada de `3.1117.0`
+  para `3.1110.0`**: ao rodar `pnpm install` com `3.1117.0` (a versão
+  mais recente no momento da pesquisa do plano), o pnpm adicionou
+  automaticamente uma entrada `minimumReleaseAgeExclude` em
+  `pnpm-workspace.yaml` — sinal de que essa versão havia sido publicada
+  há menos de 24h (confirmado via `npm view`: publicada
+  2026-08-24T19:02Z, um dia antes desta implementação) e foi bloqueada
+  pelo gate de segurança de supply-chain do pnpm por padrão. Em vez de
+  aceitar o bypass automático, a versão foi trocada para `3.1110.0`
+  (publicada 2026-08-13, ~12 dias de maturidade), que instala sem
+  precisar de nenhuma exceção em `pnpm-workspace.yaml`. Todos os
+  documentos desta spec (`research.md`, `contracts/storage-capability-shape.md`,
+  `tasks.md`) foram atualizados para refletir `3.1110.0` como a versão
+  correta. Nenhuma mudança de comportamento do adapter — só a versão
+  pinada.

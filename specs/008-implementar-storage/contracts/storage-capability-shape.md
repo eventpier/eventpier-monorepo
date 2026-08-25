@@ -49,7 +49,7 @@ export * from "./storage.js";
     "test": "vitest run"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.1117.0",
+    "@aws-sdk/client-s3": "3.1110.0",
     "@eventpier/contracts": "workspace:*"
   },
   "devDependencies": {
@@ -69,7 +69,7 @@ export * from "./storage.js";
   "devDependencies": {
     "typescript": "7.0.2",
     "@types/node": "24.13.3",
-    "@aws-sdk/client-s3": "3.1117.0"
+    "@aws-sdk/client-s3": "3.1110.0"
   }
 }
 ```

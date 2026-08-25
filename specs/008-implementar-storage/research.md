@@ -437,3 +437,69 @@ scripts anteriores nunca bateram nesse problema porque só importavam
   de execução, sem relação com o código desta spec; `pnpm-lock.yaml`
   permaneceu idêntico durante todo o episódio (confirmado via
   `git status` antes/depois).
+
+- **`/review-pr` (PR #15) — 5 correções antes da submissão do review**:
+  1. **[ALTO, achado externo, bot Codex]** `decodeURIComponent(objectsMatch[1])`
+     em `index.ts` (rota de objects) lançava `URIError` para um segmento de
+     bucket malformado (ex.: `/api/v1/storage/buckets/%/objects`) sem
+     nenhum try/catch em volta — como o handler do `createServer` é
+     `async`, a exceção virava uma promise rejeitada não tratada, e o
+     Node encerra o processo por padrão nesse caso (confirmado
+     reproduzindo antes da correção: uma única requisição malformada
+     derrubava o provider inteiro). Corrigido com um try/catch dedicado
+     em volta do `decodeURIComponent` (retorna `400 BAD_REQUEST` para
+     path malformado) **e** um try/catch geral em volta de todo o corpo
+     do handler (rede de segurança para qualquer outra exceção síncrona
+     não prevista, retorna `500`). Reconfirmado depois da correção:
+     requisição malformada agora retorna 400 e o processo continua
+     respondendo normalmente na sequência (testado manualmente e via
+     novo Cenário 3 de `scripts/validate-storage-endpoint.mjs`).
+  2. **[MÉDIO]** O filtro do "objeto marcador de pasta" em
+     `storage.adapter.ts` (`o.Key !== prefix`) escondia qualquer objeto
+     real cuja key coincidisse exatamente com um `prefix` que não
+     terminasse em `/` — só deveria filtrar quando `prefix` termina no
+     delimiter (única forma de ser de fato um marcador de pasta).
+     Corrigido com `isFolderMarker()`, condicionando o filtro a
+     `prefix.endsWith(DELIMITER)`. Coberto por um novo caso em
+     `scripts/validate-storage-endpoint.mjs` (`prefix=raiz.txt`, sem
+     `/`, deve manter o objeto real).
+  3. **[MÉDIO]** Erros `unknown` de storage (nem conexão, nem
+     `NoSuchBucket`) não deixavam nenhum rastro server-side — só a
+     mensagem genérica do `ProviderError` chegava ao chamador. Corrigido
+     com `logIfUnknown()` (`console.error`) nos dois pontos que
+     classificam erro (`createStorageHealthCheck` e
+     `withStorageErrorHandling`) — só no ramo `unknown`, já que os ramos
+     `connection`/`not-found` já carregam informação suficiente via
+     `code`/status HTTP.
+  4. **[BAIXO]** `environment.endpoint ?? ""` em `index.ts` mascararia
+     silenciosamente uma quebra futura do invariante "endpoint sempre
+     preenchido" da spec 007. Trocado por `environment.endpoint!`
+     (asserção explícita do invariante já documentado/testado, em vez
+     de um fallback que produziria um `S3Client` com endpoint vazio e um
+     erro confuso).
+  5. **[BAIXO]** Faltava um teste espelhando, para `listObjects`, o
+     teste que `listBuckets` já tinha de invalidação de cache em falha
+     de conexão real. Adicionado — cobertura simétrica entre as duas
+     funções (compartilham `withStorageErrorHandling`).
+
+  **Achado adicional durante a verificação da correção #3**: ao
+  reproduzir o log de erro `unknown` recém-adicionado,
+  `validate-manifest-endpoint.mjs`/`validate-storage-endpoint.mjs`
+  revelaram que uma falha de resolução DNS (`EAI_AGAIN`/`ENOTFOUND` —
+  o cenário real de `MINISTACK_ENDPOINT=http://ministack:4566` rodando
+  fora da rede do Compose) caía em `unknown` em vez de `connection`,
+  já que `classifyStorageError` só reconhecia
+  `ECONNREFUSED`/`ETIMEDOUT`/`ECONNRESET`. Isso significava não
+  invalidar o cache de health-check numa falha de ambiente
+  perfeitamente real e comum. Corrigido adicionando `ENOTFOUND`/
+  `EAI_AGAIN` à classificação `connection`/`CONNECTION_REFUSED`
+  (`HealthFailureCode` não tem um valor dedicado a falha de DNS — o mais
+  próximo semanticamente é "não consegui alcançar o host"), com dois
+  novos casos de teste parametrizados.
+
+  Suíte final: 42/42 testes unitários (era 39/39 antes desta rodada);
+  os três scripts de integração (`validate-manifest-endpoint.mjs`,
+  `validate-environment-config.mjs`, `validate-storage-endpoint.mjs`)
+  `OK` contra MiniStack real; `docker compose up --build` reconfirmado
+  com sucesso, incluindo o cenário de path malformado dentro do
+  container real (400, processo sobrevive).

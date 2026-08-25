@@ -54,8 +54,14 @@ export function createMiniStackStorageAdapter(endpoint: string): StorageAdapter 
         .filter((p) => p.Prefix !== undefined)
         .map((p) => ({ type: "folder", prefix: p.Prefix! }));
 
+      // Só um prefix terminado em delimiter pode corresponder ao marcador de
+      // pasta de zero bytes; um prefix "solto" coincidindo com uma key real
+      // não deve esconder esse objeto do resultado.
+      const isFolderMarker = (key: string) =>
+        prefix !== undefined && prefix.endsWith(DELIMITER) && key === prefix;
+
       const objects: StorageEntry[] = (result.Contents ?? [])
-        .filter((o) => o.Key !== undefined && o.Key !== prefix)
+        .filter((o) => o.Key !== undefined && !isFolderMarker(o.Key))
         .map((o) => ({
           type: "object",
           key: o.Key!,

@@ -130,6 +130,18 @@ await seedFixture();
       errors.push(`Listagem de "pasta/" não deveria conter um objeto fantasma para o próprio prefixo, encontrado ${JSON.stringify(nestedBody.items)}`);
     }
 
+    // prefix sem delimiter final coincidindo com uma key real não deve
+    // esconder esse objeto (filtro de marcador de pasta só se aplica a
+    // prefixos terminados em "/").
+    const exactKeyRes = await fetch(
+      `${PROVIDER_URL}/api/v1/storage/buckets/${BUCKET}/objects?prefix=${encodeURIComponent("raiz.txt")}`,
+    );
+    const exactKeyBody = await exactKeyRes.json();
+    const exactKeyObject = exactKeyBody.items?.find((i) => i.type === "object" && i.key === "raiz.txt");
+    if (!exactKeyObject) {
+      errors.push(`Listagem com prefix="raiz.txt" (sem "/") deveria manter o objeto "raiz.txt", encontrado ${JSON.stringify(exactKeyBody.items)}`);
+    }
+
     const notFoundRes = await fetch(`${PROVIDER_URL}/api/v1/storage/buckets/bucket-que-nao-existe/objects`);
     const notFoundBody = await notFoundRes.json();
     if (notFoundRes.status !== 404 || notFoundBody.code !== "RESOURCE_NOT_FOUND") {
@@ -167,6 +179,33 @@ await seedFixture();
     const storageCapability = manifestBody.capabilities?.find((c) => c.id === "storage");
     if (storageCapability?.status !== "unavailable" || typeof storageCapability?.reason !== "string") {
       errors.push(`Manifesto deveria reportar storage unavailable com reason, encontrado ${JSON.stringify(storageCapability)}`);
+    }
+  } finally {
+    child.kill();
+  }
+}
+
+// Cenário 3: segmento de bucket com percent-encoding malformado não deve
+// derrubar o processo (achado externo, bot Codex, PR #15) — decodeURIComponent
+// de um path como "/api/v1/storage/buckets/%/objects" lança URIError; sem
+// try/catch em volta, o handler async rejeitado vira unhandledRejection e
+// Node encerra o processo por padrão. Não depende de MiniStack real.
+{
+  const child = await runProvider({ MINISTACK_MANAGED: "true" });
+
+  try {
+    const res = await fetch(`${PROVIDER_URL}/api/v1/storage/buckets/%/objects`);
+    const body = await res.json();
+    if (res.status !== 400 || body.code !== "BAD_REQUEST") {
+      errors.push(`Bucket malformado deveria retornar 400 BAD_REQUEST, encontrado status=${res.status} body=${JSON.stringify(body)}`);
+    }
+
+    const stillAlive = await fetch(`${PROVIDER_URL}/api/v1/manifest`).then(
+      (r) => r.status,
+      () => null,
+    );
+    if (stillAlive !== 200) {
+      errors.push(`Processo não sobreviveu ao path malformado — requisição seguinte falhou (status=${stillAlive})`);
     }
   } finally {
     child.kill();

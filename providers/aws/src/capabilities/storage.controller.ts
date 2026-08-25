@@ -43,7 +43,7 @@ export function classifyStorageError(err: unknown): StorageErrorClassification {
   const code = errorCode(err);
   const name = errorName(err);
 
-  if (code === "ECONNREFUSED") {
+  if (code === "ECONNREFUSED" || code === "ENOTFOUND" || code === "EAI_AGAIN") {
     return { kind: "connection", reason: "CONNECTION_REFUSED" };
   }
   if (code === "ETIMEDOUT" || code === "ECONNRESET" || name === "TimeoutError") {
@@ -81,6 +81,17 @@ function toProviderError(classification: StorageErrorClassification): ProviderEr
   }
 }
 
+// Erros já classificados (conexão, bucket não encontrado) carregam
+// informação suficiente via `code`/status HTTP; um erro "unknown" é, por
+// definição, algo não previsto — sem log server-side não haveria nenhuma
+// pista para diagnosticar, já que a mensagem devolvida ao chamador é
+// deliberadamente genérica (não vaza detalhe do SDK).
+function logIfUnknown(classification: StorageErrorClassification, err: unknown): void {
+  if (classification.kind === "unknown") {
+    console.error("eventpier-aws: erro inesperado na capability storage —", err);
+  }
+}
+
 export function createStorageHealthCheck(adapter: StorageAdapter): HealthCheckFn {
   return async () => {
     try {
@@ -88,6 +99,7 @@ export function createStorageHealthCheck(adapter: StorageAdapter): HealthCheckFn
       return { status: "available" };
     } catch (err) {
       const classification = classifyStorageError(err);
+      logIfUnknown(classification, err);
       const reason = classification.kind === "connection" ? classification.reason : "UNKNOWN";
       return { status: "unavailable", reason };
     }
@@ -116,6 +128,7 @@ async function withStorageErrorHandling<T>(
     return { ok: true, page: await run() };
   } catch (err) {
     const classification = classifyStorageError(err);
+    logIfUnknown(classification, err);
     if (classification.kind === "connection") {
       healthCache.invalidate();
     }

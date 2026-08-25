@@ -63,6 +63,21 @@ function storageErrorStatus(error: ProviderError): number {
   }
 }
 
+function badRequest(res: ServerResponse, message: string): void {
+  const error: ProviderError = { code: "BAD_REQUEST", message, retryable: false };
+  sendJson(res, 400, error);
+}
+
+function internalError(res: ServerResponse, err: unknown): void {
+  console.error("eventpier-aws: erro inesperado tratando requisição —", err);
+  const error: ProviderError = {
+    code: "UNKNOWN",
+    message: "Erro inesperado ao processar a requisição.",
+    retryable: false,
+  };
+  sendJson(res, 500, error);
+}
+
 let environment;
 try {
   environment = resolveEnvironmentConfig();
@@ -74,57 +89,74 @@ try {
   throw err;
 }
 
-const storageAdapter = createMiniStackStorageAdapter(environment.endpoint ?? "");
+// resolveEnvironmentConfig() garante endpoint sempre preenchido quando tem
+// sucesso (specs/007-configurar-environment/data-model.md) — asserção, não
+// fallback silencioso, para falhar alto se esse invariante for quebrado.
+const storageAdapter = createMiniStackStorageAdapter(environment.endpoint!);
 const storageHealthCache = createHealthCache(createStorageHealthCheck(storageAdapter));
 
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
-  const url = new URL(req.url ?? "/", "http://localhost");
-  const path = url.pathname;
+  // Boundary do processo HTTP: qualquer exceção síncrona não capturada aqui
+  // (ex.: decodeURIComponent de um segmento de path malformado) rejeitaria
+  // esta função async sem handler — Node encerra o processo por padrão em
+  // promise rejeitada não tratada. Nunca deixar essa rejeição escapar.
+  try {
+    const url = new URL(req.url ?? "/", "http://localhost");
+    const path = url.pathname;
 
-  if (path === MANIFEST_PATH) {
-    if (req.method === "GET") {
-      const storageDescriptor = await getStorageCapabilityDescriptor(storageHealthCache);
-      sendJson(res, 200, buildManifest(environment, [storageDescriptor]));
-      return;
-    }
-    methodNotAllowed(res, req.method, MANIFEST_PATH);
-    return;
-  }
-
-  if (path === STORAGE_BUCKETS_PATH) {
-    if (req.method === "GET") {
-      const cursor = url.searchParams.get("cursor") ?? undefined;
-      const result = await listBuckets(storageAdapter, storageHealthCache, cursor);
-      if (result.ok) {
-        sendJson(res, 200, result.page);
-      } else {
-        sendJson(res, storageErrorStatus(result.error), result.error);
+    if (path === MANIFEST_PATH) {
+      if (req.method === "GET") {
+        const storageDescriptor = await getStorageCapabilityDescriptor(storageHealthCache);
+        sendJson(res, 200, buildManifest(environment, [storageDescriptor]));
+        return;
       }
+      methodNotAllowed(res, req.method, MANIFEST_PATH);
       return;
     }
-    methodNotAllowed(res, req.method, STORAGE_BUCKETS_PATH);
-    return;
-  }
 
-  const objectsMatch = path.match(STORAGE_BUCKET_OBJECTS_PATTERN);
-  if (objectsMatch) {
-    if (req.method === "GET") {
-      const bucket = decodeURIComponent(objectsMatch[1]);
-      const prefix = url.searchParams.get("prefix") ?? undefined;
-      const cursor = url.searchParams.get("cursor") ?? undefined;
-      const result = await listObjects(storageAdapter, storageHealthCache, bucket, prefix, cursor);
-      if (result.ok) {
-        sendJson(res, 200, result.page);
-      } else {
-        sendJson(res, storageErrorStatus(result.error), result.error);
+    if (path === STORAGE_BUCKETS_PATH) {
+      if (req.method === "GET") {
+        const cursor = url.searchParams.get("cursor") ?? undefined;
+        const result = await listBuckets(storageAdapter, storageHealthCache, cursor);
+        if (result.ok) {
+          sendJson(res, 200, result.page);
+        } else {
+          sendJson(res, storageErrorStatus(result.error), result.error);
+        }
+        return;
       }
+      methodNotAllowed(res, req.method, STORAGE_BUCKETS_PATH);
       return;
     }
-    methodNotAllowed(res, req.method, path);
-    return;
-  }
 
-  notFound(res, path);
+    const objectsMatch = path.match(STORAGE_BUCKET_OBJECTS_PATTERN);
+    if (objectsMatch) {
+      if (req.method === "GET") {
+        let bucket: string;
+        try {
+          bucket = decodeURIComponent(objectsMatch[1]);
+        } catch {
+          badRequest(res, "Segmento de bucket contém percent-encoding inválido.");
+          return;
+        }
+        const prefix = url.searchParams.get("prefix") ?? undefined;
+        const cursor = url.searchParams.get("cursor") ?? undefined;
+        const result = await listObjects(storageAdapter, storageHealthCache, bucket, prefix, cursor);
+        if (result.ok) {
+          sendJson(res, 200, result.page);
+        } else {
+          sendJson(res, storageErrorStatus(result.error), result.error);
+        }
+        return;
+      }
+      methodNotAllowed(res, req.method, path);
+      return;
+    }
+
+    notFound(res, path);
+  } catch (err) {
+    internalError(res, err);
+  }
 });
 
 server.listen(PORT, () => {

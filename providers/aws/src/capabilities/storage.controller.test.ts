@@ -25,6 +25,16 @@ describe("classifyStorageError", () => {
     });
   });
 
+  it.each(["ENOTFOUND", "EAI_AGAIN"])(
+    "classifica %s (falha de DNS) como connection/CONNECTION_REFUSED",
+    (code) => {
+      expect(classifyStorageError({ code })).toEqual({
+        kind: "connection",
+        reason: "CONNECTION_REFUSED",
+      });
+    },
+  );
+
   it("classifica erro aninhado em .cause.code (ex.: fetch failed)", () => {
     expect(
       classifyStorageError({ message: "fetch failed", cause: { code: "ECONNREFUSED" } }),
@@ -182,5 +192,26 @@ describe("listObjects", () => {
       },
     });
     expect(invalidateSpy).not.toHaveBeenCalled();
+  });
+
+  it("em falha de conexão, invalida o cache e retorna ProviderError retryable", async () => {
+    const adapter = fakeAdapter({
+      listObjects: vi.fn().mockRejectedValue({ code: "ECONNREFUSED" }),
+    });
+    const healthCache = createHealthCache(async () => ({ status: "available" }));
+    const invalidateSpy = vi.spyOn(healthCache, "invalidate");
+
+    const result = await listObjects(adapter, healthCache, "meu-bucket");
+
+    expect(result).toEqual({
+      ok: false,
+      error: {
+        code: "CONNECTION_FAILED",
+        message: expect.any(String),
+        capability: "storage",
+        retryable: true,
+      },
+    });
+    expect(invalidateSpy).toHaveBeenCalledOnce();
   });
 });

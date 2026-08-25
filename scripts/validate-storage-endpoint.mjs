@@ -38,7 +38,7 @@ if (!existsSync(PROVIDER_DIST_ENTRY)) {
 
 function runProvider(env) {
   return new Promise((resolve, reject) => {
-    const child = spawn("node", [PROVIDER_DIST_ENTRY], {
+    const child = spawn(process.execPath, [PROVIDER_DIST_ENTRY], {
       stdio: ["ignore", "pipe", "inherit"],
       env: { ...process.env, ...env },
     });

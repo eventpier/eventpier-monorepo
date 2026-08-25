@@ -1,5 +1,5 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import type { ProviderError } from "@eventpier/contracts";
+import type { Environment, ProviderError } from "@eventpier/contracts";
 import {
   InvalidEnvironmentConfigError,
   resolveEnvironmentConfig,
@@ -78,7 +78,7 @@ function internalError(res: ServerResponse, err: unknown): void {
   sendJson(res, 500, error);
 }
 
-let environment;
+let environment: Environment;
 try {
   environment = resolveEnvironmentConfig();
 } catch (err) {
@@ -95,6 +95,64 @@ try {
 const storageAdapter = createMiniStackStorageAdapter(environment.endpoint!);
 const storageHealthCache = createHealthCache(createStorageHealthCheck(storageAdapter));
 
+function sendStorageResult(
+  res: ServerResponse,
+  result: { ok: true; page: unknown } | { ok: false; error: ProviderError },
+): void {
+  if (result.ok) {
+    sendJson(res, 200, result.page);
+  } else {
+    sendJson(res, storageErrorStatus(result.error), result.error);
+  }
+}
+
+async function handleManifest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  if (req.method !== "GET") {
+    methodNotAllowed(res, req.method, MANIFEST_PATH);
+    return;
+  }
+  const storageDescriptor = await getStorageCapabilityDescriptor(storageHealthCache);
+  sendJson(res, 200, buildManifest(environment, [storageDescriptor]));
+}
+
+async function handleStorageBuckets(
+  req: IncomingMessage,
+  res: ServerResponse,
+  url: URL,
+): Promise<void> {
+  if (req.method !== "GET") {
+    methodNotAllowed(res, req.method, STORAGE_BUCKETS_PATH);
+    return;
+  }
+  const cursor = url.searchParams.get("cursor") ?? undefined;
+  const result = await listBuckets(storageAdapter, storageHealthCache, cursor);
+  sendStorageResult(res, result);
+}
+
+async function handleStorageObjects(
+  req: IncomingMessage,
+  res: ServerResponse,
+  url: URL,
+  path: string,
+  bucketSegment: string,
+): Promise<void> {
+  if (req.method !== "GET") {
+    methodNotAllowed(res, req.method, path);
+    return;
+  }
+  let bucket: string;
+  try {
+    bucket = decodeURIComponent(bucketSegment);
+  } catch {
+    badRequest(res, "Segmento de bucket contém percent-encoding inválido.");
+    return;
+  }
+  const prefix = url.searchParams.get("prefix") ?? undefined;
+  const cursor = url.searchParams.get("cursor") ?? undefined;
+  const result = await listObjects(storageAdapter, storageHealthCache, bucket, prefix, cursor);
+  sendStorageResult(res, result);
+}
+
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
   // Boundary do processo HTTP: qualquer exceção síncrona não capturada aqui
   // (ex.: decodeURIComponent de um segmento de path malformado) rejeitaria
@@ -105,51 +163,18 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
     const path = url.pathname;
 
     if (path === MANIFEST_PATH) {
-      if (req.method === "GET") {
-        const storageDescriptor = await getStorageCapabilityDescriptor(storageHealthCache);
-        sendJson(res, 200, buildManifest(environment, [storageDescriptor]));
-        return;
-      }
-      methodNotAllowed(res, req.method, MANIFEST_PATH);
+      await handleManifest(req, res);
       return;
     }
 
     if (path === STORAGE_BUCKETS_PATH) {
-      if (req.method === "GET") {
-        const cursor = url.searchParams.get("cursor") ?? undefined;
-        const result = await listBuckets(storageAdapter, storageHealthCache, cursor);
-        if (result.ok) {
-          sendJson(res, 200, result.page);
-        } else {
-          sendJson(res, storageErrorStatus(result.error), result.error);
-        }
-        return;
-      }
-      methodNotAllowed(res, req.method, STORAGE_BUCKETS_PATH);
+      await handleStorageBuckets(req, res, url);
       return;
     }
 
     const objectsMatch = path.match(STORAGE_BUCKET_OBJECTS_PATTERN);
     if (objectsMatch) {
-      if (req.method === "GET") {
-        let bucket: string;
-        try {
-          bucket = decodeURIComponent(objectsMatch[1]);
-        } catch {
-          badRequest(res, "Segmento de bucket contém percent-encoding inválido.");
-          return;
-        }
-        const prefix = url.searchParams.get("prefix") ?? undefined;
-        const cursor = url.searchParams.get("cursor") ?? undefined;
-        const result = await listObjects(storageAdapter, storageHealthCache, bucket, prefix, cursor);
-        if (result.ok) {
-          sendJson(res, 200, result.page);
-        } else {
-          sendJson(res, storageErrorStatus(result.error), result.error);
-        }
-        return;
-      }
-      methodNotAllowed(res, req.method, path);
+      await handleStorageObjects(req, res, url, path, objectsMatch[1]);
       return;
     }
 

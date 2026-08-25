@@ -503,3 +503,33 @@ scripts anteriores nunca bateram nesse problema porque só importavam
   `OK` contra MiniStack real; `docker compose up --build` reconfirmado
   com sucesso, incluindo o cenário de path malformado dentro do
   container real (400, processo sobrevive).
+
+- **SonarCloud Code Analysis (check de CI não documentado em
+  `.pipeline/quality-gates.md` — integração configurada fora do
+  pipeline do Eventpier, direto no GitHub/SonarCloud) — 2 achados após
+  o push da correção do Codex**:
+  1. **CRITICAL** (`typescript:S3776`) — o handler do `createServer`
+     em `index.ts` passou de complexidade cognitiva ~10 para 21 (limite
+     15) depois do try/catch geral adicionado para a correção do
+     Codex. Corrigido extraindo cada rota para sua própria função
+     (`handleManifest`, `handleStorageBuckets`, `handleStorageObjects`)
+     e um helper compartilhado (`sendStorageResult`) para o padrão
+     `if (result.ok) {...} else {...}` repetido três vezes — o handler
+     principal do `createServer` vira uma sequência linear de
+     `if (path === X) { await handleX(...); return; }`, sem aninhamento
+     de método/try dentro de cada rota. Exigiu uma correção adicional
+     de tipo: `let environment;` (sem anotação) parava de ter seu tipo
+     inferido corretamente dentro das novas funções `function`
+     hoisted que o referenciam (`TS7034`/`TS7005`) — corrigido com
+     `let environment: Environment;` explícito.
+  2. **MINOR** (`javascript:S4036`, vulnerability) — `spawn("node", ...)`
+     em `scripts/validate-storage-endpoint.mjs` resolve o executável
+     via `PATH` em vez de um caminho absoluto. Corrigido com
+     `spawn(process.execPath, ...)`. O mesmo padrão já existe em
+     `validate-manifest-endpoint.mjs`/`validate-environment-config.mjs`
+     (specs 005/007, não tocados por esta PR) — fora de escopo corrigir
+     ali; sinal para quando algum desses scripts for alterado de novo.
+
+  Suíte final após esta rodada: 42/42 testes unitários (inalterado —
+  refactor sem mudança de comportamento), build/typecheck limpos, os
+  três scripts de integração `OK` contra MiniStack real de novo.

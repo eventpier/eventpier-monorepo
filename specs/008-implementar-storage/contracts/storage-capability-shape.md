@@ -58,6 +58,30 @@ export * from "./storage.js";
 }
 ```
 
+## `package.json` (raiz, alterado — nova devDependency)
+
+```json
+{
+  "name": "eventpier-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@11.10.0",
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "@types/node": "24.13.3",
+    "@aws-sdk/client-s3": "3.1117.0"
+  }
+}
+```
+
+Necessário para `scripts/validate-storage-endpoint.mjs` (novo,
+definido mais abaixo) resolver `@aws-sdk/client-s3` — sob o isolamento
+de `node_modules` do pnpm, a dependência declarada só em
+`providers/aws/package.json` não é visível a partir de `scripts/`
+(`research.md`, Decisão 11). Mesma versão exata da dependência de
+`providers/aws/package.json`, para evitar duas versões divergentes do
+mesmo pacote no lockfile.
+
 ## `providers/aws/src/adapters/ministack/storage.adapter.ts` (novo arquivo)
 
 ```ts

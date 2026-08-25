@@ -331,6 +331,50 @@ válido antes desta spec).
 **Consequência para `/tasks`**: nenhuma mudança de comportamento do
 provider em si; só a asserção do script muda.
 
+## Decisão 11 — `@aws-sdk/client-s3` também declarado no `package.json` raiz
+
+**Decisão**: além de `providers/aws/package.json` (Decisão 5),
+`package.json` na raiz do monorepo ganha `@aws-sdk/client-s3` como
+`devDependency`, na mesma versão exata (`3.1117.0`).
+
+**Justificativa**: `scripts/validate-storage-endpoint.mjs` (Decisão 9)
+roda a partir da raiz do monorepo, fora de qualquer workspace, e
+precisa importar `@aws-sdk/client-s3` de verdade para criar sua
+fixture (bucket/objetos de teste) contra o MiniStack real. Sob o
+isolamento estrito de `node_modules` do pnpm (sem hoisting implícito,
+`pnpm-workspace.yaml` sem `.npmrc` customizado), uma dependência
+declarada só em `providers/aws/package.json` não fica resolvível a
+partir de `scripts/` — só pacotes declarados no `package.json` que
+"possui" o diretório de onde o import parte são linkados ali. Os
+scripts anteriores nunca bateram nesse problema porque só importavam
+`packages/contracts/dist/index.js` via caminho relativo de arquivo
+(sem resolução de pacote) ou não importavam nada externo.
+
+**Alternativas consideradas**:
+- *Usar a AWS CLI via `child_process.spawn` na fixture, em vez de
+  importar o SDK* — evitaria o problema de hoisting sem duplicar a
+  dependência, e é o mesmo caminho já usado em `quickstart.md` (passo
+  4, validação manual). Rejeitada para o script automatizado de CI
+  especificamente por depender de um binário do sistema não declarado
+  em lugar nenhum do repositório (diferente de `docker`/`node`, que já
+  são pré-requisitos assumidos por todo o pipeline) — uma dependência
+  npm declarada e instalada via `pnpm install` é mais hermética e
+  reproduzível do que assumir que `aws` CLI está no `PATH` do runner de
+  CI. `quickstart.md` continua usando a AWS CLI para validação manual
+  (ferramenta comum de desenvolvimento local), sem contradição — são
+  dois contextos diferentes com trade-offs diferentes.
+- *Mover `validate-storage-endpoint.mjs` para dentro de
+  `providers/aws/` (ex.: `providers/aws/scripts/`)* — rejeitado por
+  quebrar o padrão estabelecido desde a spec 001 de todo script de
+  validação viver em `scripts/` na raiz, independente de qual
+  workspace ele valida (`validate-manifest-endpoint.mjs` e
+  `validate-environment-config.mjs` também validam especificamente
+  `providers/aws` e vivem em `scripts/`).
+
+**Consequência para `/tasks`**: a task que cria
+`scripts/validate-storage-endpoint.mjs` também edita `package.json`
+(raiz) e roda `pnpm install` antes de poder executar o script.
+
 ## Decisões durante a implementação
 
 <!-- Preenchido pelo /implement se algo não previsto aqui surgir. -->

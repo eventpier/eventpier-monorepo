@@ -172,7 +172,7 @@ exceto onde marcado `[P]`.
   Depende de T012.
   _Valida: quickstart.md passo 2._
 
-- [ ] **T014** `[P]` Alterar `scripts/validate-manifest-endpoint.mjs`
+- [X] **T014** `[P]` Alterar `scripts/validate-manifest-endpoint.mjs`
   exatamente como em `contracts/storage-capability-shape.md`: a
   asserção de `capabilities` (antes: deveria ser `[]`) passa a exigir
   exatamente um item

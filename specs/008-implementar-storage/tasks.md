@@ -60,7 +60,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Testes
 
-- [ ] **T007** Criar
+- [X] **T007** Criar
   `providers/aws/src/capabilities/storage.controller.test.ts`
   exatamente como em `contracts/storage-capability-shape.md`. Deve
   validar:

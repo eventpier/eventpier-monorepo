@@ -41,6 +41,17 @@ compartilhando o mesmo repositório (constitution, princípio 3;
   workflows (gatilho, filtro de path, permissões, tags, ausência de
   segredo não previsto) lendo-os como texto — sem dependência de
   parser YAML.
+- Toda action usada nos dois workflows (`actions/checkout`,
+  `actions/setup-node`, `docker/login-action`, `docker/build-push-action`)
+  é fixada por SHA de commit completo (40 chars), com comentário
+  `# vX.Y.Z` ao lado — nunca por tag mutável (`@v4`, `@latest`).
+  Convenção iniciada na spec 004 (achado da PR #6, então restrita a
+  actions de terceiro) e estendida a `actions/checkout`/`actions/setup-node`
+  pela spec 014, motivada pela depreciação do runtime Node 20 que essas
+  duas actions usavam em `@v4` (GitHub força a run sob Node 24 como
+  shim de compatibilidade até a remoção completa do runtime antigo,
+  prevista para o outono de 2026). `scripts/validate-ci-workflow-shape.mjs`
+  garante isso automaticamente para as quatro actions.
 - O job `validate` de `ci.yml` é *required status check* na proteção
   de `main` (Ruleset "Protect main - PR only", regra
   `required_status_checks`, `context: "validate"`) — um PR com esse
@@ -78,5 +89,6 @@ workflow; ver
 
 | # | Spec | Tipo | Resumo | Data |
 |---|------|------|--------|------|
+| 014 | [014-atualizar-actions-ci](../../specs/014-atualizar-actions-ci/) | 🐛 Bug fix | Atualiza `actions/checkout`/`actions/setup-node` (depreciação do runtime Node 20 no GitHub Actions) e estende o pin por SHA a essas duas actions, além de `docker/login-action`/`docker/build-push-action` | 2026-08-25 |
 | 013 | [013-ativar-ci-path-providers](../../specs/013-ativar-ci-path-providers/) | ✨ Feature | Ativação operacional do CI: required status check via Ruleset, primeira publicação real, pacote GHCR público, gatilho por path confirmado com evidência real | 2026-08-13 |
 | 004 | [004-configurar-ci-path-providers](../../specs/004-configurar-ci-path-providers/) | ✨ Feature | CI com validação em todo PR e publish de imagem do provider AWS com gatilho por path (`providers/aws/**` + `packages/contracts/**`) | 2026-08-13 |

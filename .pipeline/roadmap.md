@@ -30,7 +30,7 @@ abaixo são um ponto de partida; ajuste ao rodar `/specify` de cada uma.
 | 003 | Docker Compose do MVP (rede interna `eventpier-net`, `ministack` opcional via profile, apenas `eventpier-ui` exposta ao host entre os serviços do Eventpier) | ✅ Concluído | 2026-08-13 |
 | 004 | CI com gatilho por path para `providers/*` (antecipando o comportamento do monorepo permanente do Estado 3 de `arquitetura.md`) | ✅ Concluído | 2026-08-13 |
 | 013 | Ativação operacional do CI da spec 004 (required status check, permissão de package creation da org, visibilidade pública do pacote GHCR, confirmação real do gatilho por path) | ✅ Concluído | 2026-08-13 |
-| 014 | Atualizar `actions/checkout`/`actions/setup-node` para versão sem depreciação de runtime Node 20, fixadas por SHA de commit (débito técnico, não planejado previamente) | 🟡 Em andamento | 2026-08-25 |
+| 014 | Atualizar `actions/checkout`/`actions/setup-node` para versão sem depreciação de runtime Node 20, fixadas por SHA de commit (débito técnico, não planejado previamente) | ✅ Concluído | 2026-08-25 |
 
 ## Fase 2 — Provider AWS (`providers/aws`)
 

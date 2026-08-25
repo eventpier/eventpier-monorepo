@@ -226,6 +226,77 @@ de 1 linha com link/referência se quiser evitar duplicação.
   `specs/007-configurar-environment/research.md`, "Decisões durante a
   implementação", para os detalhes completos da reprodução.
 
+## 008-implementar-storage — Capability Storage (2026-08-25)
+
+- Versão de `@aws-sdk/client-s3` rebaixada de `3.1117.0` (a mais
+  recente no momento da pesquisa do plano) para `3.1110.0`: o pnpm
+  bloqueou a mais recente por padrão (`minimumReleaseAgeExclude`
+  automático em `pnpm-workspace.yaml`) — publicada há menos de 24h no
+  momento do `pnpm install`. Em vez de aceitar o bypass automático do
+  gate de supply-chain, optou-se por uma versão com ~12 dias de
+  maturidade. Sinal para specs futuras: ao fixar uma dependência nova,
+  confirmar que `pnpm install` não precisou de nenhuma exceção nesse
+  arquivo antes de seguir.
+- `providers/aws/Dockerfile` não estava no plano original e quebrou em
+  produção: o runtime stage copiava `@eventpier/contracts` manualmente
+  (`COPY --from=build`), suficiente enquanto essa era a única
+  dependência (workspace local sem transitivas). Com
+  `@aws-sdk/client-s3` real (dezenas de pacotes transitivos
+  `@aws-sdk/*`/`@smithy/*`), `docker compose up` subiu o container e
+  ele encerrou com `ERR_MODULE_NOT_FOUND`. Corrigido substituindo o
+  `COPY` manual por `pnpm --filter @eventpier/provider-aws deploy --prod --legacy /app/deploy`
+  no fim do stage `build`, copiando o `node_modules` de produção
+  resultante para o `runtime` — confirmado funcionando contra o
+  MiniStack real do Compose. Este gap já havia sido antecipado em
+  `docs/features/provider-aws.md` ("Limitações conhecidas" da spec
+  005/007: "Reavaliar quando a spec 008 trouxer uma dependência real").
+  Sinal para qualquer provider futuro (Azure/GCP) que ganhe sua
+  primeira dependência de runtime real: checar o Dockerfile antes de
+  assumir que o padrão de `COPY` manual ainda serve.
+- `pnpm --filter <pkg> test`/`build` disparou uma reconciliação
+  automática de `node_modules` (`runDepsStatusCheck`) que, ao rodar com
+  `CI=true` (necessário para destravar o prompt interativo bloqueado
+  em shell não-interativo), executou como `install --production` e
+  removeu as `devDependencies` (`vitest` incluído) — `vitest: not
+  found` na tentativa seguinte. Corrigido com `CI=true pnpm install`
+  (sem `--production`). Efeito colateral do ambiente de execução, sem
+  relação com o código da spec; `pnpm-lock.yaml` permaneceu idêntico
+  durante todo o episódio.
+- Primeira vez que os quality gates deste projeto dependem de um
+  serviço externo real: `scripts/validate-storage-endpoint.mjs` requer
+  um MiniStack de pé (`docker compose --profile managed-env up -d ministack`),
+  tanto localmente quanto em CI (`ci.yml` ganhou o step "Iniciar
+  MiniStack"). Confirmado rodando com sucesso no GitHub Actions real
+  (não só localmente) antes de abrir a PR — ver `research.md`, Decisão
+  9, para a alternativa mais conservadora que foi descartada (testar
+  só o cenário de indisponibilidade, sem MiniStack em CI).
+- **Achado externo (bot Codex, PR #15), ALTO**: rota de objects
+  (`GET /api/v1/storage/buckets/:bucket/objects`) derrubava o processo
+  inteiro com uma única requisição contendo um segmento de bucket com
+  percent-encoding malformado (ex.: `.../buckets/%/objects`) —
+  `decodeURIComponent` lançava `URIError` dentro do handler `async` do
+  `createServer`, sem try/catch em volta; a promise rejeitada não
+  tratada derruba o processo Node por padrão. Reproduzido e confirmado
+  antes da correção. Corrigido com try/catch dedicado ao redor do
+  `decodeURIComponent` (retorna 400) e um try/catch geral em volta de
+  todo o handler HTTP (rede de segurança). Coberto por um novo cenário
+  em `scripts/validate-storage-endpoint.mjs`. Sinal para qualquer rota
+  futura com parâmetro de path decodificado (`decodeURIComponent`,
+  `JSON.parse`, etc. em input externo): sempre dentro de um boundary
+  que capture exceção síncrona, nunca confiar que o handler async por
+  si só "simplesmente retorna um erro" em vez de derrubar o processo.
+- Três correções adicionais no próprio `/review-pr` (achados internos,
+  não bloqueantes): filtro de "marcador de pasta" em `storage.adapter.ts`
+  escondia um objeto real cuja key coincidisse com um `prefix` sem `/`
+  no final; erros `unknown` de storage não eram logados em lugar
+  nenhum (agora `console.error` server-side, só nesse ramo); e, achado
+  durante a verificação desta última correção, falha de DNS
+  (`ENOTFOUND`/`EAI_AGAIN`) caía em `unknown` em vez de `connection` na
+  classificação de erro — deixando de invalidar o cache de
+  health-check num cenário de ambiente real e comum (hostname não
+  resolvível). Ver `research.md`, "Decisões durante a implementação",
+  para os detalhes completos das 5 correções + o achado adicional.
+
 <!-- Exemplo (apagar ao usar):
 ## 017-user-auth — Autenticação de usuário (2026-08-08)
 

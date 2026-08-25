@@ -197,11 +197,11 @@ exceto onde marcado `[P]`.
   (import do SDK a partir da raiz), T013 (precisa do `dist` gerado).
   _Origem: spec.md RF1-RF10, Critérios de Sucesso; research.md Decisões 9, 11; contracts/storage-capability-shape.md ("validate-storage-endpoint.mjs")._
 
-- [ ] **T016** Rodar `docker compose --profile managed-env up -d ministack`.
+- [X] **T016** Rodar `docker compose --profile managed-env up -d ministack`.
   Confirmar que o container sobe (poucos segundos).
   _Valida: quickstart.md passo 3._
 
-- [ ] **T017** Rodar
+- [X] **T017** Rodar
   `node scripts/validate-manifest-endpoint.mjs && node scripts/validate-environment-config.mjs && node scripts/validate-storage-endpoint.mjs`.
   Confirmar `OK` nos três. Depende de T014, T015, T016.
   _Valida: quickstart.md passos 5-7; spec.md Critérios de Sucesso (todos)._

@@ -65,7 +65,7 @@ dispensado automaticamente (mesmo critério de `specs/013-ativar-ci-path-provide
 
 ## Fase: Integração
 
-- [ ] **T006** Regressão do gate (prova de que a checagem nova
+- [X] **T006** Regressão do gate (prova de que a checagem nova
   realmente pega o problema, não só está presente): reverter
   temporariamente o pin de `actions/checkout` em `ci.yml` de volta
   para uma tag (`@v7.0.1`, sem SHA); rodar o script do passo anterior

@@ -35,16 +35,19 @@ cronograma de depreciação (ver fontes abaixo):
   existir e qualquer action ainda fixada numa versão `node20` passa a
   **falhar**, não apenas avisar.
 
-`actions/checkout@v5` e `actions/setup-node@v5` já foram publicados
-pelos mantenedores e declaram `runs.using: node24` nativamente — a
-remediação é fazer bump de major version nas duas actions, nos dois
-workflows.
+A partir de `actions/checkout@v5` e `actions/setup-node@v5`, ambas as
+actions declaram `runs.using: node24` nativamente — a remediação é
+fazer bump de major version nas duas actions, nos dois workflows (a
+versão exata disponível no momento da implementação pode já estar além
+de v5; ver `research.md` para a versão/SHA resolvidos nesta execução
+do `/plan`).
 
 Fontes consultadas nesta investigação:
-- https://github.com/actions/setup-node/releases
-- https://github.com/actions/checkout/pull/2226
-- https://github.com/orgs/community/discussions/189324
-- https://tenki.cloud/blog/migrate-github-actions-node-24
+
+- [actions/setup-node — Releases](https://github.com/actions/setup-node/releases)
+- [actions/checkout PR #2226 — Update actions checkout to use node 24](https://github.com/actions/checkout/pull/2226)
+- [GitHub Community Discussion #189324 — Deprecation of Node 20 on Actions runners](https://github.com/orgs/community/discussions/189324)
+- [tenki.cloud — Migrate GitHub Actions to Node.js 24 Before the Deadline](https://tenki.cloud/blog/migrate-github-actions-node-24)
 
 ## Comportamento Atual vs. Esperado
 
@@ -96,12 +99,30 @@ Fontes consultadas nesta investigação:
 `providers/aws` nem `apps/ui` — é infraestrutura de CI pura.
 
 **Conformidade com `ARQUIVO_REGRAS` (`memory/constitution.md`) e
-`ARQUIVO_ARQUITETURA` (`docs/arquitetura.md`)**: nenhum conflito
-identificado. A extensão do pin por SHA para actions first-party do
-GitHub é uma decisão desta spec (ver seção Clarificações) que
-**estende** — sem contradizer — o precedente já registrado em
-`validate-ci-workflow-shape.mjs` (achado da PR #6), aumentando a
-cobertura de hardening de supply-chain do pipeline de CI.
+`ARQUIVO_ARQUITETURA` (`docs/arquitetura.md`)**: nenhum conflito.
+
+**Conflito com decisão documentada de spec anterior** (encontrado
+durante o `/plan`, não durante o `/specify-tech` inicial — registrado
+aqui por transparência): `specs/004-configurar-ci-path-providers/contracts/ci-workflow-shape.md`
+("Validação esperada", último item) documenta explicitamente que
+`actions/checkout`/`actions/setup-node` foram **deliberadamente**
+deixados fora do pin por SHA na spec 004, com a justificativa de que
+"o risco que motivou a mudança [pin por SHA] é específico de Actions
+de terceiro" — `docker/login-action` e `docker/build-push-action` são
+mantidas pela Docker Inc., enquanto `actions/checkout`/`actions/setup-node`
+são mantidas pela própria GitHub.
+
+Esta spec **revisa** essa decisão (não a contradiz por omissão): o
+gatilho não é uma reavaliação especulativa do risco de supply chain,
+é a depreciação do runtime Node 20 forçando de qualquer forma um bump
+de major version nas duas actions — e a pergunta de clarificação desta
+spec perguntou explicitamente ao usuário se, já que o bump é
+obrigatório, valeria estender o pin por SHA para consistência com as
+outras duas actions do mesmo workflow. Resposta: sim (ver
+Clarificações). `research.md` desta spec registra a decisão revisada
+formalmente, como sucessora da decisão original de spec 004 — a
+contrato de spec 004 permanece como registro histórico correto
+daquele ponto no tempo, não é reescrito retroativamente.
 
 ## Fora do escopo desta spec
 

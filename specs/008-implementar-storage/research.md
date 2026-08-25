@@ -419,3 +419,21 @@ scripts anteriores nunca bateram nesse problema porque só importavam
   exige `inject-workspace-packages=true` para `pnpm deploy` sem essa
   flag — não configurado neste projeto, e configurá-lo é uma mudança
   de escopo maior do que o necessário para esta correção pontual.
+
+- **Passo 3 (Quality Gates) — `pnpm --filter <pkg> test`/`build` disparou
+  `pnpm install --production` e removeu `devDependencies`**: ao rodar
+  os gates finais em sequência, `pnpm --filter @eventpier/provider-aws test`
+  falhou com `[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY]` (pnpm
+  detectou possível divergência entre `node_modules` e o lockfile —
+  provavelmente resíduo do teste local de `pnpm deploy` num diretório
+  fora do projeto, decisão do Dockerfile acima — e tentou reconciliar
+  automaticamente antes do comando filtrado). Rodar com `CI=true`
+  destravou a reconciliação, mas ela rodou como `install --production`,
+  removendo `vitest`/`typescript`/`@types/node` de `node_modules`
+  (`vitest: not found` na tentativa seguinte). Corrigido com
+  `CI=true pnpm install` (sem `--production`), restaurando as
+  `devDependencies`; suíte voltou a passar (39/39) na sequência.
+  Nenhuma mudança de arquivo — só um efeito colateral local do ambiente
+  de execução, sem relação com o código desta spec; `pnpm-lock.yaml`
+  permaneceu idêntico durante todo o episódio (confirmado via
+  `git status` antes/depois).

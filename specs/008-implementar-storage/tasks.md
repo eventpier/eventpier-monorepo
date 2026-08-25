@@ -230,7 +230,7 @@ exceto onde marcado `[P]`.
   bloco `run:` do step de testes de integração.
   _Origem: research.md Decisão 9 ("Consequência para /tasks"); contracts/storage-capability-shape.md ("ci.yml")._
 
-- [ ] **T021** Rodar `git status --short`. Confirmar que as mudanças
+- [X] **T021** Rodar `git status --short`. Confirmar que as mudanças
   ficam restritas a `packages/contracts/src/storage.ts` (novo),
   `packages/contracts/src/index.ts`, `package.json` (raiz),
   `providers/aws/package.json`, `pnpm-lock.yaml`,
@@ -248,14 +248,14 @@ exceto onde marcado `[P]`.
 
 ## Fase: Polish
 
-- [ ] **T022** `[P]` Preencher `research.md` → "Decisões durante a
+- [X] **T022** `[P]` Preencher `research.md` → "Decisões durante a
   implementação" com qualquer decisão não prevista (ex.: ajuste de
   timeout do `S3Client`, comportamento real de `ListBucketsCommand`
   com `ContinuationToken` no MiniStack, ou qualquer divergência entre
   o comportamento assumido via pesquisa externa e o comportamento real
   observado no MiniStack durante T015-T018).
 
-- [ ] **T023** `[P]` Rodar `find packages/contracts/src -type f` e
+- [X] **T023** `[P]` Rodar `find packages/contracts/src -type f` e
   `find providers/aws/src -type f`. Confirmar que a primeira lista
   inclui exatamente `storage.ts` como novo arquivo (além dos já
   existentes) e a segunda inclui exatamente
@@ -266,7 +266,7 @@ exceto onde marcado `[P]`.
   vazado.
   _Origem: spec.md "Fora do escopo"._
 
-- [ ] **T024** Revisão final contra `spec.md` → "Critérios de
+- [X] **T024** Revisão final contra `spec.md` → "Critérios de
   Sucesso" e "Requisitos Funcionais", lendo o código produzido (não só
   rodando gates): confirmar que nenhuma operação de escrita sobre
   bucket/objeto existe em nenhum arquivo tocado (RF9 — só

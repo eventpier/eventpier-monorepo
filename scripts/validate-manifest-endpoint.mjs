@@ -82,8 +82,18 @@ try {
   if (typeof manifestBody.version !== "string" || manifestBody.version.length === 0) {
     errors.push(`version deveria ser string não vazia, encontrado ${JSON.stringify(manifestBody.version)}`);
   }
-  if (!Array.isArray(manifestBody.capabilities) || manifestBody.capabilities.length !== 0) {
-    errors.push(`capabilities deveria ser [], encontrado ${JSON.stringify(manifestBody.capabilities)}`);
+  const [storageCapability, ...restCapabilities] = manifestBody.capabilities ?? [];
+  if (
+    !Array.isArray(manifestBody.capabilities) ||
+    manifestBody.capabilities.length !== 1 ||
+    restCapabilities.length !== 0 ||
+    storageCapability?.id !== "storage" ||
+    storageCapability?.status !== "unavailable" ||
+    typeof storageCapability?.reason !== "string"
+  ) {
+    errors.push(
+      `capabilities deveria ter exatamente 1 item {id: "storage", status: "unavailable", reason: <string>} (MiniStack não acessível neste script), encontrado ${JSON.stringify(manifestBody.capabilities)}`,
+    );
   }
 
   const postRes = await fetch(`${BASE_URL}/api/v1/manifest`, { method: "POST" });

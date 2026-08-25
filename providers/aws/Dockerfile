@@ -16,12 +16,12 @@ COPY packages/contracts packages/contracts
 COPY providers/aws providers/aws
 RUN pnpm --filter @eventpier/contracts build
 RUN pnpm --filter @eventpier/provider-aws build
+RUN pnpm --filter @eventpier/provider-aws deploy --prod --legacy /app/deploy
 
 FROM base AS runtime
 ENV NODE_ENV=production
+COPY --from=build /app/deploy/node_modules ./node_modules
 COPY --from=build /app/providers/aws/dist ./dist
 COPY --from=build /app/providers/aws/package.json ./package.json
-COPY --from=build /app/packages/contracts/dist ./node_modules/@eventpier/contracts/dist
-COPY --from=build /app/packages/contracts/package.json ./node_modules/@eventpier/contracts/package.json
 EXPOSE 4000
 CMD ["node", "dist/index.js"]

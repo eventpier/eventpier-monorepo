@@ -392,3 +392,30 @@ scripts anteriores nunca bateram nesse problema porque só importavam
   `tasks.md`) foram atualizados para refletir `3.1110.0` como a versão
   correta. Nenhuma mudança de comportamento do adapter — só a versão
   pinada.
+
+- **T018 — `providers/aws/Dockerfile` não previsto no plano original,
+  corrigido para instalar dependências reais na imagem de runtime**:
+  nenhum artefato de `/plan` desta spec examinou `providers/aws/Dockerfile`
+  — omissão do plano. O runtime stage copiava `@eventpier/contracts`
+  manualmente (`COPY --from=build .../dist ...`) porque, até a spec
+  007, essa era a única dependência do provider, um workspace local
+  sem dependências transitivas. Com `@aws-sdk/client-s3` (dependência
+  real, com dezenas de pacotes transitivos `@aws-sdk/*`/`@smithy/*`),
+  esse padrão manual quebrou: `docker compose --profile managed-env up --build`
+  subiu o container `eventpier-aws`, que encerrou imediatamente com
+  `Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@aws-sdk/client-s3'`.
+  Corrigido substituindo o `COPY` manual por
+  `pnpm --filter @eventpier/provider-aws deploy --prod --legacy /app/deploy`
+  no fim do stage `build` (produz um `node_modules` de produção
+  autocontido, incluindo `@eventpier/contracts` com `dist/` já
+  presente e todas as dependências transitivas do AWS SDK resolvidas
+  via cópia real, não symlink cross-stage) e copiando
+  `/app/deploy/node_modules` inteiro para o stage `runtime` — testado
+  localmente com `pnpm deploy` antes de alterar o Dockerfile,
+  confirmado funcionando dentro do `docker compose` real
+  (`GET /api/v1/manifest` retornando `capabilities: [{"id":"storage","status":"available"}]`
+  de dentro do container, provando conectividade real com o `ministack`
+  do Compose). `--legacy` foi necessário porque pnpm v10+ por padrão
+  exige `inject-workspace-packages=true` para `pnpm deploy` sem essa
+  flag — não configurado neste projeto, e configurá-lo é uma mudança
+  de escopo maior do que o necessário para esta correção pontual.

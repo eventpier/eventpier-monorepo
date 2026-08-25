@@ -206,7 +206,7 @@ exceto onde marcado `[P]`.
   Confirmar `OK` nos três. Depende de T014, T015, T016.
   _Valida: quickstart.md passos 5-7; spec.md Critérios de Sucesso (todos)._
 
-- [ ] **T018** Rodar
+- [X] **T018** Rodar
   `docker compose --profile managed-env up --build` e, em seguida,
   `docker compose logs eventpier-aws`. Confirmar a mensagem
   "eventpier-aws ouvindo na porta 4000" sem nenhum erro nos logs.

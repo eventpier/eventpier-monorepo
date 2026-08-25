@@ -26,7 +26,7 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
 
 ## Fase: Setup
 
-- [ ] **T001** Criar `packages/contracts/src/storage.ts` exatamente
+- [X] **T001** Criar `packages/contracts/src/storage.ts` exatamente
   como em `contracts/storage-capability-shape.md`: `Bucket`
   (`{ name: string }`), `StorageFolderEntry`
   (`{ type: "folder"; prefix: string }`), `StorageObjectEntry`
@@ -34,11 +34,11 @@ outra task não concluída na mesma fase). Sem marcador = sequencial.
   e a união `StorageEntry`.
   _Origem: spec.md RF1-RF3; data-model.md ("Bucket"/"StorageEntry"); research.md Decisões 1-2._
 
-- [ ] **T002** Alterar `packages/contracts/src/index.ts`: adicionar
+- [X] **T002** Alterar `packages/contracts/src/index.ts`: adicionar
   `export * from "./storage.js";`. Depende de T001.
   _Origem: research.md Decisão 1; contracts/storage-capability-shape.md ("index.ts")._
 
-- [ ] **T003** Rodar `pnpm --filter @eventpier/contracts build`.
+- [X] **T003** Rodar `pnpm --filter @eventpier/contracts build`.
   Confirmar sem erros — `packages/contracts/dist/storage.d.ts` gerado.
   Depende de T001, T002.
 

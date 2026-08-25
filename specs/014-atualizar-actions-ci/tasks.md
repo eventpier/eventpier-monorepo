@@ -86,7 +86,7 @@ dispensado automaticamente (mesmo critério de `specs/013-ativar-ci-path-provide
   como o PR real desta spec — decisão de `/review-pr`, não desta task).
   _Valida: spec.md, Critério de Aceite 4; quickstart.md, passo 4._
 
-- [ ] **T008** Validar sintaticamente `publish-provider-aws.yml`
+- [X] **T008** Validar sintaticamente `publish-provider-aws.yml`
   (`python3 -c "import yaml,sys; yaml.safe_load(open('.github/workflows/publish-provider-aws.yml'))"`
   ou equivalente) — sua execução real fica adiada para o próximo push
   legítimo que toque `providers/aws/**`/`packages/contracts/**`

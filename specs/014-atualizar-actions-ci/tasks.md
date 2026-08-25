@@ -43,7 +43,7 @@ dispensado automaticamente (mesmo critério de `specs/013-ativar-ci-path-provide
 
 ## Fase: Core
 
-- [ ] **T003** `[P]` Atualizar `.github/workflows/ci.yml`: bump
+- [X] **T003** `[P]` Atualizar `.github/workflows/ci.yml`: bump
   `actions/checkout` para
   `@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1` e
   `actions/setup-node` para
@@ -51,14 +51,14 @@ dispensado automaticamente (mesmo critério de `specs/013-ativar-ci-path-provide
   `with: { node-version: "24" }` inalterado no step de setup-node.
   _Origem: data-model.md, "Instâncias — estado-alvo"; spec.md, Critérios de Aceite 1-2._
 
-- [ ] **T004** `[P]` Atualizar `.github/workflows/publish-provider-aws.yml`:
+- [X] **T004** `[P]` Atualizar `.github/workflows/publish-provider-aws.yml`:
   bump `actions/checkout` para
   `@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1`. Nenhum outro
   step do arquivo muda (`docker/login-action`, `docker/build-push-action`
   permanecem exatamente como estão).
   _Origem: data-model.md, "Instâncias — estado-alvo"; spec.md, Critérios de Aceite 1-2._
 
-- [ ] **T005** Re-rodar `node scripts/validate-ci-workflow-shape.mjs`
+- [X] **T005** Re-rodar `node scripts/validate-ci-workflow-shape.mjs`
   agora com T003/T004 aplicados — deve terminar `OK` (exit code 0),
   confirmando GREEN.
   _Valida: T002, T003, T004; spec.md, Critério de Aceite 3._
